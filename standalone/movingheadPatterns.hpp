@@ -3,7 +3,7 @@
 #include "core/generation/patterns/helpers/interval.h"
 #include "core/generation/patterns/helpers/timeline.h"
 #include "core/generation/patterns/pattern.hpp"
-#include "core/generation/pixelMap.hpp"
+#include "core/generation/pixelMap/pixelMap.hpp"
 #include "platform/includes/utils.hpp"
 #include "utils.hpp"
 #include <math.h>
