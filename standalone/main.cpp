@@ -1,6 +1,8 @@
 #include "core/hyperion.hpp"
 #include "movingheadPatterns.hpp"
 #include "patterns.hpp"
+#include "mapping/ledMap.hpp"
+#include "ledPatterns.hpp"
 
 #define COL_PALETTE 0
 #define COL_MOVINGHEAD 1
@@ -8,10 +10,10 @@
 #define COL_FAIRYLIGHT_PINSPOT 3
 #define COL_LASERS 4
 #define COL_BULBS 5
-#define COL_LEDSTER 6
-#define COL_STROBES 7
-#define COL_LED1 8
-#define COL_LED2 9
+#define COL_LED1 6
+#define COL_LED2 7
+#define COL_LEDSTER 8
+#define COL_STROBES 9
 
 void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine);
 void addLaserPipe(Hyperion *hyp);
@@ -42,8 +44,8 @@ int main()
     addBulbPipe(hyp, dmxCombine);
     addFairylightPinspotPipe(hyp, pwmCombine);
     addMovingHeadPipe(hyp, dmxCombine);
-    //   addLed1Column(hyp);
-    //   addLed2Column(hyp);
+    addLed1Column(hyp);
+    addLed2Column(hyp);
 
     hyp->createChain(pwmCombine,new PWMOutput());
     hyp->createChain(dmxCombine,new DMXOutput());
@@ -263,132 +265,129 @@ void addMovingHeadPipe(Hyperion *hyp, Combine *dmxCombine)
     );
 }
 
-// void addLed1Column(Hyperion *hyp)
-// {
-//     int nleds = 4*8*60;
-//     int nbytes = nleds * sizeof(RGBA);
-//     int i=0;
+void addLed1Column(Hyperion *hyp)
+{
+    int nleds = 4*8*60;
+    int nbytes = nleds * sizeof(RGBA);
+    int i=0;
 
-//     auto input = new ControlHubInput<RGBA>(
-//         nleds,
-//         &hyp->hub,
-//         {
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::CeilingChase()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::Fireworks()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::Chaser()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SegmentChasePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FlashesPattern()},
+    auto input = new ControlHubInput<RGBA>(
+        nleds,
+        &hyp->hub,
+        {
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::CeilingChase()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::Fireworks()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::Chaser()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SegmentChasePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FlashesPattern()},
 
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GlitchPattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadingNoisePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::StrobeHighlightPattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GlitchPattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadingNoisePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::StrobeHighlightPattern()},
 
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GlowPulsePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::BarLFO()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GradientLFO()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadeFromRandom()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::RibbenClivePattern<NegativeCosFast>()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::RibbenFlashPattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::PixelGlitchPattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SegmentGlitchPattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::StrobePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SinChasePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SawChasePattern()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadeFromCenter()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SideWave()},
-//             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SinChase2Pattern()},
-//         });
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GlowPulsePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::BarLFO()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::GradientLFO()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadeFromRandom()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::RibbenClivePattern<NegativeCosFast>()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::RibbenFlashPattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::PixelGlitchPattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SegmentGlitchPattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::StrobePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SinChasePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SawChasePattern()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadeFromCenter()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SideWave()},
+            {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SinChase2Pattern()},
+        });
 
-// #if (ESP_PLATFORM)
-//     auto splitInput = new InputSlicer(
-//         input,
-//         {
-//             {0 * nbytes / 4, nbytes / 4, true},
-//             {1 * nbytes / 4, nbytes / 4, true},
-//             {2 * nbytes / 4, nbytes / 4, true},
-//             {3 * nbytes / 4, nbytes / 4, true},
-//             // {0, nbytes, false},
-//         });
+#if (ESP_PLATFORM)
+    auto split = new Splitter({
+        nbytes/4,
+        nbytes/4,
+        nbytes/4,
+        nbytes/4,
+    });
 
-//     for (int i = 0; i < splitInput->size() - 0; i++)
-//     {
-//         auto pipe = new ConvertPipe<RGBA, BGR>(
-//             splitInput->getInput(i),
-//             new NeopixelOutput(i+1),
-//             ledLut);
-//         hyp->addPipe(pipe);
-//     }
-// #else
-//     hyp->addPipe(
-//         new ConvertPipe<RGBA, RGB>(
-//             input,
-//             new MonitorOutput(&hyp->webServer, &ledMap1)));
-// #endif
-// }
+    hyp->createChain(input,split);
 
-// void addLed2Column(Hyperion *hyp)
-// {
-//     int nleds = 4*8*60;
-//     int nbytes = nleds * sizeof(RGBA);
-//     int i=0;
+    for (int i=0;i<split->size();i++)
+        hyp->createChain(
+            split->getSlice(i),
+            new ConvertColor<RGBA,GRB>(ledLut),
+            new NeopixelOutput(i+1)
+        );
+#else
 
-//     auto input = new ControlHubInput<RGBA>(
-//         nleds,
-//         &hyp->hub,
-//         {
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GlowPulsePattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GradientLFO()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadeFromRandom()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SinChasePattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SawChasePattern()},
+    hyp->createChain(
+        input,
+        new ConvertColor<RGBA, RGB>(),
+        new MonitorOutput(&hyp->webServer, &ledMap1)
+    );
+#endif
+}
 
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::StrobePattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GlitchPattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::PixelGlitchPattern()},
+void addLed2Column(Hyperion *hyp)
+{
+    int nleds = 4*8*60;
+    int nbytes = nleds * sizeof(RGBA);
+    int i=0;
 
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SegmentChasePattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::BarLFO()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::RibbenClivePattern<NegativeCosFast>()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::RibbenFlashPattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadingNoisePattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SegmentGlitchPattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FlashesPattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::StrobeHighlightPattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadeFromCenter()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SideWave()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SinChase2Pattern()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::CeilingChase()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::Fireworks()},
-//             {.column = COL_LED2, .slot = i++, .pattern = new Patterns::Chaser()},
+    auto input = new ControlHubInput<RGBA>(
+        nleds,
+        &hyp->hub,
+        {
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GlowPulsePattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GradientLFO()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadeFromRandom()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SinChasePattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SawChasePattern()},
 
-//         });
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::StrobePattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::GlitchPattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::PixelGlitchPattern()},
 
-// #if (ESP_PLATFORM)
-//     auto splitInput = new InputSlicer(
-//         input,
-//         {
-//             {0 * nbytes / 4, nbytes / 4, true},
-//             {1 * nbytes / 4, nbytes / 4, true},
-//             {2 * nbytes / 4, nbytes / 4, true},
-//             {3 * nbytes / 4, nbytes / 4, true},
-//             // {0, nbytes, false},
-//         });
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SegmentChasePattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::BarLFO()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::RibbenClivePattern<NegativeCosFast>()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::RibbenFlashPattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadingNoisePattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SegmentGlitchPattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FlashesPattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::StrobeHighlightPattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::FadeFromCenter()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SideWave()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::SinChase2Pattern()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::CeilingChase()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::Fireworks()},
+            {.column = COL_LED2, .slot = i++, .pattern = new Patterns::Chaser()},
 
-//     for (int i = 0; i < splitInput->size() - 0; i++)
-//     {
-//         auto pipe = new ConvertPipe<RGBA, BGR>(
-//             splitInput->getInput(i),
-//             new NeopixelOutput(i+5),
-//             ledLut);
-//         hyp->addPipe(pipe);
-//     }
-// #else
-//     hyp->addPipe(
-//         new ConvertPipe<RGBA, RGB>(
-//             input,
-//             new MonitorOutput(&hyp->webServer, &ledMap2)));
-// #endif
-// }
+        });
+
+#if (ESP_PLATFORM)
+    auto split = new Splitter({
+        nbytes/4,
+        nbytes/4,
+        nbytes/4,
+        nbytes/4,
+    });
+
+    hyp->createChain(input,split);
+
+    for (int i=0;i<split->size();i++)
+        hyp->createChain(
+            split->getSlice(i),
+            new ConvertColor<RGBA,BGR>(ledLut),
+            new NeopixelOutput(i+5)
+        );
+#else
+    hyp->createChain(
+        input,
+        new ConvertColor<RGBA, RGB>(),
+        new MonitorOutput(&hyp->webServer, &ledMap2)
+    );
+#endif
+}
 
 void addPaletteColumn(Hyperion *hyp)
 {
