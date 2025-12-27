@@ -3,6 +3,7 @@
 #include "patterns.hpp"
 #include "mapping/ledMap.hpp"
 #include "ledPatterns.hpp"
+#include "common/distributeAndMonitor.hpp"
 
 #define COL_PALETTE 0
 #define COL_MOVINGHEAD 1
@@ -47,8 +48,12 @@ int main()
     addLed1Column(hyp);
     addLed2Column(hyp);
 
+    #if (ESP_PLATFORM)
     hyp->createChain(pwmCombine,new PWMOutput());
     hyp->createChain(dmxCombine,new DMXOutput());
+    #else
+    hyp->createChain(dmxCombine,new UDPOutput("hypernode1.local",9619));
+    #endif
 
     addPaletteColumn(hyp);
 
@@ -319,10 +324,23 @@ void addLed1Column(Hyperion *hyp)
         );
 #else
 
-    hyp->createChain(
+    // hyp->createChain(
+    //     input,
+    //     new ConvertColor<RGBA, RGB>(),
+    //     new MonitorOutput(&hyp->webServer, &ledMap1)
+    // );
+
+    distributeAndMonitor(
+        hyp,
         input,
-        new ConvertColor<RGBA, RGB>(),
-        new MonitorOutput(&hyp->webServer, &ledMap1)
+        &ledMap1,
+        {
+            {"hypernode1.local",9611,nbytes/4},
+            {"hypernode1.local",9612,nbytes/4},
+            {"hypernode1.local",9613,nbytes/4},
+            {"hypernode1.local",9614,nbytes/4},
+        },
+        ledLut
     );
 #endif
 }
@@ -381,10 +399,17 @@ void addLed2Column(Hyperion *hyp)
             new NeopixelOutput(i+5)
         );
 #else
-    hyp->createChain(
+    distributeAndMonitor<BGR>(
+        hyp,
         input,
-        new ConvertColor<RGBA, RGB>(),
-        new MonitorOutput(&hyp->webServer, &ledMap2)
+        &ledMap2,
+        {
+            {"hypernode1.local",9615,nbytes/4},
+            {"hypernode1.local",9616,nbytes/4},
+            {"hypernode1.local",9617,nbytes/4},
+            {"hypernode1.local",9618,nbytes/4},
+        },
+        ledLut
     );
 #endif
 }
