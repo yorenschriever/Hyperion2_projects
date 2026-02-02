@@ -16,10 +16,32 @@
 #define COL_LEDSTER 8
 #define COL_STROBES 9
 
+    class OneColor : public Pattern<RGBA>
+    {
+    public:
+        RGBA color;
+        OneColor(RGBA color, const char *name)
+        {
+            this->color = color;
+            this->name = name;
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!active)
+                return;
+
+            for (int i = 0; i < width; i++)
+            {
+                pixels[i] = color;
+            }
+        }
+    };
+
 void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine);
 void addLaserPipe(Hyperion *hyp);
 void addBulbPipe(Hyperion *hyp, Combine *dmxCombine);
-void addFairylightPinspotPipe(Hyperion *hyp, Combine * pwmCombine);
+void addFairylightPinspotPipe(Hyperion *hyp, Combine * pwmCombine, Combine *dmxCombine);
 void addMovingHeadPipe(Hyperion *hyp, Combine *dmxCombine);
 void addPaletteColumn(Hyperion *hyp);
 void addLed1Column(Hyperion *hyp);
@@ -43,10 +65,10 @@ int main()
     addColanderPipe(hyp, pwmCombine, dmxCombine);
     addLaserPipe(hyp);
     addBulbPipe(hyp, dmxCombine);
-    addFairylightPinspotPipe(hyp, pwmCombine);
+    addFairylightPinspotPipe(hyp, pwmCombine, dmxCombine);
     addMovingHeadPipe(hyp, dmxCombine);
     addLed1Column(hyp);
-    addLed2Column(hyp);
+    // addLed2Column(hyp);
 
     #if (ESP_PLATFORM)
     hyp->createChain(pwmCombine,new PWMOutput());
@@ -88,7 +110,7 @@ int main()
 
 void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
 {
-    const int numColander = 10;
+    const int numColander = 12;
     auto input = new ControlHubInput<Monochrome>(
         numColander,
         &hyp->hub,
@@ -118,23 +140,29 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
             {0, numColander, true},
         });
 
-    hyp->createChain(input,splitInput);
-
     hyp->createChain(
-        splitInput->getSlice(0),
+        input,
         new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
         dmxCombine->atDmxChannel(128)
     );
 
-    hyp->createChain(
-        splitInput->getSlice(1),
-        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
-        pwmCombine->atOffset(0));
+    // hyp->createChain(input,splitInput);
 
-    hyp->createChain(
-        splitInput->getSlice(2),
-        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
-        new UDPOutput("hyperslave6.local", 9620, 60));
+    // hyp->createChain(
+    //     splitInput->getSlice(0),
+    //     new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
+    //     dmxCombine->atDmxChannel(128)
+    // );
+
+    // hyp->createChain(
+    //     splitInput->getSlice(1),
+    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+    //     pwmCombine->atOffset(0));
+
+    // hyp->createChain(
+    //     splitInput->getSlice(2),
+    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+    //     new UDPOutput("hyperslave6.local", 9620, 60));
 
 }
 
@@ -214,36 +242,44 @@ void addBulbPipe(Hyperion *hyp, Combine *dmxCombine)
     );
 }
 
-void addFairylightPinspotPipe(Hyperion *hyp, Combine *pwmCombine)
+void addFairylightPinspotPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
 {
-    auto pinspotInput = new ControlHubInput<Monochrome>(
+    // auto pinspotInput = new ControlHubInput<Monochrome>(
+    //           1,
+    //           &hyp->hub,
+    //           {
+    //               {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 0, .pattern = new OnPattern(255)},
+    //               {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 1, .pattern = new SinPattern()},
+    //               {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 2, .pattern = new BeatAllFadePattern()},
+    //           });
+    // hyp->createChain(
+    //     pinspotInput,
+    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+    //     pwmCombine->atOffset(11)
+    // );
+
+    auto fairylightInput = new ControlHubInput<Monochrome>(
               1,
               &hyp->hub,
               {
                   {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 0, .pattern = new OnPattern(255)},
                   {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 1, .pattern = new SinPattern()},
                   {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 2, .pattern = new BeatAllFadePattern()},
-              });
-    hyp->createChain(
-        pinspotInput,
-        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
-        pwmCombine->atOffset(11)
-    );
-
-    auto fairylightInput = new ControlHubInput<Monochrome>(
-              1,
-              &hyp->hub,
-              {
-                  {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 3, .pattern = new OnPattern(255)},
-                  {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 4, .pattern = new SinPattern()},
-                  {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 5, .pattern = new BeatAllFadePattern()},
+                  {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 5, .pattern = new SlowStrobePattern()},
                   {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 6, .pattern = new BlinderPattern()},
                   {.column = COL_FAIRYLIGHT_PINSPOT, .slot = 7, .pattern = new FastStrobePattern()},
               });
+
+    // hyp->createChain(
+    //     fairylightInput,
+    //     new ConvertColor<Monochrome, Monochrome12>(GammaLut12),
+    //     pwmCombine->atOffset(12)
+    // );
+
     hyp->createChain(
         fairylightInput,
-        new ConvertColor<Monochrome, Monochrome12>(GammaLut12),
-        pwmCombine->atOffset(12)
+        // new ConvertColor<Monochrome, Monochrome>(GammaLut),
+        dmxCombine->atDmxChannel(128+19)
     );
 }
 
@@ -304,6 +340,10 @@ void addLed1Column(Hyperion *hyp)
             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::FadeFromCenter()},
             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SideWave()},
             {.column = COL_LED1, .slot = i++, .pattern = new Patterns::SinChase2Pattern()},
+
+            {.column = 7, .slot = 0, .pattern = new OneColor(RGB(255,0,0),"Red")},
+            {.column = 7, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
+            {.column = 7, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
         });
 
 #if (ESP_PLATFORM)
@@ -330,15 +370,15 @@ void addLed1Column(Hyperion *hyp)
     //     new MonitorOutput(&hyp->webServer, &ledMap1)
     // );
 
-    distributeAndMonitor(
+    distributeAndMonitor<BGR, RGBA>(
         hyp,
         input,
         &ledMap1,
         {
-            {"hypernode1.local",9611,nbytes/4},
-            {"hypernode1.local",9612,nbytes/4},
-            {"hypernode1.local",9613,nbytes/4},
-            {"hypernode1.local",9614,nbytes/4},
+            {"hypernode1.local",9611,nleds/4},
+            {"hypernode1.local",9612,nleds/4},
+            {"hypernode1.local",9613,nleds/4},
+            {"hypernode1.local",9614,nleds/4},
         },
         ledLut
     );
@@ -404,10 +444,10 @@ void addLed2Column(Hyperion *hyp)
         input,
         &ledMap2,
         {
-            {"hypernode1.local",9615,nbytes/4},
-            {"hypernode1.local",9616,nbytes/4},
-            {"hypernode1.local",9617,nbytes/4},
-            {"hypernode1.local",9618,nbytes/4},
+            {"hypernode1.local",9615,nleds/4},
+            {"hypernode1.local",9616,nleds/4},
+            {"hypernode1.local",9617,nleds/4},
+            {"hypernode1.local",9618,nleds/4},
         },
         ledLut
     );
