@@ -1,14 +1,16 @@
-#include "../common/distributeAndMonitor.hpp"
-#include "../common/mapHelpers.hpp"
-#include "../common/paletteColumn.hpp"
-#include "../common/patterns/patterns-led.hpp"
-#include "../common/patterns/patterns-mapped-2d.hpp"
-#include "../common/patterns/patterns-mask.hpp"
-#include "../common/patterns/patterns-monochrome.hpp"
-#include "../common/patterns/patterns-test.hpp"
-#include "../common/patterns/patterns-effect.hpp"
-#include "../common/setViewParams.hpp"
-#include "core/hyperion.hpp"
+#include "hyperion.hpp"
+#include "mappingHelpers.hpp"
+#include "common/distributeAndMonitor.hpp"
+// #include "common/mapHelpers.hpp"
+#include "common/paletteColumn.hpp"
+#include "common/patterns/patterns-led.hpp"
+#include "common/patterns/patterns-mapped-2d.hpp"
+#include "common/patterns/patterns-mask.hpp"
+#include "common/patterns/patterns-monochrome.hpp"
+#include "common/patterns/patterns-test.hpp"
+// #include "../common/patterns/patterns-effect.hpp"
+#include "common/setViewParams.hpp"
+
 #include "mapping/cageMap.hpp"
 #include "mapping/wingMap.old.hpp"
 #include "mapping/flippedWingMap.hpp"
@@ -462,23 +464,37 @@ void addDMXPipe(Hyperion *hyp)
         }
     );
 
-    auto combined = new CombinedInput({
-                                          {.input = inputBase, .offset = 0},
-                                          {.input = inputPinspots, .offset = 8},
-                                          {.input = inputFog, .offset = 12},
-                                      },
-                                      512);
+    // auto combined = new Combine({
+    //                                       {.input = inputBase, .offset = 0},
+    //                                       {.input = inputPinspots, .offset = 8},
+    //                                       {.input = inputFog, .offset = 12},
+    //                                   },
+    //                                   512);
+    auto combined = new Combine();
+    hyp->createChain(inputBase,combined->atOffset(0));
+    hyp->createChain(inputPinspots,combined->atOffset(8));
+    hyp->createChain(inputFog,combined->atOffset(12));
 
-    std::vector<InputSlicer::Slice> slices = {
+    std::vector<Slicer::Slice> slices = {
         {.start = 0, .length = (int)map->size(), .sync = true},
         {.start = 0, .length = (int)map->size(), .sync = false}};
-    auto splitInput = new InputSlicer(combined, slices);
+    auto splitInput = new Slicer(slices);
+    hyp->createChain(
+        combined,
+        splitInput);
+
     distribute<Monochrome, Monochrome>(hyp, distribution, splitInput);
 
-    hyp->addPipe(
-        new ConvertPipe<Monochrome, RGB>(
-            splitInput->getInput(slices.size() - 1),
-            new MonitorOutput(&hyp->webServer, map, 60)));
+    hyp->createChain(
+        splitInput->getSlice(slices.size() - 1),
+        new ConvertColor<Monochrome, RGB>(),
+        new MonitorOutput(&hyp->webServer, map, 60)
+    );
+
+    // hyp->addPipe(
+    //     new ConvertPipe<Monochrome, RGB>(
+    //         splitInput->getInput(slices.size() - 1),
+    //         new MonitorOutput(&hyp->webServer, map, 60)));
 }
 
 void addLightningPipe(Hyperion *hyp)

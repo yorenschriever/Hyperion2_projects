@@ -1,5 +1,5 @@
 #pragma once
-#include "generation/pixelMap.hpp"
+#include "generation/pixelMap/pixelMap.hpp"
 #include <algorithm>
 
 //flip all the bars individually
