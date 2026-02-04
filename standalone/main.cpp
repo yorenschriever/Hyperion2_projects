@@ -135,34 +135,41 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
 
     auto splitInput = new Slicer(
         {
-            {0, numColander, true},
-            {0, numColander, true},
+            {0, numColander, false},
+            {0, numColander, false},
+            {0, numColander, false},
             {0, numColander, true},
         });
 
-    hyp->createChain(
-        input,
-        new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
-        dmxCombine->atDmxChannel(128)
-    );
-
-    // hyp->createChain(input,splitInput);
-
     // hyp->createChain(
-    //     splitInput->getSlice(0),
+    //     input,
     //     new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
     //     dmxCombine->atDmxChannel(128)
     // );
 
-    // hyp->createChain(
-    //     splitInput->getSlice(1),
-    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
-    //     pwmCombine->atOffset(0));
+    hyp->createChain(input,splitInput);
 
-    // hyp->createChain(
-    //     splitInput->getSlice(2),
-    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
-    //     new UDPOutput("hyperslave6.local", 9620, 60));
+    hyp->createChain(
+        splitInput->getSlice(0),
+        new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
+        dmxCombine->atDmxChannel(128)
+    );
+
+    hyp->createChain(
+        splitInput->getSlice(1),
+        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+        pwmCombine->atOffset(0));
+
+    hyp->createChain(
+        splitInput->getSlice(2),
+        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+        new UDPOutput("hyperslave6.local", 9620, 60));
+
+    auto map = new PixelMap(circleMap(12,0.5));
+    hyp->createChain(
+        splitInput->getSlice(3),
+        new ConvertColor<Monochrome, RGB>(),
+        new MonitorOutput(&hyp->webServer, map , 30));
 
 }
 
