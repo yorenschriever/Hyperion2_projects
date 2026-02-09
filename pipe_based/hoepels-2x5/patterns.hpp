@@ -27,7 +27,7 @@ namespace Hoepels
             if (!transition.Calculate(active))
                 return;
 
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
             for (int i = 0; i < width; i++)
             {
                 pixels[i] = col;
@@ -54,7 +54,7 @@ namespace Hoepels
 
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
-                RGBA col = ((hoepel % 2 == 0) ? params->getPrimaryColour() : params->getSecondaryColour()) * transition.getValue();
+                RGBA col = ((hoepel % 2 == 0) ? params->getPrimaryColor() : params->getSecondaryColor()) * transition.getValue();
                 for (int led = 0; led < 50; led++)
                 {
                     pixels[hoepel * 50 + led] = col;
@@ -84,7 +84,7 @@ namespace Hoepels
             {
                 for (int led = 0; led < 50; led++)
                 {
-                    RGBA col = params->getPrimaryColour() + (params->getSecondaryColour() * abs(float(led - 25) / 25));
+                    RGBA col = params->getPrimaryColor() + (params->getSecondaryColor() * abs(float(led - 25) / 25));
                     pixels[hoepel * 50 + led] = col * transition.getValue();
                 }
             }
@@ -228,10 +228,10 @@ namespace Hoepels
 
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
-                // RGBA col = params->getPrimaryColour() * fade[hoepel].getValue() * transition.getValue();
+                // RGBA col = params->getPrimaryColor() * fade[hoepel].getValue() * transition.getValue();
                 for (int led = 0; led < 50; led++)
                 {
-                    RGBA col = params->getHighlightColour() * fade[hoepel].getValue(led * 50) * transition.getValue();
+                    RGBA col = params->getHighlightColor() * fade[hoepel].getValue(led * 50) * transition.getValue();
                     pixels[hoepel * 50 + led] = col;
                 }
             }
@@ -278,7 +278,7 @@ namespace Hoepels
             {
                 for (int led = 0; led < 50; led++)
                 {
-                    RGBA col = params->getPrimaryColour() * chase[hoepel].getValue(led, 50) * transition.getValue();
+                    RGBA col = params->getPrimaryColor() * chase[hoepel].getValue(led, 50) * transition.getValue();
                     pixels[hoepel * 50 + led] = col;
                 }
             }
@@ -306,7 +306,7 @@ namespace Hoepels
                 return;
 
             // lfo.setPeriod(params->getVelocity(10000, 500));
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             lfo.setPeriod(params->getVelocity(10000,2000));
             lfo.setDutyCycle(params->getSize());
@@ -346,7 +346,7 @@ namespace Hoepels
             lfo.setDutyCycle(params->getSize());
             int amount = params->getAmount(1,5);
 
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
@@ -406,7 +406,7 @@ namespace Hoepels
             {
                 for (int led = 0; led < 50; led++)
                 {
-                    RGBA col = params->getSecondaryColour() * chase[hoepel].getValue(led, 50) * transition.getValue();
+                    RGBA col = params->getSecondaryColor() * chase[hoepel].getValue(led, 50) * transition.getValue();
                     pixels[hoepel * 50 + led] = col;
                 }
             }
@@ -440,7 +440,7 @@ namespace Hoepels
                 perm[which].permute();
             }
 
-            // RGBA baseCol = params->getHighlightColour() * transition.getValue();
+            // RGBA baseCol = params->getHighlightColor() * transition.getValue();
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
                 for (int led = 0; led < 50; led++)
@@ -482,7 +482,7 @@ namespace Hoepels
             lfo.setPeriod(params->getVelocity(5000, 500));
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
-                RGBA col = params->getPrimaryColour() * lfo.getValue((float)(hoepel) / 10) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue((float)(hoepel) / 10) * transition.getValue();
                 for (int led = 0; led < 50; led++)
                     pixels[hoepel * 50 + led] = col;
             }
@@ -513,7 +513,7 @@ namespace Hoepels
             int amount = params->getAmount(1,3);
             lfo.setSoftEdgeWidth(amount * 1./50);
             
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
 
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
@@ -549,7 +549,7 @@ namespace Hoepels
             lfo.setDutyCycle(params->getSize());
             int amount = params->getAmount(1,3);
             lfo.setSoftEdgeWidth(amount * 1./50);
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             for (int hoepel = 0; hoepel < 10; hoepel++)
             {
@@ -594,11 +594,11 @@ namespace Hoepels
             if (!active)
                 return;
 
-            auto col = params->getPrimaryColour();
+            auto col = params->getPrimaryColor();
             if (color == 1)
-                col = params->getSecondaryColour();
+                col = params->getSecondaryColor();
             if (color == 2)
-                col = params->getHighlightColour();
+                col = params->getHighlightColor();
 
             for (int index = 0; index < width; index++)
             {
@@ -635,7 +635,7 @@ namespace Hoepels
                 int quantized = index / 10;
                 if (perm.at[quantized] > 25)
                     continue;
-                pixels[index] += params->getSecondaryColour() * transition.getValue();
+                pixels[index] += params->getSecondaryColor() * transition.getValue();
             }
         }
     };
@@ -663,7 +663,7 @@ namespace Hoepels
 
             fade.setDuration(params->getVelocity(2000,200));
 
-            RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
             for (int i = 0; i < width; i++)
                 pixels[i] += col;
         }
@@ -703,7 +703,7 @@ namespace Hoepels
             for (int i = 0; i < 5; i++)
             {
                 fade[i].setDuration(params->getVelocity(2000,200));
-                RGBA col = params->getSecondaryColour() * fade[i].getValue() * transition.getValue();
+                RGBA col = params->getSecondaryColor() * fade[i].getValue() * transition.getValue();
                 for (int j = 0; j < 100; j++)
                     pixels[i * 100 + j] += col;
             }
@@ -723,7 +723,7 @@ namespace Hoepels
             if (!active)
                 return;
 
-            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColour() : RGBA();
+            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColor() : RGBA();
 
             for (int index = 0; index < width; index++)
                 pixels[index] = col;
@@ -754,9 +754,9 @@ namespace Hoepels
             {
                 float val = 1.025 * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000);
                 if (val < 1.0)
-                    pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000) * transition.getValue(index, width);
+                    pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000) * transition.getValue(index, width);
                 else
-                    pixels[perm.at[index]] = (params->getSecondaryColour() + (params->getHighlightColour() * (val - 1) / 0.025)) * transition.getValue(index, width);
+                    pixels[perm.at[index]] = (params->getSecondaryColor() + (params->getHighlightColor() * (val - 1) / 0.025)) * transition.getValue(index, width);
             }
         }
     };

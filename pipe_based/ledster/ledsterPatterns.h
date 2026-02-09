@@ -102,10 +102,10 @@ namespace Ledster
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA colour = params->getPrimaryColour();
+                RGBA color = params->getPrimaryColor();
                 float lfoVal = lfo.getValue(scaledAngles[index]);
-                RGBA dimmedColour = colour * transition.getValue() * lfoVal;
-                pixels[index] += dimmedColour;
+                RGBA dimmedColor = color * transition.getValue() * lfoVal;
+                pixels[index] += dimmedColor;
 
                 if (index == 200 && lfoVal > 0.5) // TODO timeline.happened
                 {
@@ -158,7 +158,7 @@ namespace Ledster
 
             for (int i = 0; i < 6; i++)
             {
-                RGBA col = params->getPrimaryColour() * fade[i].getValue() * transition.getValue();
+                RGBA col = params->getPrimaryColor() * fade[i].getValue() * transition.getValue();
                 for (int j = 0; j < 45; j++)
                     pixels[petals[i][j]] += col;
             }
@@ -188,7 +188,7 @@ namespace Ledster
                 petal = (petal + 1 + Utils::random(0,4)) % 6;
             }
 
-            RGBA col = params->getHighlightColour() * transition.getValue();
+            RGBA col = params->getHighlightColor() * transition.getValue();
             for (int j = 0; j < 45; j++)
                 pixels[petals[petal][j]] += col;
         }
@@ -223,7 +223,7 @@ namespace Ledster
                     if (hex % 2 == 0)
                         phase = 1.0 - phase;
 
-                    pixels[hexagons[hex][i]] += params->getSecondaryColour() * lfo.getValue(phase, 1500 + hex*250) * transition.getValue();
+                    pixels[hexagons[hex][i]] += params->getSecondaryColor() * lfo.getValue(phase, 1500 + hex*250) * transition.getValue();
                 }
             }
         }
@@ -251,10 +251,10 @@ namespace Ledster
             int dist = params->getVelocity(100,15);
             for (int hex = 0; hex < 10; hex++)
             {
-                RGBA colour = params->getHighlightColour() * fade.getValue(hex * dist) * transition.getValue();
+                RGBA color = params->getHighlightColor() * fade.getValue(hex * dist) * transition.getValue();
                 for (int i = 0; i < hexagons[hex].size(); i++)
                 {
-                    pixels[hexagons[hex][i]] += colour;
+                    pixels[hexagons[hex][i]] += color;
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace Ledster
 
             for (int i = 0; i < snake.size(); i++)
             {
-                pixels[snake[i]] += params->getSecondaryColour() * lfo.getValue((float)i / snake.size() * variant) * transition.getValue();
+                pixels[snake[i]] += params->getSecondaryColor() * lfo.getValue((float)i / snake.size() * variant) * transition.getValue();
             }
         }
     };
@@ -322,7 +322,7 @@ namespace Ledster
 
             for (int i = 0; i < normalizedRadii.size(); i++)
             {
-                pixels[i] += params->getPrimaryColour() * fade.getValue(normalizedRadii[i] * velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue(normalizedRadii[i] * velocity) * transition.getValue();
             }
         }
     };
@@ -353,7 +353,7 @@ namespace Ledster
             for (int ribbe = 0; ribbe < numSegments; ribbe++)
             {
                 int interval = averagePeriod + perm.at[ribbe] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval);
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval);
                 for (int j = 0; j < segmentSize; j++)
                 {
                     pixels[ribben[ribbe][j]] += col;
@@ -387,7 +387,7 @@ namespace Ledster
             for (int trailnr = 0; trailnr < 4; trailnr++)
             {
                 auto trail = trails[trailnr];
-                auto col = trailnr >= 2 ? params->getPrimaryColour() : params->getSecondaryColour();
+                auto col = trailnr >= 2 ? params->getPrimaryColor() : params->getSecondaryColor();
                 for (int i = 0; i < trail.size(); i++)
                 {
                     float phase = float(i) / trail.size() + (trailnr >= 2 ? 0.1 : 0);
@@ -406,7 +406,7 @@ namespace Ledster
     {
         PixelMap *map;
         LFO<SawDown> lfo;
-        LFO<Square> lfoColour;
+        LFO<Square> lfoColor;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
@@ -417,7 +417,7 @@ namespace Ledster
         {
             this->map = map;
             this->lfo = LFO<SawDown>(1000);
-            this->lfoColour = LFO<Square>(1000);
+            this->lfoColor = LFO<Square>(1000);
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params* params) override
@@ -427,12 +427,12 @@ namespace Ledster
 
             float amount = params->getIntensity(0.25,4);
             lfo.setPeriod(params->getVelocity(2000,500));
-            lfoColour.setPeriod(params->getVariant(2000,500));
+            lfoColor.setPeriod(params->getVariant(2000,500));
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float phase = (0.5 * abs(map->y(index)) + map->x(index)) * amount;
-                auto col = lfoColour.getValue(phase) ? params->getSecondaryColour() : params->getPrimaryColour();
+                auto col = lfoColor.getValue(phase) ? params->getSecondaryColor() : params->getPrimaryColor();
                 pixels[index] += col * lfo.getValue(phase) * transition.getValue();
             }
         }
@@ -450,7 +450,7 @@ namespace Ledster
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getPrimaryColour() * transition.getValue();
+            auto col = params->getPrimaryColor() * transition.getValue();
             for (auto petal : petals)
             {
                 for (int j = 0; j < 45; j++)
@@ -492,7 +492,7 @@ namespace Ledster
             lfo.setPeriod(params->getVelocity(1000,400));
             float phase = params->getVariant(45,45*2);
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             for (auto petal : petals)
             {
                 for (int j = 0; j < 45; j++)
@@ -522,13 +522,13 @@ namespace Ledster
                 if (notfilled[notfilledIndex] == i)
                     notfilledIndex++;
                 else
-                    pixels[i] += params->getHighlightColour() * transition.getValue();
+                    pixels[i] += params->getHighlightColor() * transition.getValue();
             }
 
             // auto hex = hexagons[9];
             // for (int j = 0; j < hex.size(); j++)
             // {
-            //     pixels[hex[j]] += params->getHighlightColour() * transition.getValue();
+            //     pixels[hex[j]] += params->getHighlightColor() * transition.getValue();
             // }
         }
     };
@@ -575,7 +575,7 @@ namespace Ledster
             for (int i = 0; i < normalizedRadii.size(); i++)
             {
                 fade.duration = perm.at[i] * trail; // + 100;
-                pixels[i] += params->getSecondaryColour() * fade.getValue(normalizedRadii[i] * velocity);
+                pixels[i] += params->getSecondaryColor() * fade.getValue(normalizedRadii[i] * velocity);
             }
         }
     };
@@ -602,7 +602,7 @@ namespace Ledster
             uint8_t val = timeline.GetTimelinePosition() < 25 ? 255 * transition.getValue() : 0;
 
             for (int index = 0; index < width / 2; index++)
-                pixels[perm.at[index]] += params->getSecondaryColour() * val;
+                pixels[perm.at[index]] += params->getSecondaryColor() * val;
         }
     };
 
@@ -642,7 +642,7 @@ namespace Ledster
                 int square = xquantized + yquantized * numSquares;
                 if (perm.at[square] > threshold / numSquares )
                     continue;
-                pixels[index] += params->getHighlightColour() * transition.getValue();
+                pixels[index] += params->getHighlightColor() * transition.getValue();
             }
         }
     };
@@ -675,7 +675,7 @@ namespace Ledster
             {
                 int permutedQuantized = perm.at[index * numSegments / width] * width / numSegments;
                 int interval = averagePeriod + permutedQuantized * (averagePeriod * precision) / width;
-                pixels[index] += params->getSecondaryColour() * lfo.getValue(0, interval);
+                pixels[index] += params->getSecondaryColor() * lfo.getValue(0, interval);
             }
         }
     };
@@ -729,7 +729,7 @@ namespace Ledster
                     cumulativeFadeValue += fade[j].getValue((((float)map->x(i) * directionsy[j] + map->y(i) * directionsx[j]) + 1.0) * 300);
                 }
 
-                pixels[i] += params->getHighlightColour() * cumulativeFadeValue * transition.getValue();
+                pixels[i] += params->getHighlightColor() * cumulativeFadeValue * transition.getValue();
             }
         }
     };
@@ -780,7 +780,7 @@ namespace Ledster
         //     timeline.SetDuration(params->getVelocity(400,100));
 
         //     timeline.FrameStart();
-        //     RGBA color = timeline.GetTimelinePosition() < 40 ? params->getHighlightColour() : RGBA(0,0,0,255);
+        //     RGBA color = timeline.GetTimelinePosition() < 40 ? params->getHighlightColor() : RGBA(0,0,0,255);
 
         //     for (int index = 0; index < width; index++)
         //         pixels[index] = color;
@@ -796,7 +796,7 @@ namespace Ledster
 
             RGBA color = RGBA(0,0,0,255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; //params->getVelocity(40,4);
@@ -822,9 +822,9 @@ namespace Ledster
             RGBA color;
             float val = fade.getValue();
             if (val >= 0.5)
-                color = params->getSecondaryColour() + RGBA(255,255,255,255) * ((val - 0.5)*2);
+                color = params->getSecondaryColor() + RGBA(255,255,255,255) * ((val - 0.5)*2);
             else 
-                color = params->getSecondaryColour() * ((val - 0.5)*2); 
+                color = params->getSecondaryColor() * ((val - 0.5)*2); 
 
             for (int index = 0; index < width; index++)
                 pixels[index] = color;
@@ -856,7 +856,7 @@ namespace Ledster
 
             for (int ribbe = 0; ribbe < numVisible; ribbe++)
             {
-                RGBA col = params->getHighlightColour() * fade.getValue();
+                RGBA col = params->getHighlightColor() * fade.getValue();
                 for (int j = 0; j < segmentSize; j++)
                 {
                     pixels[ribben[perm.at[ribbe]][j]] += col;
@@ -927,7 +927,7 @@ namespace Ledster
 
             for (int i = 0; i < normalizedRadii.size(); i++)
             {
-                pixels[i] += params->getPrimaryColour() * fade.getValue((1.-normalizedRadii[i]) * velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue((1.-normalizedRadii[i]) * velocity) * transition.getValue();
             }
         }
     };

@@ -19,7 +19,7 @@ hyp->addPipe(
 ```
 hyp->createChain(
     new PatternInput<Monochrome>(SIZE, new WavePattern()),
-    new ConvertColor<Monochrome, Monochrome12>(GammaLut12),
+    new ColorConverter<Monochrome, Monochrome12>(GammaLut12),
     new PWMOutput(1)
 );
 ```

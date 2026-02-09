@@ -97,8 +97,8 @@ namespace Patterns
             if (!transition.Calculate(active))
                 return; // the fade out is done. we can skip calculating pattern data
 
-            auto col1 = params->getPrimaryColour() * transition.getValue();
-            auto col2 = params->getSecondaryColour() * transition.getValue();
+            auto col1 = params->getPrimaryColor() * transition.getValue();
+            auto col2 = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.01, 0.1);
             float zoffset = params->getVariant(0, -0.2);
             ring1.setPeriod(params->getVelocity(20000, 2000));
@@ -177,7 +177,7 @@ namespace Patterns
                 {
                     float y = fromBottom(map->y(i));
                     float fadePosition = fade[column].getValue(y * velocity);
-                    RGBA color = params->getPrimaryColour();
+                    RGBA color = params->getPrimaryColor();
                     pixels[i] = color * fadePosition * (1 - y) * transition.getValue();
                 }
             }
@@ -209,7 +209,7 @@ namespace Patterns
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                // RGBA color = params->getPrimaryColour();
+                // RGBA color = params->getPrimaryColor();
                 RGBA color = params->getGradient(fromTop(map->y(index)) * 255);
                 pixels[index] = color * lfo.getValue(normalize(map->z(index))) * transition.getValue();
             }
@@ -266,7 +266,7 @@ namespace Patterns
             for (int i = 0; i < numWindows; i++)
             {
                 int startIndex = i * windowSize;
-                RGBA col = params->getSecondaryColour() * fade[i].getValue() * transition.getValue();
+                RGBA col = params->getSecondaryColor() * fade[i].getValue() * transition.getValue();
                 for (int j = 0; j < windowSize; j++)
                     pixels[startIndex + j] += col;
             }

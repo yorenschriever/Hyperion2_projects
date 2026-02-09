@@ -2,7 +2,7 @@
 #include "distribution/inputs/fallbackInput.hpp"
 #include "pattern.hpp"
 
-LUT *NeopixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 255);
+LUT *NeopixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 255);
 
 const int channelCount = 8;
 

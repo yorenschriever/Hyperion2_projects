@@ -11,7 +11,7 @@
 #include "patterns/patterns.hpp"
 #include "patterns/masks.hpp"
 
-LUT *NeopixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 255);
+LUT *NeopixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 255);
 
 void addPaletteColumn(Hyperion *hyp, const int col);
 void addHexagonPipe(Hyperion * hyp);

@@ -27,9 +27,9 @@ public:
         {
             float val = 1.025 * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000);
             if (val < 1.0)
-                pixels[perm.at[index]] = params->getPrimaryColour() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000);
+                pixels[perm.at[index]] = params->getPrimaryColor() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000);
             else
-                pixels[perm.at[index]] = params->getPrimaryColour() + (params->getSecondaryColour() * (val - 1) / 0.025);
+                pixels[perm.at[index]] = params->getPrimaryColor() + (params->getSecondaryColor() * (val - 1) / 0.025);
         }
     }
 };
@@ -61,9 +61,9 @@ public:
 
         for (int index = 0; index < width; index++)
         {
-            RGBA colour = (index - width*noise[index] > 0.5) ? params->getSecondaryColour() : params->getPrimaryColour();
-            RGBA dimmedColour = colour * transition.getValue();
-            pixels[index] = dimmedColour;
+            RGBA color = (index - width*noise[index] > 0.5) ? params->getSecondaryColor() : params->getPrimaryColor();
+            RGBA dimmedColor = color * transition.getValue();
+            pixels[index] = dimmedColor;
         }
     }
 };
@@ -87,9 +87,9 @@ public:
 
         for (int index = 0; index < width; index++)
         {
-            RGBA colour = params->getPrimaryColour() + params->getSecondaryColour()* ((float)index / width);
-            RGBA dimmedColour = colour * transition.getValue();
-            pixels[index] = dimmedColour;
+            RGBA color = params->getPrimaryColor() + params->getSecondaryColor()* ((float)index / width);
+            RGBA dimmedColor = color * transition.getValue();
+            pixels[index] = dimmedColor;
         }
     }
 };
@@ -120,9 +120,9 @@ public:
 
         for (int index = 0; index < std::min(width, (int)map->size()); index++)
         {
-            RGBA colour = (map->operator[](index).x + noise[index % maxNoiseMapSize] < 0) ? params->getSecondaryColour() : params->getPrimaryColour();
-            RGBA dimmedColour = colour * transition.getValue();
-            pixels[index] += dimmedColour;
+            RGBA color = (map->operator[](index).x + noise[index % maxNoiseMapSize] < 0) ? params->getSecondaryColor() : params->getPrimaryColor();
+            RGBA dimmedColor = color * transition.getValue();
+            pixels[index] += dimmedColor;
         }
     }
 };

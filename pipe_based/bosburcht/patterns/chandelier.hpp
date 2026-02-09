@@ -35,8 +35,8 @@ namespace Patterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = map->r(index) * height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour * h * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color * h * transition.getValue();
             }
         }
     };
@@ -68,8 +68,8 @@ namespace Patterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = map->r(index) * height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour * h * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color * h * transition.getValue();
             }
         }
     };
@@ -102,7 +102,7 @@ namespace Patterns
             for (int bar = 0; bar < width; bar += segmentSize)
             {
                 for (int i = 0; i < segmentSize; i++)
-                    pixels[bar + i] = params->getSecondaryColour() * lfo.getValue(amount* float(bar) / width);
+                    pixels[bar + i] = params->getSecondaryColor() * lfo.getValue(amount* float(bar) / width);
             }
         }
     };
@@ -242,7 +242,7 @@ class GradientLFO : public Pattern<RGBA>
                 {
                     int distance = abs(centers[bar] - i);
                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-                    pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+                    pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
                 }
             }
         }

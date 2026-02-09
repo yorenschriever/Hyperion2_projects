@@ -46,7 +46,7 @@ namespace Min
             // for (int ribbe = 0; ribbe < numSegments; ribbe++)
             // {
             //     int interval = averagePeriod + perm.at[ribbe] * (averagePeriod * precision) / numSegments;
-            //     RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval);
+            //     RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval);
             //     for (int j = 0; j < segmentSize; j++)
             //     {
             //         pixels[ribbe * segmentSize + j] = col;
@@ -59,9 +59,9 @@ namespace Min
             for (int segment = 0; segment < numSegments; segment++)
             {
                 // int randomSegment = perm.at[segment];
-                // RGBA col = params->getPrimaryColour() * lfo.getValue(float(randomSegment)/numSegments);
+                // RGBA col = params->getPrimaryColor() * lfo.getValue(float(randomSegment)/numSegments);
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     //if (isLedster)
                     //    pixels[LedsterShapes::ribben[segment][j]] += col;
@@ -105,7 +105,7 @@ namespace Min
 
             for (int ribbe = 0; ribbe < numVisible; ribbe++)
             {
-                RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+                RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
                 // if (isLedster)
                 //     for (int j = 0; j < segmentSize; j++)
                 //         pixels[LedsterShapes::ribben[perm.at[ribbe]][j]] += col;
@@ -223,7 +223,7 @@ namespace Min
                 for (int column = 0; column < 6; column++)
                 {
                     float fadePosition = fade[column].getValue(radii[column][i] * velocity);
-                    RGBA color = params->getPrimaryColour();
+                    RGBA color = params->getPrimaryColor();
                     pixels[i] += color * fadePosition * transition.getValue();
                 }
             }
@@ -260,7 +260,7 @@ namespace Min
             for (int i = 0; i < width; i++)
             {
                 float fadePosition = fade.getValue((1 + map->z(i)) * velocity);
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 pixels[i] += color * fadePosition;
             }
         }
@@ -293,7 +293,7 @@ namespace Min
             {
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };

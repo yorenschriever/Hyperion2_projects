@@ -55,7 +55,7 @@ public:
 
         for (int i = 0; i < normalizedRadii.size(); i++)
         {
-            pixels[i] += params->getPrimaryColour() * fade.getValue(normalizedRadii[i] * velocity) * transition.getValue();
+            pixels[i] += params->getPrimaryColor() * fade.getValue(normalizedRadii[i] * velocity) * transition.getValue();
         }
     }
 };
@@ -64,7 +64,7 @@ class ChevronsPattern : public Pattern<RGBA>
 {
     PixelMap *map;
     LFO<SawDown> lfo;
-    LFO<Square> lfoColour;
+    LFO<Square> lfoColor;
     Transition transition = Transition(
         200, Transition::none, 0,
         1000, Transition::none, 0);
@@ -75,7 +75,7 @@ public:
     {
         this->map = map;
         this->lfo = LFO<SawDown>(1000);
-        this->lfoColour = LFO<Square>(1000);
+        this->lfoColor = LFO<Square>(1000);
     }
 
     inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -85,12 +85,12 @@ public:
 
         float amount = params->getIntensity(0.25, 4);
         lfo.setPeriod(params->getVelocity(2000, 500));
-        lfoColour.setPeriod(params->getVariant(2000, 500));
+        lfoColor.setPeriod(params->getVariant(2000, 500));
 
         for (int index = 0; index < std::min(width, (int)map->size()); index++)
         {
             float phase = (0.5 * abs(map->x(index)) + map->y(index)) * amount;
-            auto col = lfoColour.getValue(phase) ? params->getSecondaryColour() : params->getPrimaryColour();
+            auto col = lfoColor.getValue(phase) ? params->getSecondaryColor() : params->getPrimaryColor();
             pixels[index] += col * lfo.getValue(phase) * transition.getValue();
         }
     }
@@ -138,7 +138,7 @@ public:
         for (int i = 0; i < normalizedRadii.size(); i++)
         {
             fade.duration = perm.at[i] * trail; // + 100;
-            pixels[i] += params->getSecondaryColour() * fade.getValue(normalizedRadii[i] * velocity);
+            pixels[i] += params->getSecondaryColor() * fade.getValue(normalizedRadii[i] * velocity);
         }
     }
 };
@@ -165,7 +165,7 @@ class PixelGlitchPattern : public Pattern<RGBA>
         uint8_t val = timeline.GetTimelinePosition() < 25 ? 255 * transition.getValue() : 0;
 
         for (int index = 0; index < width / 30; index++)
-            pixels[perm.at[index]] += params->getSecondaryColour() * val;
+            pixels[perm.at[index]] += params->getSecondaryColor() * val;
     }
 };
 
@@ -200,7 +200,7 @@ public:
         {
             int permutedQuantized = perm.at[index * numSegments / width] * width / numSegments;
             int interval = averagePeriod + permutedQuantized * (averagePeriod * precision) / width;
-            pixels[index] += params->getSecondaryColour() * lfo.getValue(0, interval) * transition.getValue();
+            pixels[index] += params->getSecondaryColor() * lfo.getValue(0, interval) * transition.getValue();
         }
     }
 };
@@ -288,7 +288,7 @@ class StrobePattern : public Pattern<RGBA>
 
         RGBA color = RGBA(0, 0, 0, 255);
         if (framecounter <= 1)
-            color = params->getPrimaryColour();
+            color = params->getPrimaryColor();
 
         if (framecounter == 0)
             framecounter = 5; // params->getVelocity(40,4);
@@ -315,9 +315,9 @@ class FlashesPattern : public Pattern<RGBA>
         RGBA color;
         float val = fade.getValue();
         if (val >= 0.5)
-            color = params->getSecondaryColour() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2);
+            color = params->getSecondaryColor() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2);
         else
-            color = params->getSecondaryColour() * ((val - 0.5) * 2);
+            color = params->getSecondaryColor() * ((val - 0.5) * 2);
 
         for (int index = 0; index < width; index++)
             pixels[index] = color;
@@ -395,7 +395,7 @@ public:
 
         float velocity = params->getVelocity(600, 100);
         fade.duration = params->getSize(250,20);
-        RGBA color = params->getHighlightColour();
+        RGBA color = params->getHighlightColor();
 
         for (int i = 0; i < width; i++)
             pixels[i] += color * fade.getValue((0.8 - map->y(i)) * velocity);
@@ -464,10 +464,10 @@ public:
         for (int index = 0; index < std::min(width, (int)map->size()); index++)
         {
             // float phase = (map->x(index) + 1) / 2.;
-            // RGBA colour = params->getSecondaryColour() + params->getPrimaryColour() * phase;
-            RGBA colour = params->getGradient(abs(map->x(index)) * 255);
-            RGBA dimmedColour = colour * transition.getValue();
-            pixels[index] += dimmedColour;
+            // RGBA color = params->getSecondaryColor() + params->getPrimaryColor() * phase;
+            RGBA color = params->getGradient(abs(map->x(index)) * 255);
+            RGBA dimmedColor = color * transition.getValue();
+            pixels[index] += dimmedColor;
         }
     }
 };
@@ -489,11 +489,11 @@ public:
         for (int index = 0; index < std::min(width, (int)map->size()); index++)
         {
             if (map->y(index) > 0.7) 
-                pixels[index] = params->getHighlightColour();
+                pixels[index] = params->getHighlightColor();
             else if (map->y(index) > 0.6) 
-                pixels[index] = params->getSecondaryColour();
+                pixels[index] = params->getSecondaryColor();
             else if (map->y(index) > 0.5) 
-                pixels[index] = params->getPrimaryColour();
+                pixels[index] = params->getPrimaryColor();
             else
                 pixels[index] = params->getGradient(Utils::rescale(map->x(index),0,255,-1,1));
         }
@@ -526,7 +526,7 @@ public:
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
                 pixels[index] = color * lfo.getValue(-2 * around(map->th(index))) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -566,7 +566,7 @@ public:
                 return;
 
             
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.02,0.1);
             lfoX.setPeriod(params->getVelocity(4*20000,2000));
             lfoZ.setPeriod(params->getVelocity(4*14000,1400));
@@ -620,7 +620,7 @@ public:
     //         for (int i = 0; i < width; i++)
     //         {
     //             float fadePosition = fade.getValue((1 + map->y(i)) * velocity);
-    //             RGBA color = params->getHighlightColour();
+    //             RGBA color = params->getHighlightColor();
     //             pixels[i] += color * fadePosition; // * transition.getValue();
     //         }
     //     }
@@ -646,7 +646,7 @@ public:
                 return;
             }
 
-            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColour() : RGBA();
+            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColor() : RGBA();
             int directionUp = params->getVariant() > 0.5;
 
             for (int i = 0; i < map->size(); i++)
@@ -731,7 +731,7 @@ public:
             {
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] = params->getHighlightColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getHighlightColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };
@@ -786,7 +786,7 @@ public:
                 for (int column = 0; column < 6; column++)
                 {
                     float fadePosition = fade[column].getValue(radii[column][i] * velocity);
-                    RGBA color = params->getPrimaryColour();
+                    RGBA color = params->getPrimaryColor();
                     pixels[i] += color * fadePosition * transition.getValue();
                 }
             }
@@ -829,7 +829,7 @@ public:
             // for (int ribbe = 0; ribbe < numSegments; ribbe++)
             // {
             //     int interval = averagePeriod + perm.at[ribbe] * (averagePeriod * precision) / numSegments;
-            //     RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval);
+            //     RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval);
             //     for (int j = 0; j < segmentSize; j++)
             //     {
             //         pixels[ribbe * segmentSize + j] = col;
@@ -842,9 +842,9 @@ public:
             for (int segment = 0; segment < numSegments; segment++)
             {
                 // int randomSegment = perm.at[segment];
-                // RGBA col = params->getPrimaryColour() * lfo.getValue(float(randomSegment)/numSegments);
+                // RGBA col = params->getPrimaryColor() * lfo.getValue(float(randomSegment)/numSegments);
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[segment * segmentSize + j] = col;
             }

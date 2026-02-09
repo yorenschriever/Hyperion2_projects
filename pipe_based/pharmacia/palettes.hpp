@@ -1,5 +1,5 @@
 #pragma once
-#include "colours.h"
+#include "colors.h"
 #include "generation/controlHub/paletteColumn.hpp"
 #include "generation/gradient.hpp"
 

@@ -1,6 +1,6 @@
 
 #include "core/hyperion.hpp"
-#include "colours.h"
+#include "colors.h"
 #include "distribution/inputs/patternInput.hpp"
 #include "distribution/outputs/pwmOutput.hpp"
 #include "generation/patterns/pattern.hpp"

@@ -38,7 +38,7 @@ namespace Ophanim
             if (!transition.Calculate(active))
                 return;
 
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
             for (int i = 0; i < width; i++)
             {
                 pixels[i] = col;
@@ -66,7 +66,7 @@ namespace Ophanim
                 return;
 
 
-                RGBA col = ((hoepel % 2 == 0) ? params->getPrimaryColour() : params->getSecondaryColour()) * transition.getValue();
+                RGBA col = ((hoepel % 2 == 0) ? params->getPrimaryColor() : params->getSecondaryColor()) * transition.getValue();
                 for (int led = 0; led < width; led++)
                 {
                     pixels[led] = col;
@@ -96,7 +96,7 @@ namespace Ophanim
     //         {
     //             for (int led = 0; led < RINGSIZE; led++)
     //             {
-    //                 RGBA col = params->getPrimaryColour() + (params->getSecondaryColour() * abs(float(led - RINGSIZE/2) / RINGSIZE/2));
+    //                 RGBA col = params->getPrimaryColor() + (params->getSecondaryColor() * abs(float(led - RINGSIZE/2) / RINGSIZE/2));
     //                 pixels[hoepel * RINGSIZE + led] = col * transition.getValue();
     //             }
     //         }
@@ -240,10 +240,10 @@ namespace Ophanim
 
     //         for (int hoepel = 0; hoepel < 2; hoepel++)
     //         {
-    //             // RGBA col = params->getPrimaryColour() * fade[hoepel].getValue() * transition.getValue();
+    //             // RGBA col = params->getPrimaryColor() * fade[hoepel].getValue() * transition.getValue();
     //             for (int led = 0; led < RINGSIZE; led++)
     //             {
-    //                 RGBA col = params->getHighlightColour() * fade[hoepel].getValue(led * RINGSIZE) * transition.getValue();
+    //                 RGBA col = params->getHighlightColor() * fade[hoepel].getValue(led * RINGSIZE) * transition.getValue();
     //                 pixels[hoepel * RINGSIZE + led] = col;
     //             }
     //         }
@@ -282,7 +282,7 @@ namespace Ophanim
     //         {
     //             for (int led = 0; led < RINGSIZE; led++)
     //             {
-    //                 RGBA col = params->getPrimaryColour() * chase[hoepel].getValue(led, RINGSIZE) * transition.getValue();
+    //                 RGBA col = params->getPrimaryColor() * chase[hoepel].getValue(led, RINGSIZE) * transition.getValue();
     //                 pixels[hoepel * RINGSIZE + led] = col;
     //             }
     //         }
@@ -310,7 +310,7 @@ namespace Ophanim
                 return;
 
             // lfo.setPeriod(params->getVelocity(10000, 500));
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             lfo.setPeriod(params->getVelocity(10000,2000));
             lfo.setDutyCycle(params->getSize());
@@ -348,7 +348,7 @@ namespace Ophanim
             lfo.setDutyCycle(params->getSize());
             int amount = params->getAmount(1,5);
 
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             for (int led = 0; led < width; led++)
             {
@@ -396,7 +396,7 @@ namespace Ophanim
     //         {
     //             for (int led = 0; led < RINGSIZE; led++)
     //             {
-    //                 RGBA col = params->getSecondaryColour() * chase[hoepel].getValue(led, RINGSIZE) * transition.getValue();
+    //                 RGBA col = params->getSecondaryColor() * chase[hoepel].getValue(led, RINGSIZE) * transition.getValue();
     //                 pixels[hoepel * RINGSIZE + led] = col;
     //             }
     //         }
@@ -430,7 +430,7 @@ namespace Ophanim
     //             perm[which].permute();
     //         }
 
-    //         // RGBA baseCol = params->getHighlightColour() * transition.getValue();
+    //         // RGBA baseCol = params->getHighlightColor() * transition.getValue();
     //         for (int hoepel = 0; hoepel < 2; hoepel++)
     //         {
     //             for (int led = 0; led < RINGSIZE; led++)
@@ -472,7 +472,7 @@ namespace Ophanim
             lfo.setPeriod(params->getVelocity(5000, 500));
 
             for (int led = 0; led < width; led++)
-                pixels[led] = params->getPrimaryColour() * lfo.getValue() * transition.getValue();
+                pixels[led] = params->getPrimaryColor() * lfo.getValue() * transition.getValue();
         }
     };
 
@@ -500,7 +500,7 @@ namespace Ophanim
             int amount = params->getAmount(1,5);
             lfo.setSoftEdgeWidth(amount * 1./50);
             
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
 
             float dir = 1; // hoepel % 2 ==0 ? 1 : -1;
             for (int led = 0; led < width; led++)
@@ -534,7 +534,7 @@ namespace Ophanim
             lfo.setDutyCycle(params->getSize());
             int amount = params->getAmount(1,3);
             lfo.setSoftEdgeWidth(amount * 1./50);
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
 
             int hoepel=0;
             float dir = hoepel % 2 == 0 ? 1 : -1;
@@ -578,11 +578,11 @@ namespace Ophanim
             if (!active)
                 return;
 
-            auto col = params->getPrimaryColour();
+            auto col = params->getPrimaryColor();
             if (color == 1)
-                col = params->getSecondaryColour();
+                col = params->getSecondaryColor();
             if (color == 2)
-                col = params->getHighlightColour();
+                col = params->getHighlightColor();
 
             for (int index = 0; index < width; index++)
             {
@@ -619,7 +619,7 @@ namespace Ophanim
                 int quantized = index / 10;
                 if (perm.at[quantized] > 25)
                     continue;
-                pixels[index] += params->getSecondaryColour() * transition.getValue();
+                pixels[index] += params->getSecondaryColor() * transition.getValue();
             }
         }
     };
@@ -647,7 +647,7 @@ namespace Ophanim
 
             fade.setDuration(params->getVelocity(2000,200));
 
-            RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
             for (int i = 0; i < width; i++)
                 pixels[i] += col;
         }
@@ -687,7 +687,7 @@ namespace Ophanim
             for (int i = 0; i < 5; i++)
             {
                 fade[i].setDuration(params->getVelocity(2000,200));
-                RGBA col = params->getSecondaryColour() * fade[i].getValue() * transition.getValue();
+                RGBA col = params->getSecondaryColor() * fade[i].getValue() * transition.getValue();
                 for (int j = 0; j < 100; j++)
                     pixels[i * 100 + j] += col;
             }
@@ -707,7 +707,7 @@ namespace Ophanim
             if (!active)
                 return;
 
-            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColour() : RGBA();
+            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColor() : RGBA();
 
             for (int index = 0; index < width; index++)
                 pixels[index] = col;
@@ -738,9 +738,9 @@ namespace Ophanim
             {
                 float val = 1.025 * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000);
                 if (val < 1.0)
-                    pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000) * transition.getValue(index, width);
+                    pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(Transition::fromCenter(index, width, 1000)) / -1000) * transition.getValue(index, width);
                 else
-                    pixels[perm.at[index]] = (params->getSecondaryColour() + (params->getHighlightColour() * (val - 1) / 0.025)) * transition.getValue(index, width);
+                    pixels[perm.at[index]] = (params->getSecondaryColor() + (params->getHighlightColor() * (val - 1) / 0.025)) * transition.getValue(index, width);
             }
         }
     };

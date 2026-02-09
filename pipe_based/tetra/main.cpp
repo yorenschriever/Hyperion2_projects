@@ -3,7 +3,7 @@
 #include "ShapeChaserLedAnimation.h"
 #include "ShapeChaserLedAnimation.h"
 #include "animationPattern.h"
-#include "colours.h"
+#include "colors.h"
 #include "core/distribution/inputs/inputSplitter.hpp"
 #include "core/distribution/inputs/patternInput.hpp"
 #include "core/distribution/inputs/udpInput.hpp"

@@ -1,5 +1,5 @@
 #include "core/distribution/inputs/inputSlicer.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/luts/incandescentLut.hpp"
 #include "core/distribution/luts/laserLut.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
@@ -59,7 +59,7 @@
 #include "videos/processed/Wave_mask_2.hpp"
 #endif
 
-LUT *columnsLut = nullptr; // new ColourCorrectionLUT(1, 255, 200, 200, 200);
+LUT *columnsLut = nullptr; // new ColorCorrectionLUT(1, 255, 200, 200, 200);
 LUT *incandescentLut8 = new IncandescentLUT(2.5, 255, 24);
 LUT *laserLut = new LaserLUT(0.5, 4096, 3048);
 

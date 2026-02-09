@@ -62,7 +62,7 @@ namespace Hi
             if (!transition.Calculate(active))
                 return;
  
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.01,0.03);
             lfoX.setPeriod(params->getVelocity(4*20000,2000));
             lfoZ.setPeriod(params->getVelocity(4*14000,1400));
@@ -105,7 +105,7 @@ namespace Hi
             lfo.setPeriod(params->getVelocity(4000,400));
             float phase = params->getOffset(0,45);
 
-            //auto col = params->getPrimaryColour() * transition.getValue();
+            //auto col = params->getPrimaryColor() * transition.getValue();
             int petalIndex=0;
             for (auto petal : LedsterShapes::petals)
             {
@@ -148,10 +148,10 @@ namespace Hi
 
             for (int hex = 0; hex < 10; hex++)
             {
-                RGBA colour = params->getSecondaryColour() * fade.getValue(hex * dist) * transition.getValue();
+                RGBA color = params->getSecondaryColor() * fade.getValue(hex * dist) * transition.getValue();
                 for (int i = 0; i < LedsterShapes::hexagons[hex].size(); i++)
                 {
-                    pixels[LedsterShapes::hexagons[hex][i]] = colour;
+                    pixels[LedsterShapes::hexagons[hex][i]] = color;
                 }
             }
         }

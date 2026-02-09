@@ -1,5 +1,5 @@
 #include "core/distribution/inputs/inputSplitter.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
 #include "core/distribution/outputs/spiOutput.hpp"
 #include "core/hyperion.hpp"

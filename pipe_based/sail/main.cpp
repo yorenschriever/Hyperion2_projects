@@ -1,5 +1,5 @@
 #include "core/distribution/inputs/inputSplitter.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
 #include "core/distribution/outputs/spiOutput.hpp"
 #include "core/hyperion.hpp"
@@ -9,7 +9,7 @@
 #include "sailMap.hpp"
 #include <vector>
 
-LUT *ledsterLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+LUT *ledsterLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 auto pSailMap = sailMap.toPolarRotate90();
 

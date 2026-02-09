@@ -1,5 +1,5 @@
 #include "core/distribution/inputs/inputSlicer.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
 #include "core/distribution/outputs/spiOutput.hpp"
 #include "core/hyperion.hpp"
@@ -12,7 +12,7 @@
 #include "mapping/windowMap3dCombined.hpp"
 #include "palettes.hpp"
 #include "core/generation/palettes.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/generation/pixelMapSplitter3d.hpp"
 #include "patterns/ceiling.hpp"
 #include "patterns/common.hpp"
@@ -58,7 +58,7 @@
 #endif
 
 //2.7 gamma experimentally determined in dark environment
-LUT *columnsLut = new ColourCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *columnsLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 
 auto cwindowMap3dCombined = windowMap3dCombined.toCylindricalXZ(0, chandelierYOffset);
 auto cchandelierMap3dCombined = chandelierMap3dCombined.toCylindricalXZ(0, chandelierYOffset);

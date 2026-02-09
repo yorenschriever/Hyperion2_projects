@@ -45,7 +45,7 @@ template <class T>
             // for (int ribbe = 0; ribbe < numSegments; ribbe++)
             // {
             //     int interval = averagePeriod + perm.at[ribbe] * (averagePeriod * precision) / numSegments;
-            //     RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval);
+            //     RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval);
             //     for (int j = 0; j < segmentSize; j++)
             //     {
             //         pixels[ribbe * segmentSize + j] = col;
@@ -58,9 +58,9 @@ template <class T>
             for (int segment = 0; segment < numSegments; segment++)
             {
                 // int randomSegment = perm.at[segment];
-                // RGBA col = params->getPrimaryColour() * lfo.getValue(float(randomSegment)/numSegments);
+                // RGBA col = params->getPrimaryColor() * lfo.getValue(float(randomSegment)/numSegments);
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[segment * segmentSize + j] = col;
             }
@@ -100,7 +100,7 @@ class RibbenFlashPattern : public Pattern<RGBA>
 
             for (int ribbe = 0; ribbe < numVisible; ribbe++)
             {
-                RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+                RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[perm.at[ribbe] * segmentSize + j] += col;
             }
@@ -177,7 +177,7 @@ class SegmentChasePattern : public Pattern<RGBA>
             {
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };

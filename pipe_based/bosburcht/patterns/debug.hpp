@@ -89,7 +89,7 @@ namespace Patterns
                 return;
 
             for (int i = 0; i < width; i++)
-                pixels[i] = i<width/2 ? params->getPrimaryColour() : params->getSecondaryColour();
+                pixels[i] = i<width/2 ? params->getPrimaryColor() : params->getSecondaryColor();
         }
     };
 

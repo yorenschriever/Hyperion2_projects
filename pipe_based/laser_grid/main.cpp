@@ -2,7 +2,7 @@
 #include "mapping/ledMap.hpp"
 #include "patterns.hpp"
 
-// LUT *ledsterLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+// LUT *ledsterLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 // auto cLedsterMap3d = ledsterMap3d.toCylindricalXZ();
 

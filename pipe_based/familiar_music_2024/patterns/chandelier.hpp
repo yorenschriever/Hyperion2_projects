@@ -34,8 +34,8 @@ namespace Patterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = map->r(index) * height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour * h * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color * h * transition.getValue();
             }
         }
     };
@@ -67,8 +67,8 @@ namespace Patterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = map->r(index) * height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour * h * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color * h * transition.getValue();
             }
         }
     };
@@ -101,7 +101,7 @@ namespace Patterns
             for (int bar = 0; bar < width; bar += segmentSize)
             {
                 for (int i = 0; i < segmentSize; i++)
-                    pixels[bar + i] = params->getSecondaryColour() * lfo.getValue(amount* float(bar) / width) * transition.getValue();
+                    pixels[bar + i] = params->getSecondaryColor() * lfo.getValue(amount* float(bar) / width) * transition.getValue();
             }
         }
     };
@@ -196,7 +196,7 @@ class GradientLFO : public Pattern<RGBA>
                 {
                     int distance = abs(centers[bar] - i);
                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-                    pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+                    pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
                 }
             }
         }
@@ -248,8 +248,8 @@ class VerticallyIsolated : public Pattern<RGBA>
             if (!transition.Calculate(active))
                 return; // the fade out is done. we can skip calculating pattern data
 
-            auto col1 = params->getPrimaryColour() * transition.getValue();
-            auto col2 = params->getSecondaryColour() * transition.getValue();
+            auto col1 = params->getPrimaryColor() * transition.getValue();
+            auto col2 = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.01, 0.1);
             float zoffset = params->getVariant(0, -0.2);
             ring1.setPeriod(params->getVelocity(20000, 2000));
@@ -320,7 +320,7 @@ class VerticallyIsolated : public Pattern<RGBA>
                 {
                     float y = fromBottom(map->y(i));
                     float fadePosition = fade[column].getValue(y * velocity);
-                    RGBA color = params->getPrimaryColour();
+                    RGBA color = params->getPrimaryColor();
                     pixels[i] = color * fadePosition * (1 - y) * transition.getValue();
                 }
             }
@@ -352,7 +352,7 @@ class VerticallyIsolated : public Pattern<RGBA>
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                // RGBA color = params->getPrimaryColour();
+                // RGBA color = params->getPrimaryColor();
                 RGBA color = params->getGradient(fromBottom(map->y(index)) * 255);
                 pixels[index] = color * lfo.getValue(normalize(map->z(index))) * transition.getValue();
             }
@@ -384,7 +384,7 @@ class VerticallyIsolated : public Pattern<RGBA>
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                // RGBA color = params->getPrimaryColour();
+                // RGBA color = params->getPrimaryColor();
                 RGBA color = params->getGradient(fromBottom(map->y(index)) * 255);
                 pixels[index] = color * lfo.getValue(normalize(map->y(index))) * transition.getValue();
             }
@@ -458,7 +458,7 @@ class VerticallyIsolated : public Pattern<RGBA>
             for (int i = 0; i < width; i++)
             {
                 float phase = ((float)i / width) * amount * 48 + float(i % (width / 2)) * offset / width;
-                pixels[zigzagIndices[i]] = params->getSecondaryColour() * lfo.getValue(phase) * transition.getValue();
+                pixels[zigzagIndices[i]] = params->getSecondaryColor() * lfo.getValue(phase) * transition.getValue();
             }
         }
     };

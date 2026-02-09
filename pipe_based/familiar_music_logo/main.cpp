@@ -7,7 +7,7 @@
 #include "patterns-monochrome.hpp"
 
 LUT *incandescentLut8 = new IncandescentLUT(2.5, 255, 24);
-LUT *trianglesLut = new ColourCorrectionLUT(1.8, 255, 200, 200, 200);
+LUT *trianglesLut = new ColorCorrectionLUT(1.8, 255, 200, 200, 200);
 
 // void addLedPipe(Hyperion *hyp);
 // void addBulbPipe(Hyperion *hyp);

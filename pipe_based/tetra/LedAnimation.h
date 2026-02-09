@@ -5,7 +5,7 @@ using namespace std;
 
 #include "LedShape.h"
 #include "core/gradient.hpp"
-#include "colours.h"
+#include "colors.h"
 #include <stdint.h>
 
 #define LINEARBLEND 0

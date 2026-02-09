@@ -12,7 +12,7 @@ void addWings(Hyperion *hyp);
 
 void addPaletteColumn(Hyperion *hyp);
 
-LUT *pixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+LUT *pixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 PixelMap3d::Cylindrical cWingsMap = wingsMap.toCylindricalXY();
 

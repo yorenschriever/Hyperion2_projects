@@ -98,11 +98,11 @@ namespace TestPatterns
 
                 pos = pos - gradientSize;
                 if (pos < staticColorSize){
-                    pixels[i] = params->getPrimaryColour();
+                    pixels[i] = params->getPrimaryColor();
                 } else if (pos < 2 * staticColorSize){
-                    pixels[i] = params->getSecondaryColour();
+                    pixels[i] = params->getSecondaryColor();
                 } else {
-                    pixels[i] = params->getHighlightColour();
+                    pixels[i] = params->getHighlightColor();
                 } 
             }
         }

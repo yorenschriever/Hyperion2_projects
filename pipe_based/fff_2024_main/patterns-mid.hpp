@@ -31,7 +31,7 @@ namespace Mid
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
                 pixels[index] = color * lfo.getValue(-2 * around(map->th(index))) * fromMid(map->operator[](index)) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -58,7 +58,7 @@ namespace Mid
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
@@ -89,7 +89,7 @@ namespace Mid
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
@@ -137,7 +137,7 @@ namespace Mid
             for (int i = 0; i < 4; i++)
                 fade[i].duration = duration;
 
-            auto col = params->getPrimaryColour() * transition.getValue();
+            auto col = params->getPrimaryColor() * transition.getValue();
 
             // columns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
@@ -173,7 +173,7 @@ namespace Mid
                 if (map->z(index) < 0.44)
                     continue;
 
-                pixels[index] = params->getPrimaryColour() * transition.getValue() * Utils::rescale(map->r(index), 0, 1, 1.02, 1.15);
+                pixels[index] = params->getPrimaryColor() * transition.getValue() * Utils::rescale(map->r(index), 0, 1, 1.02, 1.15);
             }
         }
     };
@@ -283,7 +283,7 @@ namespace Mid
             {
                 if (map->z(i) < 0.44)
                     continue;
-                pixels[i] = params->getHighlightColour();
+                pixels[i] = params->getHighlightColor();
             }
         }
     };

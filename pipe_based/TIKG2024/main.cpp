@@ -1,6 +1,6 @@
 #include "core/distribution/inputs/inputSlicer.hpp"
 #include "core/distribution/inputs/inputSplitter.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/luts/gammaLut.hpp"
 #include "core/distribution/luts/incandescentLut.hpp"
 #include "core/distribution/luts/laserLut.hpp"
@@ -28,13 +28,13 @@ void addPaletteColumn(Hyperion *hyp);
 void addLed1Column(Hyperion *hyp);
 //void addLed2Column(Hyperion *hyp);
 
-// LUT *PixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+// LUT *PixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 // LUT *LaserLut = new LaserLUT(0.5, 4096, 3048);
 // LUT *IncandescentLut = new IncandescentLUT(2.5, 4096, 200);
 // LUT *IncandescentLut8 = new IncandescentLUT(2.5, 255, 24);
 // LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 // LUT *GammaLut8 = new GammaLUT(2.5, 255);
-LUT *ledLut = new ColourCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 
 int main()
 {

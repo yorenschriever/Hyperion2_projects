@@ -39,7 +39,7 @@ namespace Patterns
                 if(segment+startChannel >= universe->size) 
                     break;
 
-                auto col = params->getPrimaryColour() * (float(universe->channels[segment+startChannel]/255.)) * transition.getValue();
+                auto col = params->getPrimaryColor() * (float(universe->channels[segment+startChannel]/255.)) * transition.getValue();
                 for(int i=0;i<segmentSize;i++)
                 {
                     if (remap)

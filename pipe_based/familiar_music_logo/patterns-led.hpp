@@ -1,6 +1,6 @@
 
 #pragma once
-#include "colours.h"
+#include "colors.h"
 #include "core/generation/patterns/helpers/fade.h"
 #include "core/generation/patterns/helpers/interval.h"
 #include "core/generation/patterns/helpers/timeline.h"
@@ -58,8 +58,8 @@ namespace LedPatterns
                 return; // the fade out is done. we can skip calculating pattern data
 
             RGBA col;
-            if (colorIndex==0) col = params->getPrimaryColour();
-            if (colorIndex==1) col = params->getSecondaryColour();
+            if (colorIndex==0) col = params->getPrimaryColor();
+            if (colorIndex==1) col = params->getSecondaryColor();
 
             RGBA value = col * transition.getValue();
 
@@ -97,7 +97,7 @@ namespace LedPatterns
             {
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };
@@ -167,9 +167,9 @@ namespace LedPatterns
             RGBA color;
             float val = fade.getValue();
             if (val >= 0.5)
-                color = params->getSecondaryColour() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
+                color = params->getSecondaryColor() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
             else
-                color = params->getSecondaryColour() * (val * 2.);
+                color = params->getSecondaryColor() * (val * 2.);
 
             for (int index = 0; index < width; index++)
                 pixels[index] = color;
@@ -195,7 +195,7 @@ namespace LedPatterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -231,7 +231,7 @@ namespace LedPatterns
                 perm.permute();
 
             for (int index = 0; index < width / 30; index++)
-                pixels[perm.at[index]] = params->getSecondaryColour() * transition.getValue();
+                pixels[perm.at[index]] = params->getSecondaryColor() * transition.getValue();
         }
     };
 
@@ -260,7 +260,7 @@ namespace LedPatterns
             int noiseLevel = fade.getValue() * width / 3;
             for (int index = 0; index < noiseLevel; index++)
             {
-                pixels[perm.at[index]] = params->getHighlightColour();
+                pixels[perm.at[index]] = params->getHighlightColor();
             }
         }
     };
@@ -284,7 +284,7 @@ namespace LedPatterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getHighlightColour();
+                color = params->getHighlightColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);

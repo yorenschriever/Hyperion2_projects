@@ -30,7 +30,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor();
                 pixels[index] += MovingHead(0, -30, col * trans.getValue() * (0.25 + 0.75 * lfo.getValue(float(index) / width)));
             }
         }
@@ -56,7 +56,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor();
                 pixels[index] += MovingHead(0, -30, col * trans.getValue() * (0.25 + 0.75 * lfo.getValue()));
             }
         }
@@ -92,7 +92,7 @@ namespace MovingheadPatterns
             {
                 float pan = lfopan.getValue((float)index / width) * 300 - 150;
                 float tilt = lfotilt.getValue((float)index / width) * 160 - 80;
-                RGBA col = perm.at[index] == 0 ? params->getPrimaryColour() : RGBA(0, 0, 0, 0);
+                RGBA col = perm.at[index] == 0 ? params->getPrimaryColor() : RGBA(0, 0, 0, 0);
                 pixels[index] += MovingHead(pan, tilt, col * fade.getValue());
             }
         }
@@ -116,7 +116,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor();
                 float tilt = index % 2 == 0 ? -30 : 60;
                 pixels[index] += MovingHead(0, tilt, col * lfo.getValue(float(index % 2) / 2) * trans.getValue());
             }
@@ -141,7 +141,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? RGBA(0,0,0,0) : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? RGBA(0,0,0,0) : params->getSecondaryColor();
                 float tilt = index % 2 == 0 ? -30 : 60;
                 pixels[index] += MovingHead(0, tilt, col * lfo.getValue(float(index % 2) / 2) * trans.getValue());
             }
@@ -166,7 +166,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor();
                 pixels[index] += MovingHead(0, 60, col * lfo.getValue((float)index / width) * trans.getValue());
             }
         }
@@ -191,7 +191,7 @@ namespace MovingheadPatterns
 
             for (int index = 0; index < width; index++)
             {
-                RGBA col = index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour();
+                RGBA col = index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor();
                 pixels[index] += MovingHead(
                     (index - width / 2) * 40 - 40 + 40 * lfotilt.getValue(0.25),
                     20 + 40 * lfotilt.getValue(),
@@ -220,7 +220,7 @@ namespace MovingheadPatterns
             {
                 float pan = lfopan.getValue((float)index / width) * 300 - 150;
                 float tilt = lfotilt.getValue((float)index / width) * 160 - 80;
-                pixels[index] += MovingHead(pan, tilt, Utils::millis() % 100 < 25 ? params->getSecondaryColour() : RGBA(0, 0, 0, 255), 0);
+                pixels[index] += MovingHead(pan, tilt, Utils::millis() % 100 < 25 ? params->getSecondaryColor() : RGBA(0, 0, 0, 255), 0);
             }
         }
     };

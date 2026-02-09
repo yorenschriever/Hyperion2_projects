@@ -6,7 +6,7 @@
 #include "../common/paletteColumn.hpp"
 #include "../common/videoPattern.hpp"
 
-LUT *NeopixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 255);
+LUT *NeopixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 255);
 
 void setupLedSide(Hyperion * hyp) {
     const int columnIndex = 1;

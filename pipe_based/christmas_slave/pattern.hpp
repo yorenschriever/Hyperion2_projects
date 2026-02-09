@@ -26,8 +26,8 @@ class GlowPulsePattern : public Pattern<RGB>
             {
              float val = 1.025 * lfo.getValue(float(Transition::fromCenter(index,width,1000))/-1000);
             if (val < 1.0)
-                pixels[perm.at[index]] = params->getPrimaryColour() * lfo.getValue(float(Transition::fromCenter(index,width,1000))/-1000);
+                pixels[perm.at[index]] = params->getPrimaryColor() * lfo.getValue(float(Transition::fromCenter(index,width,1000))/-1000);
             else
-                pixels[perm.at[index]] = params->getPrimaryColour() + (params->getSecondaryColour() * (val-1)/0.025);            }
+                pixels[perm.at[index]] = params->getPrimaryColor() + (params->getSecondaryColor() * (val-1)/0.025);            }
         }
     };

@@ -38,7 +38,7 @@ namespace Mid
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
                 pixels[index] = color * lfo.getValue(-2 * around(map->th(index))) * fromMid(map->operator[](index)) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -65,7 +65,7 @@ namespace Mid
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
 
             for(int h = 0; h<6; h++){
                 int start = h * 60 * 8;
@@ -102,7 +102,7 @@ namespace Mid
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
@@ -140,7 +140,7 @@ namespace Mid
                 if (map->z(index) < 0.44)
                     continue;
 
-                pixels[index] = params->getPrimaryColour() * transition.getValue() * Utils::rescale(map->r(index), 0, 1, 1.02, 1.15);
+                pixels[index] = params->getPrimaryColor() * transition.getValue() * Utils::rescale(map->r(index), 0, 1, 1.02, 1.15);
             }
         }
     };
@@ -258,9 +258,9 @@ namespace Mid
                 int offset3 = 5 * 60;
 
                 for (int i=0;i<60;i++){
-                    if (timeline.Happened(0)) pixels[start + offset1 + i] =  params->getHighlightColour();
-                    if (timeline.Happened(100)) pixels[start + offset2 + i] =  params->getHighlightColour();
-                    if (timeline.Happened(100)) pixels[start + offset3 + i] =  params->getHighlightColour();
+                    if (timeline.Happened(0)) pixels[start + offset1 + i] =  params->getHighlightColor();
+                    if (timeline.Happened(100)) pixels[start + offset2 + i] =  params->getHighlightColor();
+                    if (timeline.Happened(100)) pixels[start + offset3 + i] =  params->getHighlightColor();
                 }
             }
         }

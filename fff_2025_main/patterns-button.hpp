@@ -131,7 +131,7 @@ namespace Buttons
 
             for (int i = 0; i < width; i++)
             {
-                RGBA color = params->getPrimaryColour();
+                RGBA color = params->getPrimaryColor();
                 float distanceFade = Utils::rescale_c(radii[i], 1, 0, 0, fadeFactor);
 
                 float lfoValue = lfo.getValue(radii[i] * 20);
@@ -168,22 +168,22 @@ namespace Buttons
                 float syncPos = redButtonManager.getSyncProgress();
                 float fadeValue = abs( syncPos - fadePos) < 0.025 ? 1 : 0;
                 
-                pixels[i] = params->getSecondaryColour() * fadeValue;
+                pixels[i] = params->getSecondaryColor() * fadeValue;
             }
         }
     };
 
-    template <class T_COLOUR>
-    class TimedAnimate : public Pattern<T_COLOUR>
+    template <class T_COLOR>
+    class TimedAnimate : public Pattern<T_COLOR>
     {
         Timeline timeline;
         int onDuration;
         int onStart;
         RedButtonManager &redButtonManager = RedButtonManager::getInstance();
-        Pattern<T_COLOUR> *innerpattern;
+        Pattern<T_COLOR> *innerpattern;
 
     public:
-        TimedAnimate(Pattern<T_COLOUR> *innerpattern, int onDuration, int onstart=0)
+        TimedAnimate(Pattern<T_COLOR> *innerpattern, int onDuration, int onstart=0)
         {
             this->innerpattern = innerpattern;
             this->onDuration = onDuration;
@@ -193,7 +193,7 @@ namespace Buttons
         }
 
 
-        inline void Calculate(T_COLOUR *pixels, int width, bool active, Params *params) override
+        inline void Calculate(T_COLOR *pixels, int width, bool active, Params *params) override
         {
             if (redButtonManager.state == RedButtonManager::SyncToMeasure){
                 timeline.reset();

@@ -1,7 +1,7 @@
 #include "core/distribution/inputs/inputSlicer.hpp"
 #include "core/distribution/inputs/fallbackInput.hpp"
 #include "core/distribution/inputs/switchableInput.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
 #include "core/distribution/outputs/spiOutput.hpp"
 #include "core/hyperion.hpp"
@@ -21,7 +21,7 @@
 void setup_wifi() {}
 #endif
 
-LUT *ledsterLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+LUT *ledsterLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 auto cLedsterMap3d = ledsterMap3d.toCylindricalXZ();
 

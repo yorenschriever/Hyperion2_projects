@@ -135,8 +135,8 @@ namespace Masks
     //         if (!transition.Calculate(active))
     //             return; // the fade out is done. we can skip calculating pattern data
 
-    //         auto col1 = params->getPrimaryColour() * transition.getValue();
-    //         auto col2 = params->getSecondaryColour() * transition.getValue();
+    //         auto col1 = params->getPrimaryColor() * transition.getValue();
+    //         auto col2 = params->getSecondaryColor() * transition.getValue();
     //         float size = params->getSize(0.01, 0.1);
     //         float zoffset = params->getVariant(0, -0.2);
     //         ring1.setPeriod(params->getVelocity(20000, 2000));

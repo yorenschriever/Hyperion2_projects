@@ -173,7 +173,7 @@ namespace SchwungPatterns
                 return;
             }
 
-            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColour() : RGBA();
+            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColor() : RGBA();
             int directionUp = params->getVariant() > 0.5;
 
             for (int i = 0; i < map->size(); i++)
@@ -221,7 +221,7 @@ namespace SchwungPatterns
             for (int i = 0; i < map->size(); i++)
             {
                 float conePos = 0.20 + map->r(i) ;
-                pixels[i] += params->getPrimaryColour() * fade.getValue(conePos* velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue(conePos* velocity) * transition.getValue();
             }
         }
     };
@@ -251,8 +251,8 @@ namespace SchwungPatterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = map->r(index); // fromBottom(map->y(index))* height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour  * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color  * transition.getValue();
             }
         }
     };
@@ -356,7 +356,7 @@ namespace SchwungPatterns
                 {
                     int distance = abs(centers[bar] - i);
                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-                    pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+                    pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
                 }
             }
         }
@@ -411,7 +411,7 @@ namespace SchwungPatterns
                 {
                     int distance = (segmentSize/2)-abs(centers[bar] - i);
                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-                    pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+                    pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
                 }
             }
         }
@@ -436,7 +436,7 @@ namespace SchwungPatterns
 
             for (int i = 0; i < 6*60; i++)
             {
-                pixels[hexagons[hex][i]] = params->getSecondaryColour();
+                pixels[hexagons[hex][i]] = params->getSecondaryColor();
             }
         }
     };
@@ -468,7 +468,7 @@ namespace SchwungPatterns
 
             for (int i = 0; i < 6*60; i++)
             {
-                pixels[hexagons[hex][i]] = params->getSecondaryColour() * fade.getValue() * transition.getValue();
+                pixels[hexagons[hex][i]] = params->getSecondaryColor() * fade.getValue() * transition.getValue();
             }
         }
     };

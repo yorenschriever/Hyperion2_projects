@@ -1,6 +1,6 @@
 #include "core/hyperion.hpp"
 
-#include "colours.h"
+#include "colors.h"
 #include "distribution/inputs/patternInput.hpp"
 #include "distribution/outputs/neopixelOutput.hpp"
 #include "distribution/pipes/convertPipe.hpp"

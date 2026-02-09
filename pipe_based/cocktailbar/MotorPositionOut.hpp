@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/colours.h"
+#include "core/colors.h"
 
-class MotorPositionOut : Colour
+class MotorPositionOut : Color
 {
 public:
     MotorPositionOut()

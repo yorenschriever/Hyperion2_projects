@@ -31,7 +31,7 @@ namespace Patterns
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             float size = 0.06; // params->getSize(0.01,0.03);
             lfoX.setPeriod(10000 /*params->getVelocity(4*20000,2000)*/);
             lfoY.setPeriod(13000 /*params->getVelocity(4*14000,1400)*/);
@@ -45,7 +45,7 @@ namespace Patterns
                     softEdge(abs(x_norm - lfoX.getValue()), size),
                     softEdge(abs(y_norm - lfoY.getValue()), size));
 
-                pixels[index] = params->getPrimaryColour() + col * dim;
+                pixels[index] = params->getPrimaryColor() + col * dim;
             }
         }
     };
@@ -75,9 +75,9 @@ namespace Patterns
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
-                pixels[index] = (params->getPrimaryColour() * 0.5) + color * lfo.getValue(-2 * around(map->th(index))) * Utils::rescale(map->r(index), 0.5, 1, 0.4, 1) * transition.getValue();
+                pixels[index] = (params->getPrimaryColor() * 0.5) + color * lfo.getValue(-2 * around(map->th(index))) * Utils::rescale(map->r(index), 0.5, 1, 0.4, 1) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
             }
         }
@@ -130,11 +130,11 @@ namespace Patterns
 
             for (int i = 0; i < width; i++)
             {
-                pixels[i] = params->getSecondaryColour();
+                pixels[i] = params->getSecondaryColor();
                 for (int column = 0; column < 6; column++)
                 {
                     float fadePosition = fade[column].getValue(radii[column][i] * velocity);
-                    // RGBA color = params->getPrimaryColour();
+                    // RGBA color = params->getPrimaryColor();
                     RGBA color = params->getGradient(255 - 255. * fadePosition);
                     pixels[i] += color * fadePosition * transition.getValue();
                 }
@@ -169,10 +169,10 @@ namespace Patterns
 
             for (int index = 0; index < width; index++)
             {
-                pixels[perm.at[index]] = params->getPrimaryColour();
+                pixels[perm.at[index]] = params->getPrimaryColor();
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] += params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] += params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };
@@ -220,7 +220,7 @@ namespace Patterns
                 float fadePosition = softEdge(pos, size, 0.06);
                 RGBA color = params->getGradient(255 - 255 * map->r(i));
 
-                pixels[i] = params->getSecondaryColour() * 0.5 + color * fadePosition * transition.getValue();
+                pixels[i] = params->getSecondaryColor() * 0.5 + color * fadePosition * transition.getValue();
             }
         }
     };
@@ -280,11 +280,11 @@ namespace Patterns
 
             for (int i = 0; i < width; i++)
             {
-                pixels[i] = params->getSecondaryColour() * 0.5;
+                pixels[i] = params->getSecondaryColor() * 0.5;
                 for (int column = 0; column < 6; column++)
                 {
                     float fadePosition = fade[column].getValue(radii[column][i] * velocity);
-                    RGBA color = params->getGradient(255 - 255. * radii[column][i]); //  params->getPrimaryColour();
+                    RGBA color = params->getGradient(255 - 255. * radii[column][i]); //  params->getPrimaryColor();
                     pixels[i] += color * fadePosition * transition.getValue();
                 }
             }
@@ -295,7 +295,7 @@ namespace Patterns
     {
         PixelMap *map;
         LFO<SawDown> lfo;
-        LFO<Square> lfoColour;
+        LFO<Square> lfoColor;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
@@ -306,7 +306,7 @@ namespace Patterns
         {
             this->map = map;
             this->lfo = LFO<SawDown>(1000);
-            this->lfoColour = LFO<Square>(1000);
+            this->lfoColor = LFO<Square>(1000);
             this->name = "Chevrons";
         }
 
@@ -317,13 +317,13 @@ namespace Patterns
 
             float amount = params->getAmount(0.25, 4);
             lfo.setPeriod(params->getVelocity(2000, 500));
-            lfoColour.setPeriod(params->getOffset(1000, 500));
+            lfoColor.setPeriod(params->getOffset(1000, 500));
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 // float dir = (map->z(index) > 0 || map->y(index) > 0.44) ? 1:-1;
                 float phase = (0.5 * abs(map->x(index)) + map->y(index)) * amount;
-                auto col = lfoColour.getValue(phase) ? params->getSecondaryColour() : params->getPrimaryColour();
+                auto col = lfoColor.getValue(phase) ? params->getSecondaryColor() : params->getPrimaryColor();
                 pixels[index] += col * lfo.getValue(phase) * transition.getValue();
             }
         }
@@ -333,7 +333,7 @@ namespace Patterns
     {
         PixelMap::Polar *map;
         LFO<SawDown> lfo;
-        LFO<Square> lfoColour;
+        LFO<Square> lfoColor;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
@@ -352,14 +352,14 @@ namespace Patterns
 
             float amount = params->getAmount(0.25, 4);
             lfo.setPeriod(params->getVelocity(2000, 500));
-            lfoColour.setPeriod(params->getOffset(1000, 500));
+            lfoColor.setPeriod(params->getOffset(1000, 500));
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float conePos = 0.5 + (map->r(index)) / 2;
 
                 float phase = conePos * amount;
-                auto col = (lfoColour.getValue(phase) > 0) ? params->getSecondaryColour() : params->getPrimaryColour();
+                auto col = (lfoColor.getValue(phase) > 0) ? params->getSecondaryColor() : params->getPrimaryColor();
                 pixels[index] += col * lfo.getValue(phase) * transition.getValue();
             }
         }
@@ -508,7 +508,7 @@ namespace Patterns
                 // fade.duration = 80; // trail + perm.at[i] / (density * map->size()/ 10);
                 //  if (perm.at[i] < density * map->size()/ 10)
                 //      fade.duration *= perm.at[i] * 4 / (density * map->size()/ 10);
-                pixels[i] = params->getSecondaryColour() * 0.25;
+                pixels[i] = params->getSecondaryColor() * 0.25;
                 for (int f = 0; f < numFades; f++)
                 {
                     float fadePosition = fade[f].getValue(abs(map->th(i)) * velocity);
@@ -550,9 +550,9 @@ namespace Patterns
 
             for (int i = 0; i < map->size(); i++)
             {
-                pixels[i] = params->getSecondaryColour();
+                pixels[i] = params->getSecondaryColor();
                 float conePos = 0.20 + (map->r(i)) / 2;
-                pixels[i] += params->getPrimaryColour() * fade.getValue(conePos * velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue(conePos * velocity) * transition.getValue();
             }
         }
     };

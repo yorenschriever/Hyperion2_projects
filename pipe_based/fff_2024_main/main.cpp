@@ -19,7 +19,7 @@
 
 auto cTriangleMap3d = triangleMap3d.toCylindricalXZ();
 
-LUT *trianglesLut = new ColourCorrectionLUT(1.8, 255, 200, 200, 200);
+LUT *trianglesLut = new ColorCorrectionLUT(1.8, 255, 200, 200, 200);
 LUT *ophanimLut = new GammaLUT(3, 255);
 
 void addPaletteColumn(Hyperion *hyp);

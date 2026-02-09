@@ -62,7 +62,7 @@ namespace Patterns
             if (!transition.Calculate(active))
                 return;
  
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             float size = 0.03; //params->getSize(0.01,0.03);
             lfoX.setPeriod(10000 /*params->getVelocity(4*20000,2000)*/);
             lfoZ.setPeriod(13000 /*params->getVelocity(4*14000,1400)*/);
@@ -105,7 +105,7 @@ namespace Patterns
             lfo.setPeriod(params->getVelocity(4000,400));
             float phase = 0; // params->getOffset(0,45);
 
-            //auto col = params->getPrimaryColour() * transition.getValue();
+            //auto col = params->getPrimaryColor() * transition.getValue();
             int petalIndex=0;
             for (auto petal : LedsterShapes::petals)
             {
@@ -146,7 +146,7 @@ namespace Patterns
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
                 pixels[index] = color * lfo.getValue(-2 * around(map->th(index))) * Utils::rescale(map->r(index),0.5,1,0.4,1) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -171,7 +171,7 @@ namespace Patterns
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getPrimaryColour() * transition.getValue();
+            auto col = params->getPrimaryColor() * transition.getValue();
             for (auto petal : LedsterShapes::petals)
             {
                 for (int j = 0; j < 45; j++)
@@ -269,7 +269,7 @@ namespace Patterns
             // for (int ribbe = 0; ribbe < numSegments; ribbe++)
             // {
             //     int interval = averagePeriod + perm.at[ribbe] * (averagePeriod * precision) / numSegments;
-            //     RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval);
+            //     RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval);
             //     for (int j = 0; j < segmentSize; j++)
             //     {
             //         pixels[ribbe * segmentSize + j] = col;
@@ -282,9 +282,9 @@ namespace Patterns
             for (int segment = 0; segment < numSegments; segment++)
             {
                 // int randomSegment = perm.at[segment];
-                // RGBA col = params->getPrimaryColour() * lfo.getValue(float(randomSegment)/numSegments);
+                // RGBA col = params->getPrimaryColor() * lfo.getValue(float(randomSegment)/numSegments);
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     if (isLedster)
                         pixels[LedsterShapes::ribben[segment][j]] += col;
@@ -401,7 +401,7 @@ namespace Patterns
                 for (int column = 0; column < 6; column++)
                 {
                     float fadePosition = fade[column].getValue(radii[column][i] * velocity);
-                    RGBA color = params->getPrimaryColour();
+                    RGBA color = params->getPrimaryColor();
                     pixels[i] += color * fadePosition * transition.getValue();
                 }
             }
@@ -436,7 +436,7 @@ namespace Patterns
             {
                 if (index % density2 != 0)
                     continue;
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };

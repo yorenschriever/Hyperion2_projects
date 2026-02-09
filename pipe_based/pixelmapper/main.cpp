@@ -1,4 +1,4 @@
-#include "colours.h"
+#include "colors.h"
 #include "distribution/inputs/controlHubInput.hpp"
 #include "distribution/inputs/websocketInput.hpp"
 #include "distribution/outputs/monitorOutput.hpp"

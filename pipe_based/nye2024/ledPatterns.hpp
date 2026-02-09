@@ -47,7 +47,7 @@ namespace Patterns
             for (int bar = 0; bar < width; bar += segmentSize)
             {
                 for (int i = 0; i < segmentSize; i++)
-                    pixels[bar + i] = params->getSecondaryColour() * lfo.getValue(amount * float(bar) / width);
+                    pixels[bar + i] = params->getSecondaryColor() * lfo.getValue(amount * float(bar) / width);
             }
         }
     };
@@ -139,7 +139,7 @@ namespace Patterns
                 {
                     int distance = abs(centers[bar] - i);
                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-                    pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+                    pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
                 }
             }
         }
@@ -169,7 +169,7 @@ namespace Patterns
 
             for (int index = 0; index < width; index++)
             {
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };
@@ -198,7 +198,7 @@ namespace Patterns
             perm.setSize(numSegments);
             perm.permute();
 
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
             for (int segment = 0; segment < numSegments * 0.1; segment++)
             {
                 for (int j = 0; j < segmentSize; j++)
@@ -239,7 +239,7 @@ namespace Patterns
             for (int segment = 0; segment < numSegments; segment++)
             {
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[segment * segmentSize + j] = col;
             }
@@ -280,7 +280,7 @@ namespace Patterns
 
             for (int ribbe = 0; ribbe < numVisible; ribbe++)
             {
-                RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+                RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[perm.at[ribbe] * segmentSize + j] += col;
             }
@@ -358,7 +358,7 @@ namespace Patterns
                 perm.permute();
 
             for (int index = 0; index < width / 30; index++)
-                pixels[perm.at[index]] = params->getSecondaryColour() * transition.getValue();
+                pixels[perm.at[index]] = params->getSecondaryColor() * transition.getValue();
         }
     };
 
@@ -387,7 +387,7 @@ namespace Patterns
             int noiseLevel = fade.getValue() * width / 3;
             for (int index = 0; index < noiseLevel; index++)
             {
-                pixels[perm.at[index]] = params->getHighlightColour();
+                pixels[perm.at[index]] = params->getHighlightColor();
             }
         }
     };
@@ -423,7 +423,7 @@ namespace Patterns
 
                 if (perm.at[segmentIndex] > threshold)
                     continue;
-                pixels[index] += params->getHighlightColour() * transition.getValue();
+                pixels[index] += params->getHighlightColor() * transition.getValue();
             }
         }
     };
@@ -451,9 +451,9 @@ namespace Patterns
             RGBA color;
             float val = fade.getValue();
             if (val >= 0.5)
-                color = params->getSecondaryColour() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
+                color = params->getSecondaryColor() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
             else
-                color = params->getSecondaryColour() * (val * 2.);
+                color = params->getSecondaryColor() * (val * 2.);
 
             for (int index = 0; index < width; index++)
                 pixels[index] = color;
@@ -479,7 +479,7 @@ namespace Patterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -508,7 +508,7 @@ namespace Patterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getHighlightColour();
+                color = params->getHighlightColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -544,7 +544,7 @@ namespace Patterns
             lfo.setSoftEdgeWidth(1. / width);
 
             for (int i = 0; i < width; i++)
-                pixels[i] = params->getPrimaryColour() * lfo.getValue(float(i) / width * multiply) * transition.getValue();
+                pixels[i] = params->getPrimaryColor() * lfo.getValue(float(i) / width * multiply) * transition.getValue();
         }
     };
 
@@ -629,7 +629,7 @@ namespace Patterns
                 for (int i = 0; i < segmentSize; i++)
                 {
                     float fadeValue = softEdge(i - baseSize, size * lfo.getValue(2. * float(bar) / (width / segmentSize) * offset) * segmentSize);
-                    pixels[bar * segmentSize + i] = params->getPrimaryColour() * fadeValue * transition.getValue();
+                    pixels[bar * segmentSize + i] = params->getPrimaryColor() * fadeValue * transition.getValue();
                 }
             }
         }
@@ -659,7 +659,7 @@ namespace Patterns
             for (int i = 0; i < width; i++)
             {
                 float phase = ((float)i / width) * amount;
-                pixels[i] = params->getSecondaryColour() * lfo.getValue(phase) * transition.getValue();
+                pixels[i] = params->getSecondaryColor() * lfo.getValue(phase) * transition.getValue();
             }
         }
     };
@@ -725,7 +725,7 @@ namespace Patterns
             for (int i = 0; i < width; i++)
             {
                 float phase = ((float)i / width) * amount * 48 + float(i % (width / 2)) * offset / width;
-                pixels[i] = params->getSecondaryColour() * lfo.getValue(phase) * transition.getValue();
+                pixels[i] = params->getSecondaryColor() * lfo.getValue(phase) * transition.getValue();
             }
         }
     };

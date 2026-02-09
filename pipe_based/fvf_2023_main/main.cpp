@@ -1,6 +1,6 @@
-#include "colours.h"
+#include "colors.h"
 #include "core/distribution/inputs/inputSlicer.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/monitorOutput3d.hpp"
 #include "core/distribution/outputs/udpOutput.hpp"
 #include "core/distribution/pipes/convertPipe.hpp"
@@ -31,9 +31,9 @@
 #include "palette-midi.hpp"
 
 // op het oog is een gamma van 1.8 het mooist, maar vanwege de kleur resolutie toch 1.4 gekozen
-LUT *ledsterLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
-LUT *columnsLut = new ColourCorrectionLUT(1, 255, 200, 200, 200);
-LUT *haloLut = nullptr; // new ColourCorrectionLUT(1, 255, 255, 255, 255);
+LUT *ledsterLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
+LUT *columnsLut = new ColorCorrectionLUT(1, 255, 200, 200, 200);
+LUT *haloLut = nullptr; // new ColorCorrectionLUT(1, 255, 255, 255, 255);
 
 auto cColumnMap3d = columnMap3d.toCylindricalXZ();
 auto cLedsterMap3d = ledsterMap3d.toCylindricalXZ();

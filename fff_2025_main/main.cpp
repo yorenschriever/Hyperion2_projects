@@ -27,7 +27,7 @@
 #include "patterns-wings.hpp"
 #include "patterns-mask.hpp"
 
-LUT *ledBarLut = new ColourCorrectionLUT(1.8, 255, 200, 200, 200);
+LUT *ledBarLut = new ColorCorrectionLUT(1.8, 255, 200, 200, 200);
 
 PixelMap3d::Cylindrical cCageMap = cageMap.toCylindricalXZ();
 PixelMap3d::Cylindrical cCageMap90 = cCageMap.rotate(M_PI * 35. /180.);
@@ -487,7 +487,7 @@ void addDMXPipe(Hyperion *hyp)
 
     hyp->createChain(
         splitInput->getSlice(slices.size() - 1),
-        new ConvertColor<Monochrome, RGB>(),
+        new ColorConverter<Monochrome, RGB>(),
         new MonitorOutput(&hyp->webServer, map, 60)
     );
 

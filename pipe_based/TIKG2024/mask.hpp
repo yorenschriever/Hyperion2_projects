@@ -56,7 +56,7 @@ namespace Patterns
     //             lfo.setSoftEdgeWidth(1. / width);
 
     //             for (int i = 0; i < width; i++)
-    //                 pixels[ceilingMappedIndices[i]] = params->getPrimaryColour() * lfo.getValue(float(i) / width * multiply) * transition.getValue();
+    //                 pixels[ceilingMappedIndices[i]] = params->getPrimaryColor() * lfo.getValue(float(i) / width * multiply) * transition.getValue();
     //         }
     //     };
 
@@ -159,7 +159,7 @@ namespace Patterns
     //                 {
     //                     int distance = abs(centers[bar] - i);
     //                     float fadeValue = fade.getValue(distance * trailSize + delays[bar] * offset);
-    //                     pixels[bar * segmentSize + i] += params->getPrimaryColour() * fadeValue * masterFade.getValue() * transition.getValue();
+    //                     pixels[bar * segmentSize + i] += params->getPrimaryColor() * fadeValue * masterFade.getValue() * transition.getValue();
     //                 }
     //             }
     //         }
@@ -196,7 +196,7 @@ namespace Patterns
     //                 for (int i = 0; i < segmentSize; i++)
     //                 {
     //                     float fadeValue = softEdge(i-baseSize,size * lfo.getValue(2.*float(bar) / (width/segmentSize) * offset)*segmentSize);
-    //                     pixels[ceilingMappedIndices[bar * segmentSize + i]] = params->getPrimaryColour() * fadeValue * transition.getValue();
+    //                     pixels[ceilingMappedIndices[bar * segmentSize + i]] = params->getPrimaryColor() * fadeValue * transition.getValue();
     //                 }
     //             }
     //         }
@@ -226,7 +226,7 @@ namespace Patterns
     //             for (int i = 0; i < width; i++)
     //             {
     //                 float phase = ((float)i/width) * amount;
-    //                 pixels[ceilingMappedIndices[i]] = params->getSecondaryColour() * lfo.getValue(phase) * transition.getValue();
+    //                 pixels[ceilingMappedIndices[i]] = params->getSecondaryColor() * lfo.getValue(phase) * transition.getValue();
     //             }
     //         }
     //     };

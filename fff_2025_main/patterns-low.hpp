@@ -37,8 +37,8 @@ namespace Low
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float h = fromBottom(map->y(index))* height;
-                RGBA colour = params->getGradient(h * 255);
-                pixels[index] = colour * h * transition.getValue();
+                RGBA color = params->getGradient(h * 255);
+                pixels[index] = color * h * transition.getValue();
             }
         }
     };
@@ -96,12 +96,12 @@ namespace Low
                 float normalized_angle = Utils::rescale_c(map->th(index), 1, 0, 0, 0.6 * M_PI);
                 float fadePosition = fade[column].getValue(normalized_angle * velocity);
 
-                RGBA color = params->getPrimaryColour(); 
+                RGBA color = params->getPrimaryColor(); 
                 pixels[index] = color * fadePosition * transition.getValue();
                 
                 // float y = fromTop2(map->y(index));
                 // float fadePosition = fade[column].getValue(y * velocity);
-                // RGBA color = params->getPrimaryColour(); 
+                // RGBA color = params->getPrimaryColor(); 
                 // pixels[index] = color * fadePosition * (1 - y) * transition.getValue();
             }
 
@@ -116,7 +116,7 @@ namespace Low
             //     {
             //         float y = fromTop(map->y(i));
             //         float fadePosition = fade[column].getValue(y * velocity);
-            //         RGBA color = params->getPrimaryColour(); 
+            //         RGBA color = params->getPrimaryColor(); 
             //         pixels[i] = color * fadePosition * (1 - y) * transition.getValue();
             //     }
             // }
@@ -154,7 +154,7 @@ namespace Low
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                // RGBA color = params->getPrimaryColour(); 
+                // RGBA color = params->getPrimaryColor(); 
                 RGBA color = params->getGradient(fromTop(map->z(index))*255); 
                 pixels[index] = color * lfo.getValue(around(map->th(index))) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -189,7 +189,7 @@ namespace Low
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getPrimaryColour(); 
+                RGBA color = params->getPrimaryColor(); 
                 float lfoArg = orientationHorizontal ? around(map->th(index)) : fromTop(map->z(index));
                 pixels[index] = color * lfo.getValue(lfoArg) * fromBottom(map->z(index)) * transition.getValue();
             }
@@ -223,7 +223,7 @@ namespace Low
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                //RGBA color = params->getPrimaryColour(); 
+                //RGBA color = params->getPrimaryColor(); 
                 //float lfoArg = orientationHorizontal ? around(map->th(index)) : fromTop(map->z(index));
                 
                 int angle = around(map->th(index)) * 3600;
@@ -272,7 +272,7 @@ namespace Low
                 if (index % density != 0)
                    continue;
                 float fade = Utils::constrain_f(fromBottom(map->y(perm.at[index]) - fadeSize),0,1);
-                pixels[perm.at[index]] = params->getPrimaryColour() * fade * lfo.getValue(float(index)/width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getPrimaryColor() * fade * lfo.getValue(float(index)/width) * transition.getValue(index, width);
             }
         }
     };
@@ -327,8 +327,8 @@ namespace Low
             if (!transition.Calculate(active))
                 return; // the fade out is done. we can skip calculating pattern data
 
-            auto col1 = params->getPrimaryColour() * transition.getValue();
-            auto col2 = params->getSecondaryColour() * transition.getValue();
+            auto col1 = params->getPrimaryColor() * transition.getValue();
+            auto col2 = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.01,0.1);
             float zoffset = params->getVariant(0,-0.2);
             ring1.setPeriod(params->getVelocity(20000,2000));

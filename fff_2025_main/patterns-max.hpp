@@ -17,7 +17,7 @@ namespace Max
     {
         PixelMap3d *map;
         LFO<SawDown> lfo;
-        LFO<Square> lfoColour;
+        LFO<Square> lfoColor;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
@@ -28,7 +28,7 @@ namespace Max
         {
             this->map = map;
             this->lfo = LFO<SawDown>(1000);
-            this->lfoColour = LFO<Square>(1000);
+            this->lfoColor = LFO<Square>(1000);
             this->name = "Chevrons";
         }
 
@@ -39,13 +39,13 @@ namespace Max
 
             float amount = params->getAmount(0.25, 4);
             lfo.setPeriod(params->getVelocity(2000, 500));
-            lfoColour.setPeriod(params->getOffset(2000, 500));
+            lfoColor.setPeriod(params->getOffset(2000, 500));
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float dir = (map->z(index) > 0 || map->y(index) > 0.44) ? 1:-1;
                 float phase = (0.5 * abs(map->x(index)) - map->z(index) + map->y(index) * dir) * amount;
-                auto col = lfoColour.getValue(phase) ? params->getSecondaryColour() : params->getPrimaryColour();
+                auto col = lfoColor.getValue(phase) ? params->getSecondaryColor() : params->getPrimaryColor();
                 pixels[index] += col * lfo.getValue(phase) * transition.getValue();
             }
         }
@@ -55,7 +55,7 @@ namespace Max
     {
         PixelMap3d::Cylindrical *map;
         LFO<SawDown> lfo;
-        LFO<Square> lfoColour;
+        LFO<Square> lfoColor;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
@@ -74,14 +74,14 @@ namespace Max
 
             float amount = params->getAmount(0.25, 4);
             lfo.setPeriod(params->getVelocity(2000, 500));
-            lfoColour.setPeriod(params->getOffset(2000, 500));
+            lfoColor.setPeriod(params->getOffset(2000, 500));
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 float conePos = 0.5 + (map->r(index) - map->z(index)) / 2;
 
                 float phase = conePos * amount; //(0.5 * abs(map->y(index)) + map->x(index)) * amount;
-                auto col = (lfoColour.getValue(phase) > 0) ? params->getSecondaryColour() : params->getPrimaryColour();
+                auto col = (lfoColor.getValue(phase) > 0) ? params->getSecondaryColor() : params->getPrimaryColor();
                 pixels[index] += col * lfo.getValue(phase) * transition.getValue();
             }
         }
@@ -254,7 +254,7 @@ namespace Max
                 return;
             }
 
-            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColour() : RGBA(0,0,0,255);
+            RGBA col = Utils::millis() % 100 < 25 ? params->getPrimaryColor() : RGBA(0,0,0,255);
             int directionUp = params->getVariant() > 0.5;
 
             for (int i = 0; i < map->size(); i++)
@@ -302,7 +302,7 @@ namespace Max
             for (int i = 0; i < map->size(); i++)
             {
                 float conePos = 0.20 + (map->r(i) - map->z(i)) / 2;
-                pixels[i] += params->getPrimaryColour() * fade.getValue(conePos* velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue(conePos* velocity) * transition.getValue();
             }
         }
     };

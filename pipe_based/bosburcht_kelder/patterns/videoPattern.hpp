@@ -23,7 +23,7 @@ public:
             return;
 
         for (int i = 0; i < width; i++)
-            pixels[i] = params->getSecondaryColour();
+            pixels[i] = params->getSecondaryColor();
     }
 };
 
@@ -98,9 +98,9 @@ public:
             if (animationIndex+2 >= animation->pixelData.size())
                 return;
 
-            pixels[i] += params->getPrimaryColour() * (float(animation->pixelData[animationIndex + 0]) / 255.);
-            pixels[i] += params->getSecondaryColour() * (float(animation->pixelData[animationIndex + 1]) / 255.);
-            //pixels[i] += params->getHighlightColour() * (float(animation->pixelData[animationIndex + 2]) / 255.);
+            pixels[i] += params->getPrimaryColor() * (float(animation->pixelData[animationIndex + 0]) / 255.);
+            pixels[i] += params->getSecondaryColor() * (float(animation->pixelData[animationIndex + 1]) / 255.);
+            //pixels[i] += params->getHighlightColor() * (float(animation->pixelData[animationIndex + 2]) / 255.);
             pixels[i] += params->getGradient(0) * (float(animation->pixelData[animationIndex + 2]) / 255.);
 
             pixels[i] = pixels[i] * transition.getValue();

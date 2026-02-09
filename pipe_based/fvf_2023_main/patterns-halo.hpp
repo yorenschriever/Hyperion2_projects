@@ -30,7 +30,7 @@ namespace Halo
 
             for (int i = 0; i < width; i++)
             {
-                pixels[i] = params->getPrimaryColour() * transition.getValue(i, width);
+                pixels[i] = params->getPrimaryColor() * transition.getValue(i, width);
             }
         }
     };
@@ -54,7 +54,7 @@ namespace Halo
 
             for (int i = 0; i < width; i++)
             {
-                pixels[i] = params->getSecondaryColour() * transition.getValue(i, width);
+                pixels[i] = params->getSecondaryColor() * transition.getValue(i, width);
             }
         }
     };
@@ -83,7 +83,7 @@ namespace Halo
             for (int i = 0; i < width; i++)
             {
                 float phase = ((float)i/width) * amount;
-                pixels[i] = params->getSecondaryColour() * lfo.getValue(phase) * transition.getValue();
+                pixels[i] = params->getSecondaryColor() * lfo.getValue(phase) * transition.getValue();
             }
         }
     };
@@ -142,7 +142,7 @@ namespace Halo
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -175,7 +175,7 @@ namespace Halo
 
             for (int i = 0; i < width; i++)
             {
-                pixels[i] = params->getSecondaryColour() * lfo.getValue() * transition.getValue();
+                pixels[i] = params->getSecondaryColor() * lfo.getValue() * transition.getValue();
             }
         }
     };

@@ -1,6 +1,6 @@
-#include "colours.h"
+#include "colors.h"
 #include "core/distribution/inputs/patternInput.hpp"
-#include "core/distribution/luts/colourCorrectionLut.hpp"
+#include "core/distribution/luts/colorCorrectionLut.hpp"
 #include "core/distribution/outputs/monitorOutput.hpp"
 #include "core/distribution/outputs/neopixelOutput.hpp"
 #include "core/distribution/pipes/convertPipe.hpp"
@@ -12,7 +12,7 @@
 
 void addLedsterPipe(Hyperion *hyp);
 
-LUT *PixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+LUT *PixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 int main()
 {

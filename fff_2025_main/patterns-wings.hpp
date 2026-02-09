@@ -38,7 +38,7 @@ namespace Wings
             if (!transition.Calculate(active))
                 return;
 
-            auto col = params->getSecondaryColour() * transition.getValue();
+            auto col = params->getSecondaryColor() * transition.getValue();
             float size = params->getSize(0.02, 0.1);
             lfoX.setPeriod(params->getVelocity(4 * 20000, 2000));
             lfoZ.setPeriod(params->getVelocity(4 * 14000, 1400));

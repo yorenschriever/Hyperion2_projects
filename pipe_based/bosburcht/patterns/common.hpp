@@ -36,7 +36,7 @@ namespace Patterns
 
             for (int index = 0; index < width; index++)
             {
-                pixels[perm.at[index]] = params->getSecondaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[perm.at[index]] = params->getSecondaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
             }
         }
     };
@@ -65,7 +65,7 @@ namespace Patterns
             perm.setSize(numSegments);
             perm.permute();
 
-            RGBA col = params->getPrimaryColour() * transition.getValue();
+            RGBA col = params->getPrimaryColor() * transition.getValue();
             for (int segment = 0; segment < numSegments * 0.1; segment++)
             {
                 for (int j = 0; j < segmentSize; j++)
@@ -106,7 +106,7 @@ namespace Patterns
             for (int segment = 0; segment < numSegments; segment++)
             {
                 int interval = averagePeriod + perm.at[segment] * (averagePeriod * precision) / numSegments;
-                RGBA col = params->getPrimaryColour() * lfo.getValue(0, interval) * transition.getValue();
+                RGBA col = params->getPrimaryColor() * lfo.getValue(0, interval) * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[segment * segmentSize + j] = col;
             }
@@ -147,7 +147,7 @@ namespace Patterns
 
             for (int ribbe = 0; ribbe < numVisible; ribbe++)
             {
-                RGBA col = params->getPrimaryColour() * fade.getValue() * transition.getValue();
+                RGBA col = params->getPrimaryColor() * fade.getValue() * transition.getValue();
                 for (int j = 0; j < segmentSize; j++)
                     pixels[perm.at[ribbe] * segmentSize + j] += col;
             }
@@ -225,7 +225,7 @@ namespace Patterns
                 perm.permute();
 
             for (int index = 0; index < width / 30; index++)
-                pixels[perm.at[index]] = params->getSecondaryColour() * transition.getValue();
+                pixels[perm.at[index]] = params->getSecondaryColor() * transition.getValue();
         }
     };
 
@@ -254,7 +254,7 @@ namespace Patterns
 
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 // RGBA color = params->getGradient(fromTop(map->z(index))*255);
                 pixels[index] = color * lfo.getValue(-2 * around(map->th(index))) * Utils::rescale(map->r(index), 0.7, 1, 0.4, 1) * transition.getValue();
                 // pixels[index] = color * lfo.getValue(fromTop(map->z(index))) * transition.getValue();
@@ -368,7 +368,7 @@ namespace Patterns
             for (int i = 0; i < map->size(); i++)
             {
                 float conePos = 0.20 + (map->r(i)) / 2;
-                pixels[i] += params->getPrimaryColour() * fade.getValue(conePos * velocity) * transition.getValue();
+                pixels[i] += params->getPrimaryColor() * fade.getValue(conePos * velocity) * transition.getValue();
             }
         }
     };
@@ -404,7 +404,7 @@ namespace Patterns
             for (int i = 0; i < width; i++)
             {
                 float fadePosition = fade.getValue((1 + map->z(i)) * velocity);
-                RGBA color = params->getSecondaryColour();
+                RGBA color = params->getSecondaryColor();
                 pixels[i] += color * fadePosition;
             }
         }
@@ -435,7 +435,7 @@ namespace Patterns
             int noiseLevel = fade.getValue() * width / 3;
             for (int index = 0; index < noiseLevel; index++)
             {
-                pixels[perm.at[index]] = params->getHighlightColour();
+                pixels[perm.at[index]] = params->getHighlightColor();
             }
         }
     };
@@ -471,7 +471,7 @@ namespace Patterns
 
                 if (perm.at[segmentIndex] > threshold)
                     continue;
-                pixels[index] += params->getHighlightColour() * transition.getValue();
+                pixels[index] += params->getHighlightColor() * transition.getValue();
             }
         }
     };
@@ -499,9 +499,9 @@ namespace Patterns
             RGBA color;
             float val = fade.getValue();
             if (val >= 0.5)
-                color = params->getSecondaryColour() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
+                color = params->getSecondaryColor() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
             else
-                color = params->getSecondaryColour() * (val * 2.);
+                color = params->getSecondaryColor() * (val * 2.);
 
             for (int index = 0; index < width; index++)
                 pixels[index] = color;
@@ -527,7 +527,7 @@ namespace Patterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -556,7 +556,7 @@ namespace Patterns
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getHighlightColour();
+                color = params->getHighlightColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -598,7 +598,7 @@ namespace Patterns
             int windowSize = width / numWindows;
             int startIndex = window * windowSize;
 
-            RGBA col = params->getSecondaryColour() * transition.getValue();
+            RGBA col = params->getSecondaryColor() * transition.getValue();
             for (int j = 0; j < windowSize; j++)
                 pixels[startIndex + j] += col;
         }

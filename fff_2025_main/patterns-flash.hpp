@@ -35,7 +35,7 @@ namespace Flash
             int noiseLevel = fade.getValue() * width / 3;
             for (int index = 0; index < noiseLevel; index++)
             {
-                pixels[perm.at[index]] = params->getHighlightColour();
+                pixels[perm.at[index]] = params->getHighlightColor();
             }
         }
     };
@@ -81,7 +81,7 @@ namespace Flash
 
                 if (perm.at[cubeIndex] > threshold )
                     continue;
-                pixels[index] += params->getHighlightColour() * transition.getValue();
+                pixels[index] += params->getHighlightColor() * transition.getValue();
             }
         }
     };
@@ -109,9 +109,9 @@ namespace Flash
             RGBA color;
             float val = fade.getValue();
             if (val >= 0.5)
-                color = params->getSecondaryColour() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
+                color = params->getSecondaryColor() + RGBA(255, 255, 255, 255) * ((val - 0.5) * 2.);
             else
-                color = params->getSecondaryColour() * (val * 2.);
+                color = params->getSecondaryColor() * (val * 2.);
 
             for (int index = 0; index < width; index++)
                 pixels[index] = color;
@@ -137,7 +137,7 @@ namespace Flash
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getPrimaryColour();
+                color = params->getPrimaryColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -166,7 +166,7 @@ namespace Flash
 
             RGBA color = RGBA(0, 0, 0, 255);
             if (framecounter <= 1)
-                color = params->getHighlightColour();
+                color = params->getHighlightColor();
 
             if (framecounter == 0)
                 framecounter = 5; // params->getVelocity(40,4);
@@ -202,7 +202,7 @@ namespace Flash
                 perm.permute();
 
             for (int index = 0; index < width / 30; index++)
-                pixels[perm.at[index]] = params->getSecondaryColour() * transition.getValue();
+                pixels[perm.at[index]] = params->getSecondaryColor() * transition.getValue();
         }
     };
 
@@ -234,7 +234,7 @@ namespace Flash
     //             petal = (petal + 1 + Utils::random(0, 4)) % 6;
     //         }
 
-    //         RGBA col = params->getSecondaryColour() * transition.getValue();
+    //         RGBA col = params->getSecondaryColor() * transition.getValue();
     //         for (int j = 0; j < 45; j++)
     //             pixels[LedsterShapes::petals[petal][j]] += col;
     //     }
@@ -264,7 +264,7 @@ namespace Flash
             {
                 float fadePos = Utils::rescale(map->th(index), 0, 3000, 0, 2* M_PI);
                 float fadeValue = Utils::rescale_c(fade.getValue(fadePos),0,1, 0, 0.5);
-                RGBA col = Utils::millis() % 100 < 25 ? params->getHighlightColour() : RGBA(0,0,0,255);
+                RGBA col = Utils::millis() % 100 < 25 ? params->getHighlightColor() : RGBA(0,0,0,255);
                 pixels[index] = col * fadeValue;
             }
         }

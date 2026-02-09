@@ -29,7 +29,7 @@ namespace Ledpar
                 return; // the fade out is done. we can skip calculating pattern data
 
             for (int index = 0; index < width; index++)
-                pixels[index] = params->getPrimaryColour() * transition.getValue();
+                pixels[index] = params->getPrimaryColor() * transition.getValue();
         }
     };
 
@@ -55,7 +55,7 @@ namespace Ledpar
             lfo.setDutyCycle(params->getSize());
             
             for (int index = 0; index < width; index++)
-                pixels[index] = params->getPrimaryColour() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
+                pixels[index] = params->getPrimaryColor() * lfo.getValue(float(index) / width) * transition.getValue(index, width);
         }
     };
 
@@ -76,7 +76,7 @@ namespace Ledpar
             if (!transition.Calculate(active))
                 return; // the fade out is done. we can skip calculating pattern data
 
-            RGBA value = Utils::millis() % 50 < 25 ? params->getHighlightColour() * transition.getValue() : RGBA();
+            RGBA value = Utils::millis() % 50 < 25 ? params->getHighlightColor() * transition.getValue() : RGBA();
 
             for (int index = 0; index < width; index++)
                 pixels[index] = value;
@@ -96,7 +96,7 @@ namespace Ledpar
             if (!active)
                 return;
 
-            RGBA value = Utils::millis() % 100 < 25 ? params->getHighlightColour() : RGBA();
+            RGBA value = Utils::millis() % 100 < 25 ? params->getHighlightColor() : RGBA();
 
             for (int index = 0; index < width; index++)
                 pixels[index] = value;
@@ -120,7 +120,7 @@ namespace Ledpar
                 return; // the fade out is done. we can skip calculating pattern data
 
             for (int index = 0; index < width; index++)
-                pixels[index] = params->getSecondaryColour() * transition.getValue();
+                pixels[index] = params->getSecondaryColor() * transition.getValue();
         }
     };
 
@@ -149,7 +149,7 @@ namespace Ledpar
 
             for (int index = 0; index < width; index++)
             {
-                pixels[index] = params->getPrimaryColour() * transition.getValue() * lfo.getValue((float)amount * index / width);
+                pixels[index] = params->getPrimaryColor() * transition.getValue() * lfo.getValue((float)amount * index / width);
             }
         }
     };
@@ -171,7 +171,7 @@ namespace Ledpar
                 return; // the fade out is done. we can skip calculating pattern data
 
             for (int index = 0; index < width; index++)
-                pixels[index] = (index % 2 == 0 ? params->getPrimaryColour() : params->getSecondaryColour()) * transition.getValue();
+                pixels[index] = (index % 2 == 0 ? params->getPrimaryColor() : params->getSecondaryColor()) * transition.getValue();
         }
     };
 

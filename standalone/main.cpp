@@ -47,13 +47,13 @@ void addPaletteColumn(Hyperion *hyp);
 void addLed1Column(Hyperion *hyp);
 void addLed2Column(Hyperion *hyp);
 
-// LUT *PixelLut = new ColourCorrectionLUT(1.5, 255, 255, 255, 240);
+// LUT *PixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 LUT *LaserLut = new LaserLUT(0.5, 4096, 3048);
 LUT *IncandescentLut = new IncandescentLUT(2.5, 4096, 200);
 LUT *IncandescentLut8 = new IncandescentLUT(2.5, 255, 24);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 LUT *GammaLut8 = new GammaLUT(2.5, 255);
-LUT *ledLut = new ColourCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 
 int main()
 {
@@ -143,7 +143,7 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
 
     // hyp->createChain(
     //     input,
-    //     new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
+    //     new ColorConverter<Monochrome, Monochrome>(IncandescentLut8),
     //     dmxCombine->atDmxChannel(128)
     // );
 
@@ -151,24 +151,24 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
 
     hyp->createChain(
         splitInput->getSlice(0),
-        new ConvertColor<Monochrome, Monochrome>(IncandescentLut8),
+        new ColorConverter<Monochrome, Monochrome>(IncandescentLut8),
         dmxCombine->atDmxChannel(128)
     );
 
     hyp->createChain(
         splitInput->getSlice(1),
-        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+        new ColorConverter<Monochrome, Monochrome12>(IncandescentLut),
         pwmCombine->atOffset(0));
 
     hyp->createChain(
         splitInput->getSlice(2),
-        new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+        new ColorConverter<Monochrome, Monochrome12>(IncandescentLut),
         new UDPOutput("hyperslave6.local", 9620, 60));
 
     auto map = new PixelMap(circleMap(12,0.5));
     hyp->createChain(
         splitInput->getSlice(3),
-        new ConvertColor<Monochrome, RGB>(),
+        new ColorConverter<Monochrome, RGB>(),
         new MonitorOutput(&hyp->webServer, map , 30));
 
 }
@@ -199,7 +199,7 @@ void addLaserPipe(Hyperion *hyp)
 
     hyp->createChain(
         input,
-        new ConvertColor<Monochrome, Monochrome12>(LaserLut),
+        new ColorConverter<Monochrome, Monochrome12>(LaserLut),
         new UDPOutput("hyperslave7.local", 9620)
     );
 }
@@ -238,13 +238,13 @@ void addBulbPipe(Hyperion *hyp, Combine *dmxCombine)
 
     hyp->createChain(
         splitInput->getSlice(0),
-        new ConvertColor<Monochrome, Monochrome>(GammaLut8),
+        new ColorConverter<Monochrome, Monochrome>(GammaLut8),
         dmxCombine->atDmxChannel(256)
     );
 
     hyp->createChain(
         splitInput->getSlice(1),
-        new ConvertColor<Monochrome, Monochrome12>(GammaLut12),
+        new ColorConverter<Monochrome, Monochrome12>(GammaLut12),
         new UDPOutput("hyperslave5.local", 9620)
     );
 }
@@ -261,7 +261,7 @@ void addFairylightPinspotPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCo
     //           });
     // hyp->createChain(
     //     pinspotInput,
-    //     new ConvertColor<Monochrome, Monochrome12>(IncandescentLut),
+    //     new ColorConverter<Monochrome, Monochrome12>(IncandescentLut),
     //     pwmCombine->atOffset(11)
     // );
 
@@ -279,13 +279,13 @@ void addFairylightPinspotPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCo
 
     // hyp->createChain(
     //     fairylightInput,
-    //     new ConvertColor<Monochrome, Monochrome12>(GammaLut12),
+    //     new ColorConverter<Monochrome, Monochrome12>(GammaLut12),
     //     pwmCombine->atOffset(12)
     // );
 
     hyp->createChain(
         fairylightInput,
-        // new ConvertColor<Monochrome, Monochrome>(GammaLut),
+        // new ColorConverter<Monochrome, Monochrome>(GammaLut),
         dmxCombine->atDmxChannel(128+19)
     );
 }
@@ -308,7 +308,7 @@ void addMovingHeadPipe(Hyperion *hyp, Combine *dmxCombine)
 
     hyp->createChain(
         input,
-        new ConvertColor<MovingHead, Miniwash7>(),
+        new ColorConverter<MovingHead, Miniwash7>(),
         dmxCombine->atDmxChannel(30)
     );
 }
@@ -366,14 +366,14 @@ void addLed1Column(Hyperion *hyp)
     for (int i=0;i<split->size();i++)
         hyp->createChain(
             split->getSlice(i),
-            new ConvertColor<RGBA,GRB>(ledLut),
+            new ColorConverter<RGBA,GRB>(ledLut),
             new NeopixelOutput(i+1)
         );
 #else
 
     // hyp->createChain(
     //     input,
-    //     new ConvertColor<RGBA, RGB>(),
+    //     new ColorConverter<RGBA, RGB>(),
     //     new MonitorOutput(&hyp->webServer, &ledMap1)
     // );
 
@@ -442,7 +442,7 @@ void addLed2Column(Hyperion *hyp)
     for (int i=0;i<split->size();i++)
         hyp->createChain(
             split->getSlice(i),
-            new ConvertColor<RGBA,BGR>(ledLut),
+            new ColorConverter<RGBA,BGR>(ledLut),
             new NeopixelOutput(i+5)
         );
 #else

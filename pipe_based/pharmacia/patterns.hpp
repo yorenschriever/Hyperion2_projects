@@ -84,7 +84,7 @@ namespace Patterns
                     float x_c = x_start[cross] * (1.0 - lfoVal);
                     float y_c = y_start[cross] * (1.0 - lfoVal);
                     if (crossOutline(map->x(index) - x_c, map->y(index) - y_c, lfoVal, Utils::rescale(lfoVal, 0.01, 0.04)))
-                        // pixels[index] = params->getPrimaryColour() * Utils::rescale(lfoVal, 0.1, 1);
+                        // pixels[index] = params->getPrimaryColor() * Utils::rescale(lfoVal, 0.1, 1);
                         pixels[index] = params->getGradient(125 - 125 * lfoVal)* Utils::rescale(lfoVal, 0.5, 1);
                 }
             }
@@ -93,7 +93,7 @@ namespace Patterns
             for (int index = 0; index < std::min(width, (int)map->size()); index++)
             {
                 if (crossOutline(map->x(index), map->y(index), 0.9, 0.02))
-                    pixels[index] = params->getPrimaryColour();
+                    pixels[index] = params->getPrimaryColor();
             }
         }
     };
