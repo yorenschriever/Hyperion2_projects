@@ -169,7 +169,7 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
     hyp->createChain(
         splitInput->getSlice(3),
         new ColorConverter<Monochrome, RGB>(),
-        new MonitorOutput(&hyp->webServer, map , 30));
+        new MonitorOutput(&hyp->webServer, map, nullptr, 30));
 
 }
 

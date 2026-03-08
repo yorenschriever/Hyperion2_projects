@@ -1,6 +1,7 @@
 #include "hyperion.hpp"
 #include "mappingHelpers.hpp"
 #include "common/distributeAndMonitor.hpp"
+#include "common/distributeAndPreview.hpp"
 // #include "common/mapHelpers.hpp"
 #include "common/paletteColumn.hpp"
 #include "common/patterns/patterns-led.hpp"
@@ -45,14 +46,14 @@ void addCagePipe(Hyperion *hyp)
     PixelMap3d::Spherical *smap = &sCageMap;
 
     std::vector<Slave> distribution = {
-        {"hyperslave1.local", 9611, 8 * 60},
-        {"hyperslave1.local", 9612, 8 * 60},
-        {"hyperslave1.local", 9613, 8 * 60},
-        {"hyperslave1.local", 9614, 8 * 60},
-        {"hyperslave1.local", 9615, 8 * 60},
-        {"hyperslave1.local", 9616, 8 * 60},
-        {"hyperslave1.local", 9617, 5 * 60},
-        {"hyperslave1.local", 9618, 5 * 60},
+        {"hypernode1.local", 9611, 8 * 60},
+        {"hypernode1.local", 9612, 8 * 60},
+        {"hypernode1.local", 9613, 8 * 60},
+        {"hypernode1.local", 9614, 8 * 60},
+        {"hypernode1.local", 9615, 8 * 60},
+        {"hypernode1.local", 9616, 8 * 60},
+        {"hypernode1.local", 9617, 5 * 60},
+        {"hypernode1.local", 9618, 5 * 60},
 
         {"hyperslave2.local", 9611, 5 * 60},
         {"hyperslave2.local", 9612, 5 * 60},
@@ -61,110 +62,116 @@ void addCagePipe(Hyperion *hyp)
 
     };
 
-    std::vector<ControlHubInput<RGBA>::SlotPattern> patterns = {
-        {.column = Columns::CAGE_1, .slot = 0, .pattern = new Max::ChevronsConePattern(cmap)},
-        {.column = Columns::CAGE_1, .slot = 1, .pattern = new Low::VerticallyIsolated(cmap)}, 
-        {.column = Columns::CAGE_1, .slot = 2, .pattern = new Low::HorizontalSaw(cmap)},
-        {.column = Columns::CAGE_1, .slot = 3, .pattern = new Low::StaticGradientPattern(map)},
-        {.column = Columns::CAGE_1, .slot = 4, .pattern = new Min::RibbenClivePattern<Glow>(10000, 1, 0.15)},
-        {.column = Columns::CAGE_1, .slot = 5, .pattern = new Min::RibbenFlashPattern()},
-        {.column = Columns::CAGE_1, .slot = 6, .pattern = new Low::HorizontalSin(cmap90)}, 
-        {.column = Columns::CAGE_1, .slot = 7, .pattern = new Mid::Halo(cmap)}, 
+    SlotPatternsGenerator generator = [&](){
+    // std::function<std::vector<ControlHubInput<RGBA>::SlotPattern>()> generator = [&](){
+        return std::vector<ControlHubInput<RGBA>::SlotPattern>({
+            {.column = Columns::CAGE_1, .slot = 0, .pattern = new Max::ChevronsConePattern(cmap)},
+            {.column = Columns::CAGE_1, .slot = 1, .pattern = new Low::VerticallyIsolated(cmap)}, 
+            {.column = Columns::CAGE_1, .slot = 2, .pattern = new Low::HorizontalSaw(cmap)},
+            {.column = Columns::CAGE_1, .slot = 3, .pattern = new Low::StaticGradientPattern(map)},
+            {.column = Columns::CAGE_1, .slot = 4, .pattern = new Min::RibbenClivePattern<Glow>(10000, 1, 0.15)},
+            {.column = Columns::CAGE_1, .slot = 5, .pattern = new Min::RibbenFlashPattern()},
+            {.column = Columns::CAGE_1, .slot = 6, .pattern = new Low::HorizontalSin(cmap90)}, 
+            {.column = Columns::CAGE_1, .slot = 7, .pattern = new Mid::Halo(cmap)}, 
 
-        // {.column = Columns::CAGE_4, .slot = 1, .pattern = new Mid::SnowflakePatternColumn(cmap)},
+            // {.column = Columns::CAGE_4, .slot = 1, .pattern = new Mid::SnowflakePatternColumn(cmap)},
 
-        {.column = Columns::CAGE_2, .slot = 0, .pattern = new Max::RadialFadePattern(cmap)},
-        {.column = Columns::CAGE_2, .slot = 1, .pattern = new Max::RadialGlitterFadePattern(cmap)},
-        {.column = Columns::CAGE_2, .slot = 2, .pattern = new Mid::TakkenChase(cmap)},
-        {.column = Columns::CAGE_2, .slot = 3, .pattern = new Max::AngularFadePattern(cmap)}, 
-        {.column = Columns::CAGE_2, .slot = 4, .pattern = new Min::GrowingCirclesPattern(map)},
-        {.column = Columns::CAGE_2, .slot = 5, .pattern = new Min::SpiralPattern(cmap)},
-        {.column = Columns::CAGE_2, .slot = 6, .pattern = new Min::SegmentChasePattern()},
-        {.column = Columns::CAGE_2, .slot = 7, .pattern = new LedPatterns::FadeFromRandom()},
+            {.column = Columns::CAGE_2, .slot = 0, .pattern = new Max::RadialFadePattern(cmap)},
+            {.column = Columns::CAGE_2, .slot = 1, .pattern = new Max::RadialGlitterFadePattern(cmap)},
+            {.column = Columns::CAGE_2, .slot = 2, .pattern = new Mid::TakkenChase(cmap)},
+            {.column = Columns::CAGE_2, .slot = 3, .pattern = new Max::AngularFadePattern(cmap)}, 
+            {.column = Columns::CAGE_2, .slot = 4, .pattern = new Min::GrowingCirclesPattern(map)},
+            {.column = Columns::CAGE_2, .slot = 5, .pattern = new Min::SpiralPattern(cmap)},
+            {.column = Columns::CAGE_2, .slot = 6, .pattern = new Min::SegmentChasePattern()},
+            {.column = Columns::CAGE_2, .slot = 7, .pattern = new LedPatterns::FadeFromRandom()},
 
 
-        {.column = Columns::CAGE_3, .slot = 1, .pattern = new Mid::Lighthouse(cmap)},
-        {.column = Columns::CAGE_3, .slot = 2, .pattern = new Max::GrowingStrobePattern(cmap)}, 
-        {.column = Columns::CAGE_3, .slot = 3, .pattern = new Hi::DotBeatPattern(smap)}, 
-        {.column = Columns::CAGE_3, .slot = 4, .pattern = new Low::GrowShrink(cmap)},
-        {.column = Columns::CAGE_3, .slot = 5, .pattern = new Hi::XY(map)}, 
-        {.column = Columns::CAGE_3, .slot = 6, .pattern = new Low::RotatingRingsPattern(cmap)}, 
-        {.column = Columns::CAGE_3, .slot = 7, .pattern = new Low::OnBeatColumnChaseUpPattern(smap)}, 
+            {.column = Columns::CAGE_3, .slot = 1, .pattern = new Mid::Lighthouse(cmap)},
+            {.column = Columns::CAGE_3, .slot = 2, .pattern = new Max::GrowingStrobePattern(cmap)}, 
+            {.column = Columns::CAGE_3, .slot = 3, .pattern = new Hi::DotBeatPattern(smap)}, 
+            {.column = Columns::CAGE_3, .slot = 4, .pattern = new Low::GrowShrink(cmap)},
+            {.column = Columns::CAGE_3, .slot = 5, .pattern = new Hi::XY(map)}, 
+            {.column = Columns::CAGE_3, .slot = 6, .pattern = new Low::RotatingRingsPattern(cmap)}, 
+            {.column = Columns::CAGE_3, .slot = 7, .pattern = new Low::OnBeatColumnChaseUpPattern(smap)}, 
 
-        // {.column = Columns::CAGE_4, .slot = 0, .pattern = new Max::AngularFadePattern(cmap)}, //duplicate van cage 2
-        {.column = Columns::CAGE_4, .slot = 1, .pattern = new Low::GlowPulsePattern(map)},
-        {.column = Columns::CAGE_4, .slot = 2, .pattern = new Min::GlowPulsePattern()},
-        {.column = Columns::CAGE_4, .slot = 3, .pattern = new Mid::DoubleFlash(cmap)}, 
-        {.column = Columns::CAGE_4, .slot = 4, .pattern = new Min::LineLaunch(map)},
-        {.column = Columns::CAGE_4, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
-        {.column = Columns::CAGE_4, .slot = 6, .pattern = new Flash::FlashesPattern()},
-        {.column = Columns::CAGE_4, .slot = 7, .pattern = new Flash::StrobePattern()},
+            // {.column = Columns::CAGE_4, .slot = 0, .pattern = new Max::AngularFadePattern(cmap)}, //duplicate van cage 2
+            {.column = Columns::CAGE_4, .slot = 1, .pattern = new Low::GlowPulsePattern(map)},
+            {.column = Columns::CAGE_4, .slot = 2, .pattern = new Min::GlowPulsePattern()},
+            {.column = Columns::CAGE_4, .slot = 3, .pattern = new Mid::DoubleFlash(cmap)}, 
+            {.column = Columns::CAGE_4, .slot = 4, .pattern = new Min::LineLaunch(map)},
+            {.column = Columns::CAGE_4, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::CAGE_4, .slot = 6, .pattern = new Flash::FlashesPattern()},
+            {.column = Columns::CAGE_4, .slot = 7, .pattern = new Flash::StrobePattern()},
 
-        {.column = Columns::CAGE_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern()},
-        {.column = Columns::CAGE_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern()},
-        {.column = Columns::CAGE_MASK, .slot = 2, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
-        {.column = Columns::CAGE_MASK, .slot = 3, .pattern = new CageMaskPatterns::GradientMaskPattern(map, true)},
-        {.column = Columns::CAGE_MASK, .slot = 4, .pattern = new CageMaskPatterns::GradientMaskPattern(map, false)},
+            {.column = Columns::CAGE_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern()},
+            {.column = Columns::CAGE_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern()},
+            {.column = Columns::CAGE_MASK, .slot = 2, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
+            {.column = Columns::CAGE_MASK, .slot = 3, .pattern = new CageMaskPatterns::GradientMaskPattern(map, true)},
+            {.column = Columns::CAGE_MASK, .slot = 4, .pattern = new CageMaskPatterns::GradientMaskPattern(map, false)},
 
-        {.column = Columns::CAGE_FLASH, .slot = 0, .pattern = new Flash::FlashesPattern()},
-        {.column = Columns::CAGE_FLASH, .slot = 1, .pattern = new Flash::SquareGlitchPattern(map)},
-        {.column = Columns::CAGE_FLASH, .slot = 2, .pattern = new Flash::PixelGlitchPattern()},
-        {.column = Columns::CAGE_FLASH, .slot = 3, .pattern = new Max::GrowingStrobePattern(cmap)},
-        {.column = Columns::CAGE_FLASH, .slot = 4, .pattern = new Flash::StrobeHighlightPattern()},
-        {.column = Columns::CAGE_FLASH, .slot = 5, .pattern = new Flash::StrobePattern()},
-        {.column = Columns::CAGE_FLASH, .slot = 6, .pattern = new Flash::FadingNoisePattern()},
-        {.column = Columns::CAGE_FLASH, .slot = 7, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 0, .pattern = new Flash::FlashesPattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 1, .pattern = new Flash::SquareGlitchPattern(map)},
+            {.column = Columns::CAGE_FLASH, .slot = 2, .pattern = new Flash::PixelGlitchPattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 3, .pattern = new Max::GrowingStrobePattern(cmap)},
+            {.column = Columns::CAGE_FLASH, .slot = 4, .pattern = new Flash::StrobeHighlightPattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 5, .pattern = new Flash::StrobePattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 6, .pattern = new Flash::FadingNoisePattern()},
+            {.column = Columns::CAGE_FLASH, .slot = 7, .pattern = new LedPatterns::SegmentGlitchPattern()},
 
-        {.column = Columns::BUTTONS, .slot = 0, .pattern = new Buttons::ButtonPressedPattern(map, 0)},
-        {.column = Columns::BUTTONS, .slot = 1, .pattern = new Buttons::ButtonPressedPattern(map, 1)},
-        {.column = Columns::BUTTONS, .slot = 2, .pattern = new Buttons::ButtonPressedPattern(map, 2)},
-        {.column = Columns::BUTTONS, .slot = 3, .pattern = new Buttons::ButtonPressedPattern(map, 3)},
-        {.column = Columns::BUTTONS, .slot = 4, .pattern = new Buttons::ButtonPressedPattern(map, 4)},
-        {.column = Columns::BUTTONS, .slot = 5, .pattern = new Buttons::ButtonPressedPattern(map, 5)},
+            {.column = Columns::BUTTONS, .slot = 0, .pattern = new Buttons::ButtonPressedPattern(map, 0)},
+            {.column = Columns::BUTTONS, .slot = 1, .pattern = new Buttons::ButtonPressedPattern(map, 1)},
+            {.column = Columns::BUTTONS, .slot = 2, .pattern = new Buttons::ButtonPressedPattern(map, 2)},
+            {.column = Columns::BUTTONS, .slot = 3, .pattern = new Buttons::ButtonPressedPattern(map, 3)},
+            {.column = Columns::BUTTONS, .slot = 4, .pattern = new Buttons::ButtonPressedPattern(map, 4)},
+            {.column = Columns::BUTTONS, .slot = 5, .pattern = new Buttons::ButtonPressedPattern(map, 5)},
 
-        //button sync patterns
-        {.column = Columns::BUTTONS_EFFECT, .slot = 0, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 1, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 2, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 3, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 4, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 5, .pattern = new Buttons::SyncToMeasurePattern(smap)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 6, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            //button sync patterns
+            {.column = Columns::BUTTONS_EFFECT, .slot = 0, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 1, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 2, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 3, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 4, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 5, .pattern = new Buttons::SyncToMeasurePattern(smap)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 6, .pattern = new Buttons::SyncToMeasurePattern(smap)},
 
-        //button effect patterns
-        {.column = Columns::BUTTONS_EFFECT, .slot = 0, .pattern = new Buttons::TimedAnimate(new Flash::FadingNoisePattern(),1000)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 1, .pattern = new Buttons::TimedAnimate(new Flash::StrobeFadePattern(smap),2000)},
-        {.column = Columns::BUTTONS_EFFECT, .slot = 6, .pattern = new Buttons::TimedAnimate(new Low::VerticallyIsolated(cmap),5000)},
+            //button effect patterns
+            {.column = Columns::BUTTONS_EFFECT, .slot = 0, .pattern = new Buttons::TimedAnimate(new Flash::FadingNoisePattern(),1000)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 1, .pattern = new Buttons::TimedAnimate(new Flash::StrobeFadePattern(smap),2000)},
+            {.column = Columns::BUTTONS_EFFECT, .slot = 6, .pattern = new Buttons::TimedAnimate(new Low::VerticallyIsolated(cmap),5000)},
 
-        // {.column = 8, .slot = 0, .pattern = new TestPatterns::ShowStarts(60)},
-        // {.column = 8, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
-        // {.column = 8, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
-        // {.column = 8, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
-        // {.column = 8, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
-        // {.column = 8, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-        // {.column = 8, .slot = 6, .pattern = new TestPatterns::Palette(120, 20)},
-        // {.column = 8, .slot = 7, .pattern = new TestPatterns::Gamma(60)},
-        // {.column = 8, .slot = 8, .pattern = new TestPatterns::BrightnessMatch()},
+            // {.column = 8, .slot = 0, .pattern = new TestPatterns::ShowStarts(60)},
+            // {.column = 8, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            // {.column = 8, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            // {.column = 8, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            // {.column = 8, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            // {.column = 8, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            // {.column = 8, .slot = 6, .pattern = new TestPatterns::Palette(120, 20)},
+            // {.column = 8, .slot = 7, .pattern = new TestPatterns::Gamma(60)},
+            // {.column = 8, .slot = 8, .pattern = new TestPatterns::BrightnessMatch()},
 
-        // // Static
-        // {.column = 1, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-        // {.column = 1, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            // // Static
+            // {.column = 1, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            // {.column = 1, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
 
-        {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution)},
-        {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
-        {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
-        {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
-        {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
-        {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-        {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
-        {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution)},
+            {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
+            {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
 
+        });
     };
+    // auto patterns = generator();
+    // auto input = new ControlHubInput<RGBA>(map->size(), &hyp->hub, patterns);
+    // distributeAndMonitor3d<BGR, RGBA>(
+    //     hyp, input, map, distribution, ledBarLut);
 
-    auto input = new ControlHubInput<RGBA>(map->size(), &hyp->hub, patterns);
+    distributeAndPreview<GBR, RGBA>(
+        hyp, generator, map, distribution, ledBarLut);
 
-    distributeAndMonitor3d<GBR, RGBA>(
-        hyp, input, map, distribution, ledBarLut);
 }
 
 void addWingsPipe(Hyperion *hyp)
@@ -488,13 +495,13 @@ void addDMXPipe(Hyperion *hyp)
     hyp->createChain(
         splitInput->getSlice(slices.size() - 1),
         new ColorConverter<Monochrome, RGB>(),
-        new MonitorOutput(&hyp->webServer, map, 60)
+        new MonitorOutput(&hyp->webServer, map)
     );
 
     // hyp->addPipe(
     //     new ConvertPipe<Monochrome, RGB>(
     //         splitInput->getInput(slices.size() - 1),
-    //         new MonitorOutput(&hyp->webServer, map, 60)));
+    //         new MonitorOutput(&hyp->webServer, map)));
 }
 
 void addLightningPipe(Hyperion *hyp)

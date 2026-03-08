@@ -65,7 +65,7 @@ void addBase(Hyperion *hyp)
             {.column = 1, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
         });
 
-    distributeAndMonitor3d<BGR, RGBA>(
+    distributeAndMonitor<BGR, RGBA>(
         hyp,
         input,
         &baseMap,
@@ -92,7 +92,7 @@ void addWings(Hyperion *hyp)
             {.column = 2, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
         });
 
-    distributeAndMonitor3d<BGR, RGBA>(
+    distributeAndMonitor<BGR, RGBA>(
         hyp,
         input,
         &wingsMap,
