@@ -1,0 +1,59 @@
+<html>
+
+<canvas id="heart" width="400" height="400"></canvas>
+
+<script>
+    const canvas = document.getElementById('heart');
+    const ctx = canvas.getContext('2d');
+
+    function drawHeart() {
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+
+        const circle = (x, y, d) => {
+            return x * x + y * y < d * d;
+        }
+
+        const red = [255, 0, 0, 255];
+        const white = [255, 255, 255, 255];
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imgData.data;
+
+        for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+                const rx = x / canvas.width * 2 - 1;
+                const ry = y / canvas.height * 2 - 1;
+
+                // const color = true ||
+                //     circle(rx - 0.5, ry - 0.5, 1) ||
+                //         circle(rx + 0.5, ry - 0.5, 1) ||
+                //         (rx * rx + ry * ry < 1 && ry > 0) ? red : white;
+
+                const color = 
+                    circle(rx+0.5, ry+0.5, 0.5) || 
+                    circle(rx-0.5, ry+0.5, 0.5) ||
+                    (ry > -0.25 && Math.abs(rx*1.25) < 0.92-ry) ||
+                    (Math.abs(rx) < 0.5 && ry > -0.5 && ry < 0.25)
+                    
+                    ? red : white;
+
+                pixels[(y * canvas.width + x) * 4 + 0] = color[0];
+                pixels[(y * canvas.width + x) * 4 + 1] = color[1];
+                pixels[(y * canvas.width + x) * 4 + 2] = color[2];
+                pixels[(y * canvas.width + x) * 4 + 3] = color[3];
+
+            }
+
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+    drawHeart();
+
+</script>
+
+
+</html>

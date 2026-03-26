@@ -20,10 +20,10 @@ def line(turtle,addPositionToTrail=True):
         turtle.move(ledDistance, addPositionToTrail)
 
 def base(turtle):
-    numBars=24
+    numBars=18
     for i in range(numBars):
-        turtle.setPosition(0, 1000, -3000)
-        turtle.setRotation(i*360/numBars,0, 0)
+        turtle.setPosition(0, 0, -3000)
+        turtle.setRotation(i*180/(numBars-1),0, 0)
         #radius of the circle
         turtle.move(1000, False)
         turtle.pitch(100)
@@ -39,7 +39,7 @@ def wings(turtle):
             localangle = i/5*angularsize-angularsize/2
             angle = 45+wing*90 + localangle
             
-            turtle.setPosition(0, 0, -250)
+            turtle.setPosition(0, -1000, -250)
             turtle.setRotation(0,angle, 0)
             turtle.move(250, False)
             if i%2 == 0:

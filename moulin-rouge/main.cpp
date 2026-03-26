@@ -1,7 +1,10 @@
 #include "hyperion.hpp"
 #include "common/distributeAndMonitor.hpp"
+#include "common/patterns/patterns-led.hpp"
+#include "common/patterns/patterns-mapped-2d.hpp"
 #include "mapping/moulin-rouge-map.hpp"
 #include "common/setViewParams.hpp"
+#include "patterns/static.hpp"
 #include "patterns.hpp"
 
 #define COL_PALETTE 0
@@ -15,6 +18,10 @@ void addPaletteColumn(Hyperion *hyp);
 LUT *pixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 PixelMap3d::Cylindrical cWingsMap = wingsMap.toCylindricalXY();
+PixelMap base2d = resizeAndTranslateMap(baseMap.to2d(), 1, 0, 0.06);
+PixelMap::Polar basePolar = base2d.toPolar();
+PixelMap wings2d = resizeAndTranslateMap(wingsMap.to2d(), 1, 0, 0.06);
+PixelMap::Polar wingsPolar = wings2d.toPolar();
 
 int main()
 {
@@ -42,7 +49,7 @@ int main()
     auto viewParams = new ViewParams(
         35,
         -0.75,
-        Vector{0, 0.1, -2.5},
+        Vector{0, 0.15, -2.5},
         Rotation{M_PI, 0, 1, 0},
         Rotation{0, 0, 1, 0});
     setViewParams(hyp, viewParams);
@@ -63,6 +70,14 @@ void addBase(Hyperion *hyp)
             {.column = 1, .slot = 0, .pattern = new Base(&baseMap, RGB(255,0,0),"Red")},
             {.column = 1, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
             {.column = 1, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
+            {.column = 1, .slot = 3, .pattern = new Heart(&baseMap)},
+            {.column = 1, .slot = 4, .pattern = new HeartZoom(&baseMap)},
+
+            {.column = 3, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = 3, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = 3, .slot = 2, .pattern = new Static::HorizontalSaw(&basePolar)},
+            {.column = 3, .slot = 3, .pattern = new Static::HorizontalSin(&basePolar)},
+            {.column = 3, .slot = 4, .pattern = new Static::RadialSaw(&basePolar)},
         });
 
     distributeAndMonitor<BGR, RGBA>(
@@ -90,6 +105,14 @@ void addWings(Hyperion *hyp)
             {.column = 2, .slot = 0, .pattern = new Wings(&cWingsMap, RGB(255,0,0),"Red")},
             {.column = 2, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
             {.column = 2, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
+
+            {.column = 1, .slot = 4, .pattern = new HeartZoom(&wingsMap)},
+
+            {.column = 3, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = 3, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = 3, .slot = 2, .pattern = new Static::HorizontalSaw(&wingsPolar)},
+            {.column = 3, .slot = 3, .pattern = new Static::HorizontalSin(&wingsPolar)},
+            {.column = 3, .slot = 4, .pattern = new Static::RadialSaw(&wingsPolar)},
         });
 
     distributeAndMonitor<BGR, RGBA>(
