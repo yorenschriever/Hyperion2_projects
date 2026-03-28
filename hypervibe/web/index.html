@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Monitor - Hyperion</title>
+        <!-- <link rel="stylesheet" href="./monitor/monitor.css"> -->
+        <style>
+            :root {
+                color-scheme: dark;
+            }
+
+            body {
+                margin: 0;
+                /* height: 100dvh; */
+                /* display: flex; */
+                /* flex-direction: row; */
+            }
+
+            .monitor canvas {
+                width: 50vw;
+                height: 50vh;
+            }
+
+            textarea {
+                width: 100%;
+                height: 300px;
+            }
+        </style>
+        <script type="module">
+            import { html, render } from './common/preact-standalone.js'
+            import { HypervibeApp } from "./hypervibe.js"
+
+            render(html`<${HypervibeApp}/>`, document.body);
+        </script>
+  </head>
+
+  <body></body>
+</html>

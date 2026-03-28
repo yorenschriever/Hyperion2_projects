@@ -10,7 +10,7 @@
 
 void addPaletteColumn(Hyperion *hyp);
 
-LUT *pixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 230);
+LUT *pixelLut = new ColorCorrectionLUT(2.27, 255, 255, 255, 230);
 
 PixelMap freakMapBig = resizeAndTranslateMap(freakMap, 1.2);
 PixelMap nFreakMap = normalizeMap(freakMap);
@@ -63,6 +63,15 @@ int main()
             {.column = FULL, .slot = 2, .pattern = new Mapped2dPatterns::HorizontalSaw(&pFreakMap)},
             {.column = FULL, .slot = 3, .pattern = new RadialGradient(&pFreakMap)},
             {.column = FULL, .slot = 4, .pattern = new LinearGradient(&freakMap)},
+            {.column = FULL, .slot = 5, .pattern = new PulseRing(&freakMap)},
+            {.column = FULL, .slot = 6, .pattern = new RotatingTriangle(&freakMap)},
+            {.column = FULL, .slot = 7, .pattern = new TriangleBurst(&freakMap)},
+            {.column = FULL, .slot = 8, .pattern = new ExpandingTriangle(&freakMap)},
+            {.column = FULL, .slot = 9, .pattern = new ExpandingTriangle2(&freakMap)},
+            {.column = FULL, .slot = 10, .pattern = new TrianglePulse(&freakMap)},
+            {.column = FULL, .slot = 11, .pattern = new TriangleOutlineGrow(&pFreakMap)},
+            {.column = FULL, .slot = 12, .pattern = new LetterStrobeFlash()},
+            {.column = FULL, .slot = 13, .pattern = new CosmicJellyfish(&pFreakMap)},
 
             {.column = LETTER, .slot = 0, .pattern = new LedPatterns::RibbenFlashPattern(50)},
             {.column = LETTER, .slot = 1, .pattern = new LedPatterns::RibbenClivePattern<Glow>(1000, 1, 0.25, 50)},
@@ -102,7 +111,7 @@ int main()
             {.column = DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
             {.column = DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
             {.column = DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
-            {.column = DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            {.column = DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(50)},
         });
 
     distributeAndMonitor<RGB, RGBA>(hyp,input,&freakMap,distribution,pixelLut,0.01,timing);
