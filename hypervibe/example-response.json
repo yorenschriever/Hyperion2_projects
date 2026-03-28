@@ -1,0 +1,26 @@
+{
+    "model": "claude-opus-4-6",
+    "id": "msg_01XQtbxWHVgSUHu3Vzvycdgr",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+        {
+            "type": "text",
+            "text": "class CelestialDrift : public Pattern<RGBA>\n{\n    PixelMap::Polar *map;\n    Transition transition = Transition(800, 1500);\n    LFO<SinFast> breathLfo;\n    LFO<SawUp> spinLfo;\n    LFO<Glow> pulseLfo;\n    LFO<SinFast> wobbleLfo;\n    Permute perm;\n    FadeDown fade = FadeDown(1200);\n    BeatWatcher watcher;\n\npublic:\n    CelestialDrift(PixelMap::Polar *map)\n    {\n        this->map = map;\n        this->name = \"Celestial drift\";\n    }\n\n    inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override\n    {\n        if (!transition.Calculate(active))\n            return;\n\n        float velocity = params->getVelocity(12000, 2000);\n        float size = params->getSize(0.8, 0.15);\n        float amount = params->getAmount(2, 6);\n        float offset = params->getOffset(0, 0.5);\n        float variant = params->getVariant();\n        float intensity = params->getIntensity(0.3, 1.0);\n\n        spinLfo.setPeriod(velocity);\n        breathLfo.setPeriod(velocity * 1.7);\n        pulseLfo.setPeriod(velocity * 0.6);\n        pulseLfo.setDutyCycle(0.4);\n        wobbleLfo.setPeriod(velocity * 2.3);\n\n        if (watcher.Triggered())\n            fade.reset();\n\n        perm.setSize(width);\n\n        float spin = spinLfo.getValue();\n        float wobble = wobbleLfo.getValue() * 0.3 * variant;\n\n        for (int i = 0; i < std::min(width, (int)map->size()); i++)\n        {\n            float r = map->r(i);\n            float th = map->th(i) / (2.0f * M_PI);\n\n            float angularPhase = th + spin + r * wobble;\n            float arms = 0;\n            for (int a = 0; a < (int)amount; a++)\n            {\n                float armOffset = (float)a / amount + offset * a * 0.1f;\n                float dist = angularPhase - armOffset;\n                dist = dist - (int)dist;\n                if (dist < 0) dist += 1.0f;\n                if (dist > 0.5f) dist = 1.0f - dist;\n                float armBrightness = Utils::constrain_f(1.0f - dist / size, 0.0f, 1.0f);\n                armBrightness *= armBrightness;\n                arms = std::max(arms, armBrightness);\n            }\n\n            float radialPulse = breathLfo.getValue(r * 0.3f);\n            float coreBrightness = Utils::constrain_f(1.0f - r / (size * 3.0f), 0.0f, 1.0f);\n            coreBrightness *= coreBrightness * pulseLfo.getValue(0.0f);\n\n            float gradientPos = Utils::constrain_f(th + r * 0.5f + spin * 0.5f, 0.0f, 1.0f);\n            RGBA armColor = params->getGradient(gradientPos);\n            RGBA coreColor = params->getHighlightColor();\n\n            float radialFade = Utils::constrain_f(1.0f - r * (1.0f - radialPulse * 0.4f), 0.2f, 1.0f);\n\n            float beatFlash = fade.getValue() * 0.3f * intensity;\n            float finalBrightness = (arms * radialFade + coreBrightness + beatFlash) * transition.getValue();\n            finalBrightness = Utils::constrain_f(finalBrightness, 0.0f, 1.0f);\n\n            pixels[i] = armColor * (arms * radialFade * transition.getValue());\n            pixels[i] += coreColor * (coreBrightness * transition.getValue());\n            pixels[i] += params->getPrimaryColor() * (beatFlash * transition.getValue());\n        }\n    }\n};\ntypedef CelestialDrift VibePattern;\n"
+        }
+    ],
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "usage": {
+        "input_tokens": 6006,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1125,
+        "service_tier": "standard",
+        "inference_geo": "global"
+    }
+}

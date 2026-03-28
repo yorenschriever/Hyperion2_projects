@@ -8,3 +8,5 @@ include($ENV{HYPERION_LIB_DIR}/build-utils/utils.cmake)
 hyperion_before()
 project(${PROJECT})
 hyperion_after()
+
+target_include_directories(${PROJECT} PRIVATE $ENV{BOOST_DIR})

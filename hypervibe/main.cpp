@@ -3,47 +3,11 @@
 #include "platform/includes/thread.hpp"
 #include "platform/includes/utils.hpp"
 
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <array>
-#include <fstream>
-using namespace std;
-
-class CompileResponse: public WebServerResponseBuilder
-{
-public:
-    void build(WebServerResponseBuilder::Writer write, std::string postData, void * userData) override
-    {
-        ofstream myfile;
-        myfile.open ("compile/pattern.hpp");
-        myfile << postData;
-        myfile.close();
-
-        system("cd ./compile && ./compile-server.sh");
-        
-        streampos size;
-        char * memblock;
-
-        ifstream file ("compile/pattern.wasm", ios::in|ios::binary|ios::ate);
-        if (!file.is_open())
-            return;
-
-        size = file.tellg();
-        memblock = new char [size];
-        file.seekg (0, ios::beg);
-        file.read (memblock, size);
-        file.close();
-
-        write(memblock, size, userData);
-
-        delete[] memblock;
-    }
-};
+#include "compile-reponse.hpp"
+#include "generate-response.hpp"
 
 CompileResponse compileResponse;
+GenerateResponse generateResponse;
 
 int main()
 {
@@ -54,6 +18,7 @@ int main()
     auto webServer = WebServer::createInstance();
 
     webServer->addPath("/compile", &compileResponse);
+    webServer->addPath("/generate", &generateResponse);
 
     while (1)
         Thread::sleep(1000);

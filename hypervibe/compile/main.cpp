@@ -34,7 +34,7 @@ TempoSource tempo;
 EXTERN EMSCRIPTEN_KEEPALIVE void init(int size, uint8_t *outputArray) {
     // printf("init called\n");
 
-    pattern = new LetterStrobeFlash();
+    pattern = new VibePattern();
 
     chain = new Chain(
         new PatternInput<RGBA>(size, pattern),
