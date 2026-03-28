@@ -422,7 +422,7 @@ function updateMemoryViews() {
   HEAPU16 = new Uint16Array(b);
   HEAP32 = new Int32Array(b);
   HEAPU32 = new Uint32Array(b);
-  HEAPF32 = new Float32Array(b);
+  Module['HEAPF32'] = HEAPF32 = new Float32Array(b);
   HEAPF64 = new Float64Array(b);
   HEAP64 = new BigInt64Array(b);
   HEAPU64 = new BigUint64Array(b);
@@ -1064,6 +1064,7 @@ async function createWasm() {
     };
 
 
+
 // End JS library code
 
 // include: postlibrary.js
@@ -1319,7 +1320,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'HEAPU16',
   'HEAP32',
   'HEAPU32',
-  'HEAPF32',
   'HEAPF64',
   'HEAP64',
   'HEAPU64',
@@ -1564,7 +1564,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['emscripten_stack_get_current'] != 'undefined', 'missing Wasm export: emscripten_stack_get_current');
   assert(typeof wasmExports['memory'] != 'undefined', 'missing Wasm export: memory');
   assert(typeof wasmExports['__indirect_function_table'] != 'undefined', 'missing Wasm export: __indirect_function_table');
-  _init = Module['_init'] = createExportWrapper('init', 2);
+  _init = Module['_init'] = createExportWrapper('init', 3);
   _beat = Module['_beat'] = createExportWrapper('beat', 0);
   _process = Module['_process'] = createExportWrapper('process', 0);
   _malloc = Module['_malloc'] = createExportWrapper('malloc', 1);

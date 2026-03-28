@@ -22,6 +22,8 @@ This method is where the pattern actually is generated.
 
 ### Example:
 ```
+#include "core/generation/patterns/pattern.hpp"
+
 class HelloWorld : public Pattern<RGBA>
 {
     // This example will paint all leds red. It will show you the minimal code you need in a pattern
@@ -251,10 +253,10 @@ public:
     PixelMap::Polar *map;
     Transition transition = Transition(0, 2000); // fade out over 2 seconds, instant fade in.
 
-    GrowingCirclePattern(PixelMap::Polar *map) 
+    GrowingCirclePattern(PixelMap *map) 
     {
         this->name = "Growing Circle";
-        this->map = map;
+        this->map = map->toPolar();
     }
 
     inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -379,7 +381,7 @@ Use a PixelMap to get the positions of the lights.
 
 ```
 #include <algorithm>
-#include "includes/utils.hpp"
+#include "platform/includes/utils.hpp"
 #include "generation/patterns/helpers/lfo.h"
 
 class MappedPattern : public Pattern<RGBA>
@@ -415,9 +417,9 @@ public:
 
 ### Polar coordinates
 If you are working with circular patterns, it can be useful to use a polar coordinate system. 
-In that case, let the constructor receive a PixelMap::Polar
+In that case, let the constructor receive a PixelMap, and call toPolar() or toPolarRotate90() before storing it in the class property.
 
-polar maps have use r and th for the radius and angle. r[0,1] and th[0,2 pi], where th=0 is the rightmost point of the circle and it goes ccw.
+Polar maps use `r` and `th` for the radius and angle. r[0,1] and th[0,2 pi], where th=0 is the rightmost point of the circle and it goes counter clockwise.
 example: `map->r(index)` and `map->th(index)` 
 
 ```
@@ -429,9 +431,10 @@ class DotBeatPattern : public Pattern<RGBA>
     BeatWatcher watcher = BeatWatcher();
 
 public:
-    DotBeatPattern(PixelMap::Polar *map)
+    DotBeatPattern(PixelMap *map)
     {
-        this->map = map;
+        this->map = map->toPolar(); //th=0 is on the right.
+        //alternatively use this->map = map->toPolarRotate90(); if you need the seam to be at the top.
         this->name = "Dot beat";
     }
 
@@ -509,10 +512,10 @@ public:
 ```
 
 ## Utils
-You can use a few utility functions from the Utils class. These are located in `includes/utils.hpp`.
+You can use a few utility functions from the Utils class. These are located in `platform/includes/utils.hpp`.
 
 int Utils::random(int minimum, int maximum);
-float Utils::randomf();
+float Utils::random_f(); (between 0-1)
 int utils::constrain(int value, int min, int max);
 int utils::constrain_f(float value, float min, float max);
 float Utils::rescale(float value, float start_out, float end_out, float start_in, float end_in);
@@ -595,7 +598,7 @@ public:
 
 
 ## Glossary
-- Chaser: a wave moving though the leds, based on pixel indices. Use the dutycycle to create space between the chasers. Chasers work well with gradients.
+- Chaser: a wave moving though the leds, based on pixel indices. 
 - Sweep: a wave moving though the leds, based on their position in the map. 
 - Angular: rotating, based in the angle of the polar coordinates.
 - Radial: growing from the center, based on the radius of the polar coordinates.
@@ -603,6 +606,15 @@ public:
 - Blinder: very bright when the pattern is on, fade out slowly when the pattern is off.
 - Flash: very bright on a beat, fade out quickly after that.
 - Glow: use a LFO<Glow> with a duty cycle in combination with Permute
+
+## Creative instructions
+- Multiple patterns will be layered, so keep them simple, don't do multiple things in one pattern. 
+- Keep the background transparent.
+- Only use colors form the palette. Use primary for sparse foreground effects, secondary for effect that are more filling, and use highlight only for accents. Gradients are also allowed.
+- Use the duty cycle to create space between the chasers. 
+- Chasers work well with gradients.
+- Gradients also work well to fade a color over time.
+- The pixelMap coordinates are between [-1,1]*[-1,1]. Make the shapes roughly this size. Clipping is ok.
 
 ## Constraints:
 - Code must compile with c++17.
@@ -613,6 +625,7 @@ public:
 - Be Neutral.
 - Base all the information only on this document.
 - Output only the class
+- Constructor must always have a PixelMap* argument, even if no map is used.
 - Do not wrap the output in a markdown codeblock
 - End with a typedef to `VibePattern` with the class you generated. example: `typedef DotBeatPattern VibePattern;`
 

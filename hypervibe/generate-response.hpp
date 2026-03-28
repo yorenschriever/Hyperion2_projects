@@ -134,27 +134,27 @@ public:
         ctx.set_verify_mode(ssl::verify_peer);
         SSL_set_tlsext_host_name(ssocket.native_handle(), host.c_str());
 
-        // connect(ssocket.lowest_layer(), it);
-        // ssocket.handshake(ssl::stream_base::handshake_type::client);
-        // http::request<http::string_body> req{http::verb::post, path, 11};
-        // req.set(http::field::host, host);
-        // req.set(http::field::content_type, "application/json");
-        // req.set("x-api-key", readFile("api.key"));
-        // req.set("anthropic-version", "2023-06-01");
-        // req.body() = request;
-        // req.prepare_payload();
+        connect(ssocket.lowest_layer(), it);
+        ssocket.handshake(ssl::stream_base::handshake_type::client);
+        http::request<http::string_body> req{http::verb::post, path, 11};
+        req.set(http::field::host, host);
+        req.set(http::field::content_type, "application/json");
+        req.set("x-api-key", readFile("api.key"));
+        req.set("anthropic-version", "2023-06-01");
+        req.body() = request;
+        req.prepare_payload();
 
-        // http::write(ssocket, req);
+        http::write(ssocket, req);
 
-        // printf("Request sent, waiting for response...\n");
+        printf("Request sent, waiting for response...\n");
 
-        // http::response<http::string_body> res;
-        // flat_buffer buffer;
-        // http::read(ssocket, buffer, res);
-        // std::string body = res.body();
-        // ssocket.lowest_layer().close();
+        http::response<http::string_body> res;
+        flat_buffer buffer;
+        http::read(ssocket, buffer, res);
+        std::string body = res.body();
+        ssocket.lowest_layer().close();
 
-        std::string body = readFile("example-response.json");
+        // std::string body = readFile("example-response.json");
 
         printf("Response received, done.\n");
 

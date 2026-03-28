@@ -8,7 +8,6 @@
 
 #include "platform/includes/webServer.hpp"
 #include "platform/includes/webServerResponseBuilder.hpp"
-#include "readfile.hpp"
 
 using namespace std;
 
@@ -22,8 +21,29 @@ public:
         myfile << postData;
         myfile.close();
 
-        system("cd ./compile && ./compile-server.sh");
-        
+
+
+
+
+        std::array<char, 1024> buffer;
+        std::string result;
+        FILE* pipe = popen("cd ./compile && ./compile-server.sh 2>&1", "r");
+        if (!pipe) {
+            throw std::runtime_error("popen() failed!");
+        }
+        while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe) != nullptr) {
+            result += buffer.data();
+        }
+        int closeResult = pclose(pipe);
+        if (closeResult != 0) {
+            cerr << "Error: compile-server.sh exited with code " << closeResult << endl;
+            write(result.c_str(), result.size(), userData);
+            return;
+        }
+
+
+
+
         streampos size;
         char * memblock;
 

@@ -2,16 +2,14 @@ import { html, useState, useEffect, useRef} from './common/preact-standalone.js'
 import { main as initWebGLMonitor } from './monitor/webgl-monitor.js';
 import wasmFactory from './pattern.mjs';
 
-export const Monitor = ({ scenes, code }) => {
+export const Monitor = ({ scenes, wasmBinary }) => {
     const canvasRef = useRef(null);
 
     useEffect(async () => {
         if (!canvasRef.current) return;
+        if (!wasmBinary) return;
 
-        console.log('Compiling code for monitor:', code);
-        const config = {
-            wasmBinary: await fetch('/compile',{cache: "no-cache", method: "POST", body: code}).then(response => response.arrayBuffer())
-        };
+        const config = { wasmBinary};
 
         wasmFactory(config).then(instance => {
 
@@ -22,14 +20,27 @@ export const Monitor = ({ scenes, code }) => {
 
             const createPixelSource = (scenePart, setBuffer) => {
                 
+                //set pixel buffer
                 const sizeof_rgb = 3;
                 const pixelBuffer = new Uint8Array(scenePart.positions.length * sizeof_rgb);
                 const wasmBuffer = instance._malloc(pixelBuffer.length * pixelBuffer.BYTES_PER_ELEMENT);
                 wasmBuffers.push(wasmBuffer);
                 instance.HEAPU8.set(pixelBuffer, wasmBuffer);
 
-                instance._init(scenePart.positions.length, wasmBuffer);
+                //set pixel map buffer
+                const pixelMapData = new Float32Array(scenePart.positions.length * 2);
+                for (let i = 0; i < scenePart.positions.length; i++) {
+                    pixelMapData[i * 2] = scenePart.positions[i].x;
+                    pixelMapData[i * 2 + 1] = scenePart.positions[i].y;
+                }
+                const pixelMapBuffer = instance._malloc(pixelMapData.length * pixelMapData.BYTES_PER_ELEMENT);
+                wasmBuffers.push(pixelMapBuffer);
+                instance.HEAPF32.set(pixelMapData, pixelMapBuffer / Float32Array.BYTES_PER_ELEMENT);
 
+                //init
+                instance._init(scenePart.positions.length, wasmBuffer, pixelMapBuffer);
+
+                //run
                 const updateFrame = () => {
                     instance._process();
 
@@ -54,7 +65,7 @@ export const Monitor = ({ scenes, code }) => {
             exitFrameRequest = true;
             instance = null;
         }
-    }, [scenes, code]);
+    }, [scenes, wasmBinary]);
 
     return html`<canvas ref=${canvasRef} width="640" height="480"></canvas>`;
 }

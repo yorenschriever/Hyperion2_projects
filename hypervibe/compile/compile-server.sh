@@ -11,4 +11,4 @@ thread.cpp \
 -sMODULARIZE \
 --no-entry \
 -s EXPORTED_FUNCTIONS=_init,_process,_beat,_malloc,_free \
--s EXPORTED_RUNTIME_METHODS=wasmMemory,HEAPU8 \
+-s EXPORTED_RUNTIME_METHODS=wasmMemory,HEAPU8,HEAPF32 \
