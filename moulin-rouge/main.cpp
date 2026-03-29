@@ -2,13 +2,21 @@
 #include "common/distributeAndMonitor.hpp"
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-mapped-2d.hpp"
+#include "common/patterns/patterns-test.hpp"
 #include "mapping/moulin-rouge-map.hpp"
 #include "common/setViewParams.hpp"
+// #include "distribution/utils/indexMap.hpp"
 #include "patterns/static.hpp"
 #include "patterns.hpp"
+#include "wings-zigzag.hpp"
 
-#define COL_PALETTE 0
-#define COL_LED 1
+enum Columns
+{
+    PALETTE,
+    BASE,
+    WINGS,
+    DEBUG,
+};
 
 void addBase(Hyperion *hyp);
 void addWings(Hyperion *hyp);
@@ -19,9 +27,9 @@ LUT *pixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 PixelMap3d::Cylindrical cWingsMap = wingsMap.toCylindricalXY();
 PixelMap base2d = resizeAndTranslateMap(baseMap.to2d(), 1, 0, 0.06);
-PixelMap::Polar basePolar = base2d.toPolar();
+PixelMap::Polar basePolar = *(base2d.toPolar());
 PixelMap wings2d = resizeAndTranslateMap(wingsMap.to2d(), 1, 0, 0.06);
-PixelMap::Polar wingsPolar = wings2d.toPolar();
+PixelMap::Polar wingsPolar = *(wings2d.toPolar());
 
 int main()
 {
@@ -31,20 +39,19 @@ int main()
     addWings(hyp);
     addPaletteColumn(hyp);
 
-    hyp->hub.setColumnName(COL_PALETTE, "Kleur");
-    hyp->hub.setColumnName(1, "Base");
-    hyp->hub.setColumnName(2, "Wings");
+    hyp->hub.setColumnName(Columns::PALETTE, "Kleur");
+    hyp->hub.setColumnName(Columns::BASE, "Base");
+    hyp->hub.setColumnName(Columns::WINGS, "Wings");
 
-    Tempo::AddSource(new ConstantTempo(120));
+    hyp->hub.buttonPressed(Columns::PALETTE, 0);
+    hyp->hub.setForcedSelection(Columns::PALETTE);
+    hyp->hub.setFlashColumn(Columns::PALETTE, false, true);
 
-    hyp->hub.buttonPressed(COL_PALETTE, 0);
-    hyp->hub.setForcedSelection(COL_PALETTE);
-    hyp->hub.setFlashColumn(COL_PALETTE, false, true);
-
-    hyp->hub.buttonPressed(1, 0);
-    hyp->hub.buttonPressed(2, 0);
+    hyp->hub.buttonPressed(Columns::DEBUG, 0);
+    // hyp->hub.buttonPressed(Columns::WINGS, 0);
 
     hyp->start();
+    Tempo::AddSource(new ConstantTempo(120));
 
     auto viewParams = new ViewParams(
         35,
@@ -62,71 +69,106 @@ int main()
 void addBase(Hyperion *hyp)
 {
     int nleds = baseMap.size();
+    IndexMap *zigzag = new BaseZigZagMapper(nleds,3*60);
+
+    Distribution distribution = {
+        {"hypernode1.local",9611,6*60},
+        {"hypernode1.local",9612,6*60},
+        {"hypernode1.local",9613,6*60},
+        {"hypernode1.local",9614,6*60},
+
+        {"hypernode1.local",9615,6*60},
+
+        {"hypernode2.local",9611,6*60},
+        {"hypernode2.local",9612,6*60},
+        {"hypernode2.local",9613,6*60},
+        {"hypernode2.local",9614,6*60},
+    };
 
     auto input = new ControlHubInput<RGBA>(
         nleds,
         &hyp->hub,
         {
-            {.column = 1, .slot = 0, .pattern = new Base(&baseMap, RGB(255,0,0),"Red")},
-            {.column = 1, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
-            {.column = 1, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
-            {.column = 1, .slot = 3, .pattern = new Heart(&baseMap)},
-            {.column = 1, .slot = 4, .pattern = new HeartZoom(&baseMap)},
+            {.column = Columns::BASE, .slot = 0, .pattern = new Base(&baseMap, RGB(255,0,0),"Red")},
+            {.column = Columns::BASE, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
+            {.column = Columns::BASE, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
+            {.column = Columns::BASE, .slot = 3, .pattern = new Heart(&baseMap)},
+            {.column = Columns::BASE, .slot = 4, .pattern = new HeartZoom(&baseMap)},
 
-            {.column = 3, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = 3, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = 3, .slot = 2, .pattern = new Static::HorizontalSaw(&basePolar)},
-            {.column = 3, .slot = 3, .pattern = new Static::HorizontalSin(&basePolar)},
-            {.column = 3, .slot = 4, .pattern = new Static::RadialSaw(&basePolar)},
+            {.column = Columns::BASE, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::BASE, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::BASE, .slot = 2, .pattern = new Static::HorizontalSaw(&basePolar)},
+            {.column = Columns::BASE, .slot = 3, .pattern = new Static::HorizontalSin(&basePolar)},
+            {.column = Columns::BASE, .slot = 4, .pattern = new Static::RadialSaw(&basePolar)},
+
+            {.column = Columns::BASE, .slot = 5, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap = zigzag},
+
+            {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
+            {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
+            {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
 
-    distributeAndMonitor<BGR, RGBA>(
-        hyp,
-        input,
-        &baseMap,
-        {
-            {"hypernode1.local",9611,nleds/4},
-            {"hypernode1.local",9612,nleds/4},
-            {"hypernode1.local",9613,nleds/4},
-            {"hypernode1.local",9614,nleds/4},
-        },
-        pixelLut
-    );
+    distributeAndMonitor<BGR, RGBA>(hyp,input,&baseMap,distribution,pixelLut);
 }
 
 void addWings(Hyperion *hyp)
 {
     int nleds = wingsMap.size();
+    IndexMap *zigzag = new WingsZigZagMapper(nleds);
+
+    Distribution distribution = {
+        {"hypernode3.local",9611,5*60},
+        {"hypernode3.local",9612,3*60},
+
+        {"hypernode3.local",9613,5*60},
+        {"hypernode3.local",9614,3*60},
+
+        {"hypernode3.local",9615,5*60},
+        {"hypernode3.local",9616,3*60},
+
+        {"hypernode3.local",9617,5*60},
+        {"hypernode3.local",9618,3*60},
+    };
 
     auto input = new ControlHubInput<RGBA>(
         nleds,
         &hyp->hub,
         {
-            {.column = 2, .slot = 0, .pattern = new Wings(&cWingsMap, RGB(255,0,0),"Red")},
-            {.column = 2, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
-            {.column = 2, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
+            {.column = Columns::WINGS, .slot = 0, .pattern = new Wings(&cWingsMap, RGB(255,0,0),"Red")},
+            {.column = Columns::WINGS, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
+            {.column = Columns::WINGS, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
 
-            {.column = 1, .slot = 4, .pattern = new HeartZoom(&wingsMap)},
+            {.column = Columns::WINGS, .slot = 4, .pattern = new HeartZoom(&wingsMap)},
 
-            {.column = 3, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = 3, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = 3, .slot = 2, .pattern = new Static::HorizontalSaw(&wingsPolar)},
-            {.column = 3, .slot = 3, .pattern = new Static::HorizontalSin(&wingsPolar)},
-            {.column = 3, .slot = 4, .pattern = new Static::RadialSaw(&wingsPolar)},
+            {.column = Columns::WINGS, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::WINGS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::WINGS, .slot = 2, .pattern = new Static::HorizontalSaw(&wingsPolar)},
+            {.column = Columns::WINGS, .slot = 3, .pattern = new Static::HorizontalSin(&wingsPolar)},
+            {.column = Columns::WINGS, .slot = 4, .pattern = new Static::RadialSaw(&wingsPolar)},
+
+            {.column = Columns::WINGS, .slot = 5, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap = zigzag},
+
+
+            {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
+            {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
+            {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
 
-    distributeAndMonitor<BGR, RGBA>(
-        hyp,
-        input,
-        &wingsMap,
-        {
-            {"hypernode2.local",9611,nleds/4},
-            {"hypernode2.local",9612,nleds/4},
-            {"hypernode2.local",9613,nleds/4},
-            {"hypernode2.local",9614,nleds/4},
-        },
-        pixelLut
-    );
+    distributeAndMonitor<BGR, RGBA>(hyp,input,&wingsMap,distribution,pixelLut);
 }
 
 void addPaletteColumn(Hyperion *hyp)

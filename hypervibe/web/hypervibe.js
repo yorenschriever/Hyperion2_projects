@@ -26,6 +26,7 @@ export const HypervibeApp = () => {
             const code = await response.text();
             console.log('Generated code:', code);
             setCodeState(code);
+            setCodeLoading(false);
             await loadMonitorFromCode(code);
         } finally {
             setCodeLoading(false);

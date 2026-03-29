@@ -2,7 +2,7 @@ export const pixelMap = {
     "path": "/ws/monitor1",
     "instance": "",
     "type": "2d",
-    "size": 0.010000,
+    "size": 0.030000,
     "positions": [
       {"x" : -0.950000, "y" : -0.950000}, 
       {"x" : -0.850000, "y" : -0.950000}, 

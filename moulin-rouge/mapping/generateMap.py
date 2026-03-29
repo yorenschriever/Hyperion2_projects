@@ -52,6 +52,31 @@ def wings(turtle):
 base(turtleBase)
 wings(turtleWings)
 
+def zigZag(array, segmentSize):
+    result = []
+    for i in range(0, len(array), segmentSize):
+        segment = array[i:i+segmentSize]
+        if (i//segmentSize) % 2 == 1:
+            segment.reverse()
+        result.extend(segment)
+    return result
+
+def reverseBetween(array, start, size):
+    result = array[:]
+    end = start + size
+    result[start:end] = reversed(result[start:end])
+    return result
+
+def wingsZigZag(array):
+    for w in range(4):
+        wstart = w*8*ledsPerMeter
+        array = reverseBetween(array, wstart + 2*ledsPerMeter, ledsPerMeter)
+        array = reverseBetween(array, wstart + 3*ledsPerMeter, 2*ledsPerMeter)
+
+        array = reverseBetween(array, wstart + 5*ledsPerMeter, 3*ledsPerMeter)
+        array = reverseBetween(array, wstart + 5*ledsPerMeter, 2*ledsPerMeter)
+    return array
+
 def writePoints(name, points, scale=1.):
     f.write("PixelMap3d " + name + " = {\n")
     for point in points:
@@ -64,7 +89,7 @@ print ("Base map has " + str(len(turtleBase.trail)) + " points")
 print ("Wings map has " + str(len(turtleWings.trail)) + " points")
 
 f = open(os.path.join(dir, "moulin-rouge-map.hpp"), "w")
-writePoints("baseMap", turtleBase.trail, scale)
-writePoints("wingsMap", turtleWings.trail, scale)
+writePoints("baseMap", zigZag(turtleBase.trail, 3*60), scale)
+writePoints("wingsMap", wingsZigZag(turtleWings.trail), scale)
 writePoints("totalMap", turtleBase.trail + turtleWings.trail, scale)
 f.close()

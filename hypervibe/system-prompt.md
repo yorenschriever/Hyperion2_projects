@@ -615,6 +615,7 @@ public:
 - Chasers work well with gradients.
 - Gradients also work well to fade a color over time.
 - The pixelMap coordinates are between [-1,1]*[-1,1]. Make the shapes roughly this size. Clipping is ok.
+- Make sure the colors don't get too dim. Use full brightness of the palette most of the time. If you multiply multiple values for the alpha channel, correct for it to pump up the brightness again.
 
 ## Constraints:
 - Code must compile with c++17.
