@@ -15,6 +15,7 @@
 #include "patterns/trigger.hpp"
 #include "patterns/vibe.hpp"
 #include "patterns.hpp"
+#include "palettes.hpp"
 #include "wings-zigzag.hpp"
 
 enum Columns
@@ -134,12 +135,18 @@ void addBase(Hyperion *hyp)
             {.column = Columns::BASE, .slot = 8, .pattern = new Mapped2dPatterns::Lighthouse(&basePolar)},
             {.column = Columns::BASE, .slot = 9, .pattern = new BasePatterns::BarberPole(&cBaseMap)},
             {.column = Columns::BASE, .slot = 10, .pattern = new BasePatterns::RotatingRingsPattern(&cBaseMap)},
+            {.column = Columns::BASE, .slot = 11, .pattern = new BasePatterns::MeshPattern(&cBaseMap)},
 
             // {.column = Columns::BASE, .slot = 11, .pattern = new VibePatterns::TriangleBurst(&base2d)},
             {.column = Columns::BASE, .slot = 12, .pattern = new VibePatterns::RotatingTriangle(&base2d)},
             {.column = Columns::BASE, .slot = 13, .pattern = new VibePatterns::TriangleStutter(&base2d)},
             {.column = Columns::BASE, .slot = 14, .pattern = new VibePatterns::TrianglePulse(&base2d)},
             {.column = Columns::BASE, .slot = 15, .pattern = new VibePatterns::TriangleOutlineGrow(&base2d)},
+
+            {.column = Columns::BASE, .slot = 16, .pattern = new VibePatterns::MatrixRainPattern(&base2d)},
+            {.column = Columns::BASE, .slot = 17, .pattern = new VibePatterns::HeartbeatPattern(&base2d)},
+            {.column = Columns::BASE, .slot = 18, .pattern = new VibePatterns::FireworkBurstPattern(&base2d)},
+            {.column = Columns::BASE, .slot = 19, .pattern = new VibePatterns::MeteorShowerPattern(&base2d)},
 
             {.column = Columns::TRIGGER, .slot = 0, .pattern = new TriggerPatterns::FadingNoisePattern()},
             {.column = Columns::TRIGGER, .slot = 1, .pattern = new TriggerPatterns::PulsePattern()},
@@ -160,10 +167,19 @@ void addBase(Hyperion *hyp)
             {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(3*60, true), .indexMap = zigzag},
             {.column = Columns::MASK, .slot = 3, .pattern = new MaskPatterns::SegmentGradientMaskPattern(3*60, false), .indexMap = zigzag},
             {.column = Columns::MASK, .slot = 6, .pattern = new MaskPatterns::SideChainCompressorMask()},
+            {.column = Columns::MASK, .slot = 7, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+            
+
+            {.column = Columns::FLASH, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::FLASH, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::FLASH, .slot = 2, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::FLASH, .slot = 3, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::FLASH, .slot = 4, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::FLASH, .slot = 5, .pattern = new LedPatterns::FadeFromRandom()},
             {.column = Columns::FLASH, .slot = 7, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
 
-            {.column = Columns::FLASH, .slot = 0, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
-        
+
+
 
             // {.column = Columns::MASK, .slot = 3, .pattern = new MaskPatterns::TriggerPalettePattern(1, "Secondary", 20)},
 
@@ -253,12 +269,25 @@ void addWings(Hyperion *hyp)
             {.column = Columns::BASE, .slot = 15, .pattern = new VibePatterns::TriangleOutlineGrow(&wings2d)},
 
 
+            {.column = Columns::BASE, .slot = 16, .pattern = new VibePatterns::MatrixRainPattern(&wings2d)},
+            // {.column = Columns::BASE, .slot = 17, .pattern = new VibePatterns::HeartbeatPattern(&wings2d)},
+            {.column = Columns::BASE, .slot = 18, .pattern = new VibePatterns::FireworkBurstPattern(&wings2d)},
+            {.column = Columns::BASE, .slot = 19, .pattern = new VibePatterns::MeteorShowerPattern(&wings2d)},
+
+
             {.column = Columns::MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
             {.column = Columns::MASK, .slot = 1, .pattern = new MaskPatterns::GlowPulseMaskPattern(), .indexMap = zigzag},
             // {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(8*60, true)},
             // {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(2*60, false)},
             {.column = Columns::MASK, .slot = 4, .pattern = new MaskPatterns::WingsFadePattern(&wingsPolar)},
             {.column = Columns::MASK, .slot = 5, .pattern = new MaskPatterns::WingsFadePattern(&wingsPolar,true)},
+
+            {.column = Columns::FLASH, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::FLASH, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::FLASH, .slot = 2, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::FLASH, .slot = 3, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::FLASH, .slot = 4, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::FLASH, .slot = 5, .pattern = new LedPatterns::FadeFromRandom()},
 
             {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
             {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
@@ -282,6 +311,70 @@ void addPaletteColumn(Hyperion *hyp)
         0,
         0,
         {
+&bloodMoon,
+&crimsonTide2,
+
+//kuler
+&toulouse2,
+&gaslight,
+&velvetNoose,
+&midnightCorset,
+&redLipLullaby,
+&sinfuleTouch,
+&champagneSin,
+&lastWaltz,
+&scarletPromise,
+&burlesqueOath,
+
+//moulin rouge
+&cancan,
+&absinthe,
+&velvetKiss,
+&laceDiable,
+&petitMort,
+
+&cancan2,
+&absinthe2,
+&petticoat,
+&montmartre,
+&toulouse,
+
+&cancan3,
+&absinthe3,
+&petticoat2,
+&redlight,
+&lautrec,
+
+//synthwave
+&midnightChrome,
+&laserGrid,
+&vhsTracking,
+&turboNoir,
+&plasmaRewind,
+
+//red
+            &emberForge,
+            &crimsonTide,
+            &dragonBlood,
+            &volcanica,
+            &emberGlow,
+            &velvetThorn,
+            &dragonScale,
+            &ember,
+            &solstice,
+            &cayenne,
+            &ember,
+            &matador,
+            &ignition,
+            &crimsonRitual,
+            &voltageRush,
+            &serpentKiss,
+            &shatteredNeon,
+            &throneOfThorns,
+
+
+
+
             &pinkSunset,
             &heatmap,
             &campfire,

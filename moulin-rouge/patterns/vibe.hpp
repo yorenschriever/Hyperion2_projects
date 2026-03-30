@@ -382,4 +382,416 @@ public:
     }
 };
 
+
+
+class MatrixRainPattern : public Pattern<RGBA>
+{
+    static const int MAX_DROPS = 30;
+
+    struct Drop
+    {
+        float x;
+        float headY;
+        float speed;
+        float trailLength;
+        bool alive;
+    };
+
+    static Drop drops[MAX_DROPS];
+    Transition transition = Transition(500, 1500);
+    PixelMap *map;
+    unsigned long frameCounter = 0;
+
+    void spawnDrop(Drop &d, float speedMin, float speedMax, float sizeParam)
+    {
+        d.x = Utils::random_f() * 2.0f - 1.0f;
+        d.headY = -1.0f - Utils::random_f() * 0.5f;
+        d.speed = Utils::random_f() * (speedMax - speedMin) + speedMin;
+        d.trailLength = 0.3f + Utils::random_f() * 1.2f * sizeParam;
+        d.alive = true;
+    }
+
+public:
+    MatrixRainPattern(PixelMap *map)
+    {
+        this->name = "Notre dame";
+        this->map = map;
+        for (int i = 0; i < MAX_DROPS; i++)
+            drops[i].alive = false;
+    }
+
+    inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+    {
+        if (!transition.Calculate(active))
+            return;
+
+        frameCounter++;
+
+        float velocity = params->getVelocity(0.002f, 0.015f);
+        int targetDrops = params->getAmount(3, 25);
+        float sizeParam = params->getSize(0.3f, 1.5f);
+        float dropWidth = 0.05f + params->getIntensity(0.02f, 0.15f);
+
+        int aliveCount = 0;
+        for (int i = 0; i < MAX_DROPS; i++)
+        {
+            if (drops[i].alive)
+            {
+                drops[i].headY += drops[i].speed * velocity;
+                if (drops[i].headY - drops[i].trailLength > 1.0f)
+                    drops[i].alive = false;
+                else
+                    aliveCount++;
+            }
+        }
+
+        if (frameCounter % 3 == 0)
+        {
+            while (aliveCount < targetDrops)
+            {
+                for (int i = 0; i < MAX_DROPS; i++)
+                {
+                    if (!drops[i].alive)
+                    {
+                        spawnDrop(drops[i], 0.5f, 1.5f, sizeParam);
+                        aliveCount++;
+                        break;
+                    }
+                }
+                if (aliveCount < targetDrops)
+                {
+                    bool found = false;
+                    for (int i = 0; i < MAX_DROPS; i++)
+                        if (!drops[i].alive) { found = true; break; }
+                    if (!found) break;
+                }
+                else break;
+            }
+        }
+
+        int mapSize = std::min(width, (int)map->size());
+
+        for (int i = 0; i < mapSize; i++)
+        {
+            float px = map->x(i);
+            float py = -map->y(i);
+
+            for (int d = 0; d < MAX_DROPS; d++)
+            {
+                if (!drops[d].alive)
+                    continue;
+
+                float dx = std::abs(px - drops[d].x);
+                if (dx > dropWidth)
+                    continue;
+
+                float tailY = drops[d].headY - drops[d].trailLength;
+
+                if (py < tailY || py > drops[d].headY)
+                    continue;
+
+                float posInTrail = (drops[d].headY - py) / drops[d].trailLength;
+                float brightness = 1.0f - posInTrail;
+                brightness *= brightness;
+
+                float lateralFade = 1.0f - (dx / dropWidth);
+                lateralFade *= lateralFade;
+
+                float alpha = brightness * lateralFade;
+
+                RGBA color = params->getSecondaryColor() * alpha;
+
+                if (posInTrail < 0.1f)
+                    color += params->getHighlightColor() * (1.0f - posInTrail / 0.1f) * lateralFade * 0.5f;
+
+                pixels[i] += color * transition.getValue();
+            }
+        }
+    }
+};
+MatrixRainPattern::Drop MatrixRainPattern::drops[MAX_DROPS] = {};
+
+class HeartbeatPattern : public Pattern<RGBA>
+{
+    Transition transition = Transition(200, 1000);
+    PixelMap *map;
+    BeatWatcher watcher;
+    FadeDown pulse1 = FadeDown(250);
+    FadeDown pulse2 = FadeDown(250);
+    int beatCount = 0;
+    bool doublePulseTriggered = false;
+    unsigned long frameCounter = 0;
+    int frameAtTrigger = 0;
+
+public:
+    HeartbeatPattern(PixelMap *map)
+    {
+        this->map = map;
+        this->name = "Heartbeat";
+    }
+
+    inline bool isInsideHeart(float x, float y)
+    {
+        float x2 = x * x;
+        float y2 = y * y;
+        float val = (x2 + y2 - 1.0f);
+        return (val * val * val - x2 * y2 * y) <= 0.0f;
+    }
+
+    inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+    {
+        if (!transition.Calculate(active))
+            return;
+
+        frameCounter++;
+
+        if (watcher.Triggered())
+        {
+            beatCount++;
+            if (beatCount % 2 == 1)
+            {
+                pulse1.reset();
+                doublePulseTriggered = true;
+                frameAtTrigger = frameCounter;
+            }
+        }
+
+        if (doublePulseTriggered && (frameCounter - frameAtTrigger) > 8)
+        {
+            pulse2.reset();
+            doublePulseTriggered = false;
+        }
+
+        float pulseVal = std::max(pulse1.getValue(), pulse2.getValue());
+
+        float size = params->getSize(0.1f, 0.3f);
+        float scale = size + pulseVal * 0.3f * size;
+
+        for (int i = 0; i < std::min(width, (int)map->size()); i++)
+        {
+            float mx = map->x(i);
+            float my = map->y(i) + 0.6f;
+
+            float hx = mx / scale;
+            float hy = (my - 0.0f) / scale;
+
+            if (isInsideHeart(hx, hy))
+            {
+                float dist = sqrtf(hx * hx + hy * hy);
+                float brightness = Utils::constrain_f(1.0f - dist * 0.4f, 0.3f, 1.0f);
+                float glow = 0.3f + 0.7f * pulseVal;
+                pixels[i] = params->getPrimaryColor() * brightness * glow * transition.getValue();
+            }
+        }
+    }
+};
+
+
+
+#include "core/generation/patterns/pattern.hpp"
+#include "core/generation/patterns/helpers/fade.h"
+#include "core/generation/patterns/helpers/transition.h"
+#include "platform/includes/utils.hpp"
+#include <algorithm>
+#include <cmath>
+
+class FireworkBurstPattern : public Pattern<RGBA>
+{
+    Transition transition = Transition(200, 1500);
+    PixelMap *map;
+    static BeatWatcher watcher;
+    static FadeDown fade;
+
+    static float burstCenterX ;
+    static float burstCenterY ;
+
+    const float speeds[4] = {1.0f, 0.7f, 0.45f, 0.25f};
+    // const float speeds[4] = {0.25, 0.45, 0.7, 1.0f};
+
+public:
+    FireworkBurstPattern(PixelMap *map)
+    {
+        this->map = map;
+        this->name = "Blast wave";
+    }
+
+    inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+    {
+        if (!transition.Calculate(active))
+            return;
+
+        float size = params->getSize(1.5f, 0.7f);
+        float velocity = params->getVelocity(2000, 600);
+        float intensity = params->getIntensity(0.5f, 1.0f);
+
+        fade.setDuration(velocity);
+
+        if (watcher.Triggered(2))
+        {
+            fade.reset();
+            burstCenterX = Utils::random_f() * 1.4f - 0.7f;
+            burstCenterY = Utils::random_f() * 1.4f - 0.7f;
+        }
+
+        if (fade.isFinished())
+            return;
+
+        float phase = fade.getPhase();
+        float fadeVal = fade.getValue();
+
+        int amount = params->getAmount(2, 5);
+
+        for (int i = 0; i < std::min(width, (int)map->size()); i++)
+        {
+            float dx = map->x(i) - burstCenterX;
+            float dy = map->y(i) - burstCenterY;
+            float dist = sqrtf(dx * dx + dy * dy);
+
+            RGBA accum = RGBA(0, 0, 0, 0);
+
+            for (int e = 0; e < amount; e++)
+            {
+                float offset = params->getOffset(0.0f, 0.3f) * e;
+                float ringRadius = ( phase) * speeds[e] * size + offset;
+                float ringWidth = 0.15f * size * (1.0f + 0.3f * e);
+
+                float diff = fabsf(dist - ringRadius);
+                if (diff > ringWidth)
+                    continue;
+
+                float brightness = (1.0f - diff / ringWidth);
+                brightness = brightness * brightness;
+
+                float gradPos = Utils::constrain_f((float)e / 3.0f + (1.-phase) * 0.3f * 1.5, 0.0f, 1.0f);
+                RGBA color = params->getGradientf(gradPos);
+
+                float distFade = 1; //1.0f - Utils::constrain_f(dist / (size * 1.2f), 0.0f, 1.0f);
+
+                accum += color * (brightness * distFade * fadeVal * intensity);
+            }
+
+            pixels[i] += accum * transition.getValue();
+        }
+    }
+};
+float FireworkBurstPattern::burstCenterX = 0.0f;
+float FireworkBurstPattern::burstCenterY = 0.0f;
+BeatWatcher FireworkBurstPattern::watcher;
+FadeDown FireworkBurstPattern::fade = FadeDown(1500);
+
+class MeteorShowerPattern : public Pattern<RGBA>
+{
+    static const int MAX_METEORS = 30;
+    Transition transition = Transition(300, 1000);
+    PixelMap *map;
+    LFO<SawUp> meteorLFOs[MAX_METEORS];
+    LFO<SinFast> strobeLFO;
+    static float angles[MAX_METEORS];
+
+public:
+    MeteorShowerPattern(PixelMap *map)
+    {
+        this->map = map;
+        this->name = "Plasma orb";
+
+        strobeLFO.setPeriod(80);
+
+        for (int i = 0; i < MAX_METEORS; i++)
+        {
+            angles[i] = Utils::random_f() * 2.0f * M_PI;
+            meteorLFOs[i].setPeriod(Utils::random(1500, 3000));
+        }
+    }
+
+    inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+    {
+        if (!transition.Calculate(active))
+            return;
+
+        int amount = params->getAmount(3, 25);
+        float velocity = params->getVelocity(4000, 800);
+        float size = params->getSize(0.15f, 0.03f);
+        float trailLength = params->getIntensity(0.4f, 0.15f);
+        float offset = params->getOffset(0.0f, 1.0f);
+
+        for (int m = 0; m < amount; m++)
+        {
+            meteorLFOs[m].setPeriod(velocity + m * (offset * 300));
+        }
+
+        for (int i = 0; i < std::min(width, (int)map->size()); i++)
+        {
+            float px = map->x(i);
+            float py = map->y(i);
+
+            for (int m = 0; m < amount; m++)
+            {
+                float phase = meteorLFOs[m].getPhase();
+                float easedPhase = phase * phase;
+
+                float dirX = cosf(angles[m]);
+                float dirY = sinf(angles[m]);
+
+                float meteorX = dirX * easedPhase * 1.5f;
+                float meteorY = dirY * easedPhase * 1.5f;
+
+                float dx = px - meteorX;
+                float dy = py - meteorY;
+                float dist = sqrtf(dx * dx + dy * dy);
+
+                float toCenter = sqrtf(px * px + py * py);
+                float meteorR = sqrtf(meteorX * meteorX + meteorY * meteorY);
+
+                float behindDot = (dx * (-dirX) + dy * (-dirY));
+                float trailDist = 0.0f;
+                if (behindDot > 0)
+                {
+                    float perpX = dx - behindDot * (-dirX);
+                    float perpY = dy - behindDot * (-dirY);
+                    trailDist = sqrtf(perpX * perpX + perpY * perpY);
+                }
+
+                float headBrightness = .0f;
+                if (dist < size)
+                {
+                    headBrightness = 1.0f - (dist / size);
+                    //float strobe = 1; //0.7f + 0.3f * strobeLFO.getValue(float(m) / amount);
+                    //headBrightness *= strobe;
+                }
+
+                float trailBrightness = 0.0f;
+                if (behindDot > 0 && behindDot < trailLength && trailDist < size * 0.6f)
+                {
+                    trailBrightness = (1.0f - behindDot / trailLength) * (1.0f - trailDist / (size * 0.6f));
+                    trailBrightness *= 0.6f;
+                }
+
+                float brightness = std::max(headBrightness, trailBrightness);
+                brightness = Utils::constrain_f(brightness, 0.0f, 1.0f);
+
+                if (brightness > 0.01f)
+                {
+                    float gradientVal = easedPhase;
+                    RGBA color = params->getGradientf(1.-gradientVal) * brightness * transition.getValue();
+                    pixels[i] += color;
+                }
+            }
+        }
+
+        for (int m = 0; m < amount; m++)
+        {
+            if (meteorLFOs[m].getPhase() < 0.02f)
+            {
+                angles[m] = Utils::random_f() * 2.0f * M_PI;
+            }
+        }
+    }
+};
+
+float MeteorShowerPattern::angles[MAX_METEORS] = {0};
+
+
+
+
+
 }

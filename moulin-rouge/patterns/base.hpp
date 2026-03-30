@@ -153,7 +153,7 @@ namespace BasePatterns
     class BarberPole : public Pattern<RGBA>
     {
         Transition transition;
-        LFO<PWM> lfo;
+        LFO<SoftSawDown> lfo;
         PixelMap3d::Cylindrical *map;
 
     public:
@@ -161,6 +161,7 @@ namespace BasePatterns
         {
             this->map = map;
             this->name = "Barber pole";
+            lfo.setSoftEdgeWidth(0.1);
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -207,7 +208,7 @@ namespace BasePatterns
 
             auto col1 = params->getPrimaryColor() * transition.getValue();
             auto col2 = params->getSecondaryColor() * transition.getValue();
-            float size = params->getSize(0.01,0.1);
+            float size = params->getSize(1.2,0.2);
             float zoffset = params->getVariant(0,-0.2);
             ring1.setPeriod(params->getVelocity(20000,2000));
             ring2.setPeriod(params->getVelocity(14000,1400));
@@ -217,10 +218,51 @@ namespace BasePatterns
                 float z_norm = zoffset+fromTop2(map->z(index));
                 float offset = around(map->th(index)) * params->getOffset();
 
-                pixels[index] = col1 * softEdge(abs(z_norm - ring1.getValue(offset)), size);
-                pixels[index] += col2 * softEdge(abs(z_norm - ring2.getValue(offset)), size);
+                // pixels[index] = col1 * softEdge(abs(z_norm - ring1.getValue(offset)), size);
+                // pixels[index] += col2 * softEdge(abs(z_norm - ring2.getValue(offset)), size);
+
+                pixels[index] = col1 * Cos::getValue(Utils::constrain_f(abs(z_norm - ring1.getValue(offset))/size,0,0.5),0);
+                pixels[index] += col2 * Cos::getValue(Utils::constrain_f(abs(z_norm - ring2.getValue(offset))/size,0,0.5),0);
             }
         }
     };
 
+
+
+    class MeshPattern : public Pattern<RGBA>
+    {
+        Transition transition;
+        PixelMap3d::Cylindrical *map;
+        LFO<Sin> ring1;
+        LFO<Sin> ring2;
+
+    public:
+        MeshPattern(PixelMap3d::Cylindrical *map)
+        {
+            this->map = map;
+            this->name = "Moire Mesh";
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params* params) override
+        {
+            if (!transition.Calculate(active))
+                return; // the fade out is done. we can skip calculating pattern data
+
+            auto col1 = params->getPrimaryColor() * transition.getValue();
+            auto col2 = params->getSecondaryColor() * transition.getValue();
+            float size = params->getSize(0.3,0.1);
+            float zoffset = params->getVariant(1,-0.8);
+            ring1.setPeriod(params->getVelocity(2*20000,2000));
+            ring2.setPeriod(params->getVelocity(2*14000,1400));
+
+            for (int index = 0; index < width; index++)
+            {
+                float z_norm = map->z(index) + zoffset;
+                float offset = around(map->th(index)) * params->getOffset(0,0.5);
+
+                pixels[index] = col1 * Cos::getValue(abs(z_norm - ring1.getValue(offset))/size,0);
+                pixels[index] += col2 * Cos::getValue(abs(z_norm - ring2.getValue(offset))/size,0);
+            }
+        }
+    };
 }
