@@ -419,7 +419,7 @@ public:
 If you are working with circular patterns, it can be useful to use a polar coordinate system. 
 In that case, let the constructor receive a PixelMap, and call toPolar() or toPolarRotate90() before storing it in the class property.
 
-Polar maps use `r` and `th` for the radius and angle. r[0,1] and th[0,2 pi], where th=0 is the rightmost point of the circle and it goes counter clockwise.
+Polar maps use `r` and `th` for the radius and angle. r[0,1] and th[0,2*pi], where th=0 is the rightmost point of the circle and it goes counter clockwise.
 example: `map->r(index)` and `map->th(index)` 
 
 ```
