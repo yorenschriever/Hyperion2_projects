@@ -1,3 +1,4 @@
+#pragma once    
 #include "generation/patterns/pattern.hpp"
 
 class OneColor : public Pattern<RGBA>
@@ -22,12 +23,12 @@ public:
     }
 };
 
-class Base : public Pattern<RGBA>
+class BaseFadePattern : public Pattern<RGBA>
 {
 public:
     RGBA color;
     PixelMap3d *map;
-    Base(PixelMap3d *map, RGBA color, const char *name)
+    BaseFadePattern(PixelMap3d *map, RGBA color, const char *name)
     {
         this->color = color;
         this->name = name;
@@ -46,12 +47,12 @@ public:
     }
 };
 
-class Wings : public Pattern<RGBA>
+class WingsFadePattern : public Pattern<RGBA>
 {
 public:
     RGBA color;
     PixelMap3d::Cylindrical *map;
-    Wings(PixelMap3d::Cylindrical *map, RGBA color, const char *name)
+    WingsFadePattern(PixelMap3d::Cylindrical *map, RGBA color, const char *name)
     {
         this->color = color;
         this->name = name;

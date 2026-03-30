@@ -14,7 +14,7 @@ class BaseZigZagMapper : public IndexMap
     }
 
 public:
-    BaseZigZagMapper(int numLeds, int segmentSize = 60)
+    BaseZigZagMapper(int numLeds, int segmentSize = 60, bool reverse = false)
     {
         indices.resize(numLeds);
         std::iota(indices.begin(), indices.end(), 0);
@@ -22,7 +22,7 @@ public:
         for (int i = 0; i < numLeds; i += segmentSize)
         {
             int seg = i / segmentSize;
-            if (seg % 2 == 1)
+            if (seg % 2 == (reverse ? 0 : 1))
             {
                 int size = std::min(segmentSize, numLeds - i);
                 reverseBetween(i, size);
@@ -46,7 +46,7 @@ class WingsZigZagMapper : public IndexMap
     }
 
 public:
-    WingsZigZagMapper(int numLeds, int ledsPerMeter = 60)
+    WingsZigZagMapper(int numLeds, int ledsPerMeter = 60, bool flip = false)
     {
         indices.resize(numLeds);
         std::iota(indices.begin(), indices.end(), 0);
@@ -55,11 +55,21 @@ public:
         for (int w = 0; w < 4; w++)
         {
             int wstart = w * 8 * L;
-            reverseBetween(wstart + 2 * L, L);
-            reverseBetween(wstart + 3 * L, 2 * L);
+            if (flip)
+            {
+                reverseBetween(wstart, 2*L);
 
-            reverseBetween(wstart + 5 * L, 3 * L);
-            reverseBetween(wstart + 6 * L, 2 * L);
+                reverseBetween(wstart + 5 * L, 3 * L);
+                reverseBetween(wstart + 5 * L,  L);
+            }
+            else
+            {
+                reverseBetween(wstart + 2 * L, L);
+                reverseBetween(wstart + 3 * L, 2 * L);
+
+                reverseBetween(wstart + 5 * L, 3 * L);
+                reverseBetween(wstart + 6 * L, 2 * L);
+            }
         }
     }
 
