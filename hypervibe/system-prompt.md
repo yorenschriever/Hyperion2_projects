@@ -166,7 +166,7 @@ LFO takes a template argument:
 - NegativeCosFast: Starts a 0, goes to 0.5, 1, 0.5 and back to 0, This starting point makes it useful for example for pulsing effects using the duty cycle.
 - Glow: synonym for NegativeCosFast
 - PWM: Pulse width modulation.
-- Triangle: Creates a triangle wave.
+- Tri: Creates a triangle wave.
 - SoftPwm: Similar to PWM, but with a soft edge. This means that the transition from on to off is not instant, but gradual. This can create a more pleasant effect.
 - SoftSawUp: Similar to SawUp, but with a soft edge. This means that the transition from 0 to 1 is not instant, but gradual. This can create a more pleasant effect.
 - SoftSawDown: Similar to SoftSawUp, but goes from 1 to 0 instead of 0 to 1.
