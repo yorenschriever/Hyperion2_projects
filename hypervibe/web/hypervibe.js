@@ -97,6 +97,12 @@ export const HypervibeApp = () => {
 
     return html`
         <div class="vibe-patterns-app">
+            <div class="params">
+                <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState}/>
+                ${wasmLoading && html`<${LoadingSpinner}/>`}
+                ${wasmError && html`<${ErrorIcon} text=${wasmError}/>`}
+            </div>
+
             <div class="monitor">
                 <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState}/>
                 ${wasmLoading && html`<${LoadingSpinner}/>`}
@@ -113,7 +119,7 @@ export const HypervibeApp = () => {
             <div class="code-editor">
                 <textarea value=${codeState} onInput=${ (e) => setCodeState(e.target.value)} onKeyDown=${codeKeyDownHandler}></textarea>
                 <div class="buttons">
-                    <button onClick=${ () => loadMonitorFromCode(codeState)} disabled=${wasmLoading}>Update Monitor</button>
+                    <button onClick=${ () => loadMonitorFromCode(codeState)} disabled=${wasmLoading}>Compile</button>
                     <button onClick=${ () => download(codeState)}>Download</button>
                 </div>
                 ${codeLoading && html`<${LoadingSpinner}/>`}

@@ -144,6 +144,28 @@ function downloadFile(filename, content) {
   URL.revokeObjectURL(a.href);
 }
 
+// ── LocalStorage ─────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = 'palette-editor-palettes';
+
+function getSavedPalettes() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch { return {}; }
+}
+
+function savePaletteToStorage(palette) {
+  const all = getSavedPalettes();
+  all[palette.name] = palette;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
+function removePaletteFromStorage(name) {
+  const all = getSavedPalettes();
+  delete all[name];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
 // ── Components ───────────────────────────────────────────────────────────────
 
 function ColorPicker({ color, onChange }) {
@@ -305,6 +327,7 @@ function App() {
   const [selectedStop, setSelectedStop] = useState(null);
   const [prompt, setPrompt] = useState('');
   const [importText, setImportText] = useState('');
+  const [savedNames, setSavedNames] = useState(() => Object.keys(getSavedPalettes()));
 
   const loadPalette = (p) => {
     setName(p.name);
@@ -332,6 +355,21 @@ function App() {
   const onExport = () => {
     const content = exportHpp({ name, primary, secondary, highlight, gradient });
     downloadFile(sanitizeName(name) + '.hpp', content);
+  };
+
+  const onSave = () => {
+    savePaletteToStorage({ name, primary, secondary, highlight, gradient });
+    setSavedNames(Object.keys(getSavedPalettes()));
+  };
+
+  const onLoad = (paletteName) => {
+    const all = getSavedPalettes();
+    if (all[paletteName]) loadPalette(all[paletteName]);
+  };
+
+  const onRemove = (paletteName) => {
+    removePaletteFromStorage(paletteName);
+    setSavedNames(Object.keys(getSavedPalettes()));
   };
 
   // Update selected stop color via the color picker shown below gradient
@@ -403,12 +441,27 @@ function App() {
       </div>
     </div>
 
-    <!-- Export -->
+    <!-- Save / Export -->
     <div class="section">
-      <h2>Export</h2>
+      <h2>Save / Export</h2>
       <div class="export-section">
+        <button onClick=${onSave}>Save to browser</button>
         <button onClick=${onExport}>Download .hpp</button>
       </div>
+      ${savedNames.length > 0 && html`
+        <div class="mt-12">
+          <h2>Saved palettes</h2>
+          <div class="saved-list">
+            ${savedNames.map(n => html`
+              <div class="saved-row">
+                <span class="saved-name" onClick=${() => onLoad(n)}>${n}</span>
+                <button class="small" onClick=${() => onLoad(n)}>Load</button>
+                <button class="small secondary" onClick=${() => onRemove(n)}>Remove</button>
+              </div>
+            `)}
+          </div>
+        </div>
+      `}
     </div>
 
     <!-- AI Prompt -->
