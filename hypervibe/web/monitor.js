@@ -62,13 +62,13 @@ function gradientCSS(stops) {
     return `linear-gradient(to right, ${parts.join(', ')})`;
 }
 
-const PaletteSelector = ({ instance }) => {
+const PaletteSelector = ({ instance, refreshKey }) => {
     const [palettes, setPalettes] = useState({});
     const [selected, setSelected] = useState('');
 
     useEffect(() => {
         setPalettes(getSavedPalettes());
-    }, []);
+    }, [refreshKey]);
 
     const onSelect = (e) => {
         const name = e.target.value;
@@ -106,6 +106,8 @@ const PaletteSelector = ({ instance }) => {
 export const Monitor = ({ scenes, wasmBinary }) => {
     const canvasRef = useRef(null);
     const [wasmInstance, setWasmInstance] = useState(null);
+    const [showPaletteEditor, setShowPaletteEditor] = useState(false);
+    const [paletteRefreshKey, setPaletteRefreshKey] = useState(0);
 
     useEffect(async () => {
         if (!canvasRef.current) return;
@@ -171,9 +173,29 @@ export const Monitor = ({ scenes, wasmBinary }) => {
         }
     }, [scenes, wasmBinary]);
 
+    const closePaletteEditor = () => {
+        setShowPaletteEditor(false);
+        setPaletteRefreshKey(k => k + 1);
+    };
+
     return html`
-        <canvas ref=${canvasRef} width="640" height="480"></canvas>
-        <${ParamSliders} instance=${wasmInstance} />
-        <${PaletteSelector} instance=${wasmInstance} />
+        <div class="monitor-layout">
+            <div class="monitor-controls">
+                <${ParamSliders} instance=${wasmInstance} />
+                <${PaletteSelector} instance=${wasmInstance} refreshKey=${paletteRefreshKey} />
+                <div class="palette-editor-btn">
+                    <button onClick=${() => setShowPaletteEditor(true)}>Edit Palettes</button>
+                </div>
+            </div>
+            <canvas ref=${canvasRef} width="640" height="480"></canvas>
+        </div>
+        ${showPaletteEditor && html`
+            <div class="modal-overlay" onClick=${closePaletteEditor}>
+                <div class="modal-content" onClick=${e => e.stopPropagation()}>
+                    <button class="modal-close" onClick=${closePaletteEditor}>×</button>
+                    <iframe src="palette/index.html"></iframe>
+                </div>
+            </div>
+        `}
     `;
 }

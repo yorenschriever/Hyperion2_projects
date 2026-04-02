@@ -30,8 +30,23 @@
     position: relative;
 }
 
+.monitor-layout {
+    display: flex;
+    gap: 0;
+}
+
+.monitor-controls {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 260px;
+    padding-top: 8px;
+}
+
 canvas {
-    width: 100vw;
+    flex: 1;
+    width: 0;
+    min-width: 0;
     height: 50vh;
 }
 
@@ -116,8 +131,8 @@ textarea {
 .param-sliders {
     padding: 8px 10px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .param-row {
@@ -149,19 +164,19 @@ textarea {
 .palette-selector {
     padding: 8px 10px;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 6px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 12px;
     color: #aaa;
 }
 
 .palette-selector label {
-    text-align: right;
-    width: 64px;
+    text-align: left;
 }
 
 .palette-selector select {
+    width: 100%;
     background: #1e1e1e;
     color: #d4d4d4;
     border: 1px solid #555;
@@ -172,12 +187,12 @@ textarea {
 
 .palette-preview {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .palette-gradient {
-    width: 120px;
+    width: 100%;
     height: 16px;
     border-radius: 3px;
     border: 1px solid #555;
@@ -193,4 +208,70 @@ textarea {
     height: 16px;
     border-radius: 3px;
     border: 1px solid #555;
+}
+
+.palette-editor-btn {
+    padding: 8px 10px;
+}
+
+.palette-editor-btn button {
+    width: 100%;
+    padding: 6px 12px;
+    background: #333;
+    color: #ccc;
+    border: 1px solid #555;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+}
+
+.palette-editor-btn button:hover {
+    background: #444;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    position: relative;
+    width: 90vw;
+    height: 85vh;
+    background: #1e1e1e;
+    border: 1px solid #555;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.modal-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    z-index: 101;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #fff;
 }
