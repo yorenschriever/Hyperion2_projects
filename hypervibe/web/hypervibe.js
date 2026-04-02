@@ -97,11 +97,6 @@ export const HypervibeApp = () => {
 
     return html`
         <div class="vibe-patterns-app">
-            <div class="params">
-                <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState}/>
-                ${wasmLoading && html`<${LoadingSpinner}/>`}
-                ${wasmError && html`<${ErrorIcon} text=${wasmError}/>`}
-            </div>
 
             <div class="monitor">
                 <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState}/>

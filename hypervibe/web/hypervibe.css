@@ -111,3 +111,36 @@ textarea {
     color: #aaa;
     border: 1px solid #555;
 }
+
+/* Param sliders */
+.param-sliders {
+    padding: 8px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+}
+
+.param-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.param-row label {
+    width: 64px;
+    text-align: right;
+}
+
+.param-row input[type="range"] {
+    width: 120px;
+    accent-color: #888;
+}
+
+.param-row span {
+    width: 36px;
+    text-align: right;
+    color: #666;
+}

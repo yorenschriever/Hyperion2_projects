@@ -30,6 +30,7 @@ public:
 Pattern<RGBA> *pattern;
 ColorConverter<RGBA,RGB> colorConverter;
 Chain *chain;
+PatternInput<RGBA> *patternInput;
 TempoSource tempo;
 PixelMap pixelMap;
 
@@ -40,9 +41,10 @@ EXTERN EMSCRIPTEN_KEEPALIVE void init(int size, uint8_t *outputArray, float *pix
         pixelMap.push_back({.x = pixelMapData[i * 2], .y = pixelMapData[i * 2 + 1]});
 
     pattern = new VibePattern(&pixelMap);
+    patternInput = new PatternInput<RGBA>(size, pattern);
 
     chain = new Chain(
-        new PatternInput<RGBA>(size, pattern),
+        patternInput,
         &colorConverter, 
         new BufferOutput(outputArray, size * sizeof(RGB))
     );
@@ -58,4 +60,16 @@ EXTERN EMSCRIPTEN_KEEPALIVE void beat() {
 EXTERN EMSCRIPTEN_KEEPALIVE void process() {
     // printf("calculateFrame Called\n");
     chain->process();
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void setParam(int index, float value) {
+    if (!patternInput) return;
+    switch (index) {
+        case 0: patternInput->params.velocity  = value; break;
+        case 1: patternInput->params.amount    = value; break;
+        case 2: patternInput->params.size      = value; break;
+        case 3: patternInput->params.variant   = value; break;
+        case 4: patternInput->params.offset    = value; break;
+        case 5: patternInput->params.intensity = value; break;
+    }
 }

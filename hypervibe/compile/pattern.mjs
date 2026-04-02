@@ -1532,6 +1532,7 @@ function checkIncomingModuleAPI() {
 var _init = Module['_init'] = makeInvalidEarlyAccess('_init');
 var _beat = Module['_beat'] = makeInvalidEarlyAccess('_beat');
 var _process = Module['_process'] = makeInvalidEarlyAccess('_process');
+var _setParam = Module['_setParam'] = makeInvalidEarlyAccess('_setParam');
 var _malloc = Module['_malloc'] = makeInvalidEarlyAccess('_malloc');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
@@ -1551,6 +1552,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['init'] != 'undefined', 'missing Wasm export: init');
   assert(typeof wasmExports['beat'] != 'undefined', 'missing Wasm export: beat');
   assert(typeof wasmExports['process'] != 'undefined', 'missing Wasm export: process');
+  assert(typeof wasmExports['setParam'] != 'undefined', 'missing Wasm export: setParam');
   assert(typeof wasmExports['malloc'] != 'undefined', 'missing Wasm export: malloc');
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
@@ -1567,6 +1569,7 @@ function assignWasmExports(wasmExports) {
   _init = Module['_init'] = createExportWrapper('init', 3);
   _beat = Module['_beat'] = createExportWrapper('beat', 0);
   _process = Module['_process'] = createExportWrapper('process', 0);
+  _setParam = Module['_setParam'] = createExportWrapper('setParam', 2);
   _malloc = Module['_malloc'] = createExportWrapper('malloc', 1);
   _fflush = createExportWrapper('fflush', 1);
   _strerror = createExportWrapper('strerror', 1);
