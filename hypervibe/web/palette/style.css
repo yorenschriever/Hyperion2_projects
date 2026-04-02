@@ -1,0 +1,356 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+#app {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin-bottom: 24px;
+    color: #fff;
+}
+
+h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Sections */
+.section {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+textarea {
+    background: #0f3460;
+    border: 1px solid #1a1a4e;
+    color: #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    outline: none;
+    width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #e94560;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: monospace;
+    font-size: 0.8rem;
+}
+
+/* Buttons */
+button {
+    background: #e94560;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+button:hover {
+    background: #c73652;
+}
+
+button.secondary {
+    background: #0f3460;
+}
+
+button.secondary:hover {
+    background: #1a4a80;
+}
+
+button.small {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+}
+
+/* Name input */
+.name-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.name-row input {
+    flex: 1;
+}
+
+.name-row .sanitized {
+    font-size: 0.78rem;
+    color: #888;
+    white-space: nowrap;
+}
+
+/* Prompt box */
+.prompt-row {
+    display: flex;
+    gap: 8px;
+}
+
+.prompt-row input {
+    flex: 1;
+}
+
+/* Gradient bar */
+.gradient-bar {
+    height: 48px;
+    border-radius: 8px;
+    border: 1px solid #1a1a4e;
+    position: relative;
+    cursor: crosshair;
+}
+
+/* Stop handles */
+.stops-track {
+    position: relative;
+    height: 32px;
+    margin-top: 4px;
+}
+
+.stop-handle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    transform: translate(-50%, 0);
+    cursor: grab;
+    top: 0;
+    transition: box-shadow 0.1s;
+}
+
+.stop-handle:hover,
+.stop-handle.selected {
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.5);
+}
+
+.stop-handle.selected {
+    border-color: #e94560;
+}
+
+/* Stop list */
+.stop-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stop-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #0f3460;
+    border-radius: 6px;
+}
+
+.stop-row.selected {
+    outline: 2px solid #e94560;
+}
+
+.stop-row .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.stop-row input[type="number"] {
+    width: 64px;
+    flex-shrink: 0;
+}
+
+.stop-row input[type="text"] {
+    width: 90px;
+    flex-shrink: 0;
+}
+
+.stop-row button {
+    flex-shrink: 0;
+}
+
+.stop-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* Color fields (primary/secondary/highlight) */
+.color-fields {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.color-field {
+    flex: 1;
+    min-width: 180px;
+    background: #0f3460;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.color-field label {
+    display: block;
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.color-field .swatch-large {
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    margin-bottom: 10px;
+}
+
+/* HSL sliders */
+.hsl-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.slider-row span {
+    font-size: 0.75rem;
+    color: #888;
+    width: 14px;
+    text-align: right;
+}
+
+.slider-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: #1a1a2e;
+    outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e94560;
+    cursor: pointer;
+}
+
+.slider-row input[type="number"] {
+    width: 52px;
+    padding: 4px 6px;
+    font-size: 0.78rem;
+}
+
+.hex-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hex-row span {
+    font-size: 0.78rem;
+    color: #888;
+}
+
+.hex-row input[type="text"] {
+    width: 90px;
+}
+
+/* Preview */
+.preview-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.preview-gradient {
+    flex: 2;
+    height: 60px;
+    border-radius: 8px;
+    border: 1px solid #1a1a4e;
+}
+
+.preview-swatches {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+}
+
+.preview-swatch {
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #1a1a4e;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 4px;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.6);
+    min-height: 60px;
+}
+
+/* Import */
+.import-section textarea {
+    margin-bottom: 8px;
+}
+
+/* Export */
+.export-section {
+    display: flex;
+    gap: 12px;
+}
+
+/* Utility */
+.row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
