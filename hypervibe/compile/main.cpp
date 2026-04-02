@@ -73,3 +73,40 @@ EXTERN EMSCRIPTEN_KEEPALIVE void setParam(int index, float value) {
         case 5: patternInput->params.intensity = value; break;
     }
 }
+
+Palette customPalette{
+    .gradient = Gradient({
+        {.position = 0, .color = RGB(0, 0, 0)},        // Black
+        {.position = 128, .color = RGB(255, 0, 0)},    // Red
+        {.position = 224, .color = RGB(255, 255, 0)},  // Bright yellow
+        {.position = 255, .color = RGB(255, 255, 255)} // Full white
+    }),
+    .primary = RGB(255, 0, 0),
+    .secondary = RGB(255, 255, 0),
+    .highlight = RGB(255, 255, 255),
+    .name = "Heatmap"};
+Gradient::GradientEntry gradientBuffer[32];
+
+EXTERN EMSCRIPTEN_KEEPALIVE void setPrimary(int r, int g, int b) {
+    customPalette.primary = RGB(r, g, b);
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void setSecondary(int r, int g, int b) {
+    customPalette.secondary = RGB(r, g, b);
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void setHighlight(int r, int g, int b) {
+    customPalette.highlight = RGB(r, g, b);
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void setGradientStop(int index, int position, int r, int g, int b) {
+    if (index < 0 || index >= 32) return;
+    gradientBuffer[index] = {.position = (uint8_t)position, .color = RGB(r, g, b)};
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void applyPalette(int numStops) {
+    if (!patternInput) return;
+    std::vector<Gradient::GradientEntry> entries(gradientBuffer, gradientBuffer + numStops);
+    customPalette.gradient = Gradient(entries);
+    patternInput->params.palette = &customPalette;
+}

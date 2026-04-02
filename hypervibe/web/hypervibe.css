@@ -144,3 +144,53 @@ textarea {
     text-align: right;
     color: #666;
 }
+
+/* Palette selector */
+.palette-selector {
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.palette-selector label {
+    text-align: right;
+    width: 64px;
+}
+
+.palette-selector select {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #555;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.palette-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.palette-gradient {
+    width: 120px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid #555;
+}
+
+.palette-swatches {
+    display: flex;
+    gap: 4px;
+}
+
+.palette-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid #555;
+}

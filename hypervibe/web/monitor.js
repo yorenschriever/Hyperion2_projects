@@ -28,6 +28,81 @@ const ParamSliders = ({ instance }) => {
     `;
 };
 
+const PALETTE_STORAGE_KEY = 'palette-editor-palettes';
+
+function getSavedPalettes() {
+    try {
+        return JSON.parse(localStorage.getItem(PALETTE_STORAGE_KEY)) || {};
+    } catch { return {}; }
+}
+
+function applyPaletteToInstance(instance, palette) {
+    if (!instance || !palette) return;
+    const { primary, secondary, highlight, gradient } = palette;
+    if (primary)   instance._setPrimary(primary.r, primary.g, primary.b);
+    if (secondary) instance._setSecondary(secondary.r, secondary.g, secondary.b);
+    if (highlight) instance._setHighlight(highlight.r, highlight.g, highlight.b);
+    if (gradient && gradient.length > 0) {
+        const sorted = [...gradient].sort((a, b) => a.position - b.position);
+        sorted.forEach((stop, i) => {
+            instance._setGradientStop(i, stop.position, stop.color.r, stop.color.g, stop.color.b);
+        });
+        instance._applyPalette(sorted.length);
+    }
+}
+
+function rgbToHex({ r, g, b }) {
+    return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+}
+
+function gradientCSS(stops) {
+    if (!stops || stops.length === 0) return 'linear-gradient(to right, #888, #888)';
+    const sorted = [...stops].sort((a, b) => a.position - b.position);
+    const parts = sorted.map(s => `${rgbToHex(s.color)} ${(s.position / 255 * 100).toFixed(1)}%`);
+    return `linear-gradient(to right, ${parts.join(', ')})`;
+}
+
+const PaletteSelector = ({ instance }) => {
+    const [palettes, setPalettes] = useState({});
+    const [selected, setSelected] = useState('');
+
+    useEffect(() => {
+        setPalettes(getSavedPalettes());
+    }, []);
+
+    const onSelect = (e) => {
+        const name = e.target.value;
+        setSelected(name);
+        if (name && palettes[name]) {
+            applyPaletteToInstance(instance, palettes[name]);
+        }
+    };
+
+    const names = Object.keys(palettes);
+
+    return html`
+        <div class="palette-selector">
+            <label>Palette</label>
+            <select value=${selected} onChange=${onSelect}>
+                <option value="">-- default --</option>
+                ${names.map(name => html`
+                    <option key=${name} value=${name}>${name}</option>
+                `)}
+            </select>
+            ${selected && palettes[selected] && html`
+                <div class="palette-preview">
+                    <div class="palette-gradient" style=${{ background: gradientCSS(palettes[selected].gradient) }}></div>
+                    <div class="palette-swatches">
+                        <div class="palette-swatch" style=${{ background: rgbToHex(palettes[selected].primary) }} title="primary"></div>
+                        <div class="palette-swatch" style=${{ background: rgbToHex(palettes[selected].secondary) }} title="secondary"></div>
+                        <div class="palette-swatch" style=${{ background: rgbToHex(palettes[selected].highlight) }} title="highlight"></div>
+                    </div>
+                </div>
+            `}
+        </div>
+    `;
+};
+
 export const Monitor = ({ scenes, wasmBinary }) => {
     const canvasRef = useRef(null);
     const [wasmInstance, setWasmInstance] = useState(null);
@@ -99,5 +174,6 @@ export const Monitor = ({ scenes, wasmBinary }) => {
     return html`
         <canvas ref=${canvasRef} width="640" height="480"></canvas>
         <${ParamSliders} instance=${wasmInstance} />
+        <${PaletteSelector} instance=${wasmInstance} />
     `;
 }
