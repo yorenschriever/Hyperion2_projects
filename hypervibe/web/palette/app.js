@@ -346,39 +346,17 @@ function App() {
   return html`
     <h1>Palette Editor</h1>
 
-    <!-- Name -->
+    <!-- Preview -->
     <div class="section">
-      <h2>Name</h2>
-      <div class="name-row">
-        <input type="text" value=${name} onInput=${e => setName(e.target.value)} placeholder="Palette name" />
-        <span class="sanitized">${sanitizeName(name)}</span>
-      </div>
-    </div>
-
-    <!-- AI Prompt -->
-    <div class="section">
-      <h2>AI Generate</h2>
-      <div class="prompt-row">
-        <input type="text" value=${prompt} onInput=${e => setPrompt(e.target.value)}
-          placeholder="Describe a palette..." onKeyDown=${e => e.key === 'Enter' && onGenerate()} />
-        <button onClick=${onGenerate}>Generate</button>
-      </div>
-    </div>
-
-    <!-- Gradient -->
-    <div class="section">
-      <h2>Gradient</h2>
-      <${GradientEditor}
-        stops=${gradient}
-        onChange=${setGradient}
-        selectedIdx=${selectedStop}
-        onSelect=${setSelectedStop} />
-      ${selectedStopColor && html`
-        <div class="mt-12">
-          <h2>Stop Color</h2>
-          <${ColorPicker} color=${selectedStopColor} onChange=${onSelectedStopColorChange} />
+      <h2>Preview</h2>
+      <div class="preview-row">
+        <div class="preview-gradient" style=${{ background: gradientCSS(gradient) }}></div>
+        <div class="preview-swatches">
+          <div class="preview-swatch" style=${{ background: rgbToHex(primary) }}>pri</div>
+          <div class="preview-swatch" style=${{ background: rgbToHex(secondary) }}>sec</div>
+          <div class="preview-swatch" style=${{ background: rgbToHex(highlight) }}>hi</div>
         </div>
-      `}
+      </div>
     </div>
 
     <!-- Primary / Secondary / Highlight -->
@@ -400,16 +378,46 @@ function App() {
       </div>
     </div>
 
-    <!-- Preview -->
+    <!-- Gradient -->
     <div class="section">
-      <h2>Preview</h2>
-      <div class="preview-row">
-        <div class="preview-gradient" style=${{ background: gradientCSS(gradient) }}></div>
-        <div class="preview-swatches">
-          <div class="preview-swatch" style=${{ background: rgbToHex(primary) }}>pri</div>
-          <div class="preview-swatch" style=${{ background: rgbToHex(secondary) }}>sec</div>
-          <div class="preview-swatch" style=${{ background: rgbToHex(highlight) }}>hi</div>
+      <h2>Gradient</h2>
+      <${GradientEditor}
+        stops=${gradient}
+        onChange=${setGradient}
+        selectedIdx=${selectedStop}
+        onSelect=${setSelectedStop} />
+      ${selectedStopColor && html`
+        <div class="mt-12">
+          <h2>Stop Color</h2>
+          <${ColorPicker} color=${selectedStopColor} onChange=${onSelectedStopColorChange} />
         </div>
+      `}
+    </div>
+
+    <!-- Name -->
+    <div class="section">
+      <h2>Name</h2>
+      <div class="name-row">
+        <input type="text" value=${name} onInput=${e => setName(e.target.value)} placeholder="Palette name" />
+        <span class="sanitized">${sanitizeName(name)}</span>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="section">
+      <h2>Export</h2>
+      <div class="export-section">
+        <button onClick=${onExport}>Download .hpp</button>
+      </div>
+    </div>
+
+    <!-- AI Prompt -->
+    <div class="section">
+      <h2>AI Generate</h2>
+      <div class="prompt-row">
+        <input type="text" value=${prompt} onInput=${e => setPrompt(e.target.value)}
+          placeholder="Describe a palette..." onKeyDown=${e => e.key === 'Enter' && onGenerate()} />
+        <button onClick=${onGenerate}>Generate</button>
       </div>
     </div>
 
@@ -421,13 +429,6 @@ function App() {
       <button onClick=${onParse}>Parse</button>
     </div>
 
-    <!-- Export -->
-    <div class="section">
-      <h2>Export</h2>
-      <div class="export-section">
-        <button onClick=${onExport}>Download .hpp</button>
-      </div>
-    </div>
   `;
 }
 
