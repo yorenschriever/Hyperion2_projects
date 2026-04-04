@@ -6,7 +6,9 @@
 #include "core/distribution/processors/colorConverter.hpp"
 #include "core/generation/patterns/helpers/tempo/tempo.h"
 #include "core/generation/patterns/helpers/tempo/abstractTempo.h"
+#include "core/generation/patterns/helpers/timeline.h"
 #include "core/generation/pixelMap/pixelMap.hpp"
+#include "core/generation/pixelMap/spatialGrid.hpp"
 #include "core/distribution/chain.hpp"
 #include "platform/includes/utils.hpp"
 
