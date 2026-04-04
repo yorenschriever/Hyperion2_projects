@@ -5,11 +5,17 @@
 // pm2 startup # to generate the command to run on startup
 // pm2 save # to save the current process list so it can be resurrected on startup
 
+// This starts a server in port 3000
+// nginx will combine it with static files in this config
+// /usr/local/etc/nginx/nginx.conf
+
+// a cloudflare tunnel will expose the nginx server to the internet, and forward requests to the express server
+
 const config = {
   apps : [
         {
             name   : "apiserver",
-            script : "/Users/yoren/Documents/gitprojecten/Hyperion2_projects/hypervibe/api/server.js",
+            script : "./server.js",
             watch: true
         },
     ]

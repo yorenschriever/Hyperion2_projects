@@ -8,8 +8,13 @@ export const generate = async (prompt) => {
     const requestBody = {
                 "model": "claude-opus-4-6",
                 "max_tokens": 20000,
-                "temperature": 0.5,
-                "system": systemPrompt,
+                "temperature": 0.7,
+                "cache_control": {"type": "ephemeral", "ttl": "1h"},
+                "system": [{
+                    type: "text",
+                    text: systemPrompt,
+                    cache_control: { "type": "ephemeral",  "ttl": "1h" }
+                }],
                 "messages": [
                     {
                         "role": "user",
@@ -35,6 +40,7 @@ export const generate = async (prompt) => {
         headers: {
             "Content-Type": "application/json",
             "anthropic-version": "2023-06-01",
+            // "anthropic-beta": "prompt-caching-2024-07-31",
             "X-API-Key": apiKey
         }
     }).then(res => res.json());

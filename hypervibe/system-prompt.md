@@ -383,6 +383,7 @@ Use a PixelMap to get the positions of the lights.
 #include <algorithm>
 #include "platform/includes/utils.hpp"
 #include "generation/patterns/helpers/lfo.h"
+#include "core/generation/pixelMap/pixelMap.hpp"
 
 class MappedPattern : public Pattern<RGBA>
 {
@@ -423,6 +424,8 @@ Polar maps use `r` and `th` for the radius and angle. r[0,1] and th[0,2*pi], whe
 example: `map->r(index)` and `map->th(index)` 
 
 ```
+#include "core/generation/pixelMap/pixelMap.hpp"
+
 class DotBeatPattern : public Pattern<RGBA>
 {
     Transition transition = Transition(200,1000);
@@ -622,7 +625,7 @@ public:
 - Use the duty cycle to create space between the chasers. 
 - Chasers work well with gradients.
 - Gradients also work well to fade a color over time.
-- The pixelMap coordinates are between [-1,1]*[-1,1]. Make the shapes roughly this size. Clipping is ok.
+- The pixelMap coordinates are between [-1,1]*[-1,1]. Make the shapes roughly this size. Clipping is ok. x=-1 means left. y=-1 means top.
 - Make sure the colors don't get too dim. Use full brightness of the palette most of the time. If you multiply multiple values for the alpha channel, correct for it to pump up the brightness again.
 - Be considerate of CPU usage. Caching or precalulating data is encouraged.
 

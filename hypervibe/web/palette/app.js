@@ -67,18 +67,27 @@ function gradientCSS(stops) {
 // ── AI stub ──────────────────────────────────────────────────────────────────
 
 async function generatePaletteFromPrompt(prompt) {
+
+      const response = await fetch('/api/generate-palette', {
+          cache: "no-cache",
+          method: "POST",
+          body:prompt
+      });
+      const code = await response.json();
+      return code;
+
   // TODO: replace with real API call
-  return {
-    name: "Generated Palette",
-    primary: { r: 255, g: 94, b: 77 },
-    secondary: { r: 45, g: 0, b: 80 },
-    highlight: { r: 255, g: 214, b: 0 },
-    gradient: [
-      { position: 0, color: { r: 45, g: 0, b: 80 } },
-      { position: 128, color: { r: 255, g: 94, b: 77 } },
-      { position: 255, color: { r: 255, g: 214, b: 0 } },
-    ],
-  };
+  // return {
+  //   name: "Generated Palette",
+  //   primary: { r: 255, g: 94, b: 77 },
+  //   secondary: { r: 45, g: 0, b: 80 },
+  //   highlight: { r: 255, g: 214, b: 0 },
+  //   gradient: [
+  //     { position: 0, color: { r: 45, g: 0, b: 80 } },
+  //     { position: 128, color: { r: 255, g: 94, b: 77 } },
+  //     { position: 255, color: { r: 255, g: 214, b: 0 } },
+  //   ],
+  // };
 }
 
 // ── Import parser ────────────────────────────────────────────────────────────
@@ -324,6 +333,7 @@ function App() {
   const [prompt, setPrompt] = useState('');
   const [importText, setImportText] = useState('');
   const [savedNames, setSavedNames] = useState(() => Object.keys(getSavedPalettes()));
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const loadPalette = (p) => {
     setName(p.name);
@@ -335,8 +345,16 @@ function App() {
   };
 
   const onGenerate = async () => {
-    const p = await generatePaletteFromPrompt(prompt);
-    loadPalette(p);
+    if (isGenerating) return;
+    setIsGenerating(true);
+    try {
+      const p = await generatePaletteFromPrompt(prompt);
+      loadPalette(p);
+    } catch (e) {
+      alert('Generate error: ' + e.message);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const onParse = () => {
@@ -465,8 +483,12 @@ function App() {
       <h2>AI Generate</h2>
       <div class="prompt-row">
         <input type="text" value=${prompt} onInput=${e => setPrompt(e.target.value)}
-          placeholder="Describe a palette..." onKeyDown=${e => e.key === 'Enter' && onGenerate()} />
-        <button onClick=${onGenerate}>Generate</button>
+          placeholder="Describe a palette..." onKeyDown=${e => e.key === 'Enter' && !isGenerating && onGenerate()} />
+        <button class=${isGenerating ? 'loading' : ''} onClick=${onGenerate} disabled=${isGenerating}>
+          ${isGenerating
+            ? html`<span class="button-spinner" aria-hidden="true"></span><span>Generating...</span>`
+            : 'Generate'}
+        </button>
       </div>
     </div>
 

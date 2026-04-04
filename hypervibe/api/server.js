@@ -1,6 +1,7 @@
 import express from 'express'
 import {compile} from './compile.js'
 import {generate} from './generate.js'
+import {generatePalette} from './generatePalette.js'
 
 const app = express();
 
@@ -34,8 +35,12 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'healthy' });
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok2',
+        ip: req.ip,
+        protocol: req.protocol
+    });
 });
 
 app.post('/api/compile', async (req, res) => {
@@ -51,6 +56,10 @@ app.post('/api/compile', async (req, res) => {
 
 app.post('/api/generate', async (req, res) => {
     res.status(200).send(await generate(req.rawBody));
+});
+
+app.post('/api/generate-palette', async (req, res) => {
+    res.status(200).send(await generatePalette(req.rawBody));
 });
 
 const PORT = process.env.PORT || 3000;
