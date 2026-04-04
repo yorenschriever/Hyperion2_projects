@@ -43,7 +43,7 @@ PixelMap3d::Cylindrical cBaseMap = *(baseMap.toCylindricalXZ());
 PixelMap base2d = resizeAndTranslateMap(*(baseMap.to2d()), 1.45, 0, 0.06);
 PixelMap::Polar basePolar = *(base2d.toPolar());
 
-PixelMap3d::Cylindrical cWingsMap = *(wingsMap.toCylindricalXY(0, -0.06));
+PixelMap3d::Cylindrical cWingsMap = *(resizeAndTranslateMap3d(wingsMap, 1, 0, -0.06).toCylindricalXY()); 
 PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.to2d()), 1.45, 0, 0.06);
 PixelMap::Polar wingsPolar = *(wings2d.toPolar());
 
