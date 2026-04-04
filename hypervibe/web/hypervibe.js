@@ -18,7 +18,7 @@ export const HypervibeApp = () => {
         setCodeLoading(true);
         setWasmLoading(true);
         try {
-            const response = await fetch('/generate', {
+            const response = await fetch('/api/generate', {
                 cache: "no-cache",
                 method: "POST",
                 body:promptState
@@ -40,7 +40,7 @@ export const HypervibeApp = () => {
         setWasmLoading(true);
         setWasmError(null);
         try {
-            const response = await fetch('/compile',{
+            const response = await fetch('/api/compile',{
                 cache: "no-cache",
                 method: "POST",
                 body: codeStateArg

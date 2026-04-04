@@ -17,8 +17,8 @@ int main()
     // And lastly, it is an easy way to get a backend to build the wasm.
     auto webServer = WebServer::createInstance();
 
-    webServer->addPath("/compile", &compileResponse);
-    webServer->addPath("/generate", &generateResponse);
+    webServer->addPath("/api/compile", &compileResponse);
+    webServer->addPath("/api/generate", &generateResponse);
 
     while (1)
         Thread::sleep(1000);
