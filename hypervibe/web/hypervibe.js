@@ -1,10 +1,22 @@
 import {html, useState, useEffect, useRef} from './common/preact-standalone.js'
 import {Monitor} from './monitor.js';
-import {pixelMap} from './pixelMap.js';
+import {pixelMap as defaultPixelMap} from './pixelMap.js';
 
-const scenes = [pixelMap];
+const PIXELMAP_STORAGE_KEY = 'hypervibe-custom-pixelmap';
+
+function loadSavedPixelMap() {
+    try {
+        const saved = localStorage.getItem(PIXELMAP_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+}
 
 export const HypervibeApp = () => {
+    const [scenes, setScenes] = useState(() => {
+        const saved = loadSavedPixelMap();
+        return [saved || defaultPixelMap];
+    });
     const [promptState,setPromptState] = useState('');
     const [codeState,setCodeState] = useState('');
     const [wasmState,setWasmState] = useState(null);
@@ -95,11 +107,15 @@ export const HypervibeApp = () => {
             loadMonitorFromCode(codeState);
     }
 
+    const onScenesChange = (newScenes) => {
+        setScenes(newScenes);
+    };
+
     return html`
         <div class="vibe-patterns-app">
 
             <div class="monitor">
-                <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState}/>
+                <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState} onScenesChange=${onScenesChange}/>
                 ${wasmLoading && html`<${LoadingSpinner}/>`}
                 ${wasmError && html`<${ErrorIcon} text=${wasmError}/>`}
             </div>

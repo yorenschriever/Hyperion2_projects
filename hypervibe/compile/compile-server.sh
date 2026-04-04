@@ -1,6 +1,6 @@
 source ~/repos/emsdk/emsdk_env.sh > /dev/null 2>&1
 
-emcc main.cpp \
+emcc -O2 main.cpp \
 $HYPERION_LIB_DIR/platform/unix_common/utils.cpp \
 $HYPERION_LIB_DIR/platform/unix_common/log.cpp \
 $HYPERION_LIB_DIR/core/generation/patterns/helpers/tempo/tempo.cpp \

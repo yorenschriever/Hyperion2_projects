@@ -1,5 +1,6 @@
 import { html, useState, useEffect, useRef} from './common/preact-standalone.js'
 import { main as initWebGLMonitor } from './monitor/webgl-monitor.js';
+import { pixelMap as defaultPixelMap } from './pixelMap.js';
 import wasmFactory from './pattern.mjs';
 
 const PARAM_NAMES = ['Velocity', 'Amount', 'Size', 'Variant', 'Offset', 'Intensity'];
@@ -103,7 +104,60 @@ const PaletteSelector = ({ instance, refreshKey }) => {
     `;
 };
 
-export const Monitor = ({ scenes, wasmBinary }) => {
+const PIXELMAP_STORAGE_KEY = 'hypervibe-custom-pixelmap';
+
+const PixelMapLoader = ({ onScenesChange }) => {
+    const fileRef = useRef(null);
+    const hasCustom = !!localStorage.getItem(PIXELMAP_STORAGE_KEY);
+
+    const loadFile = () => fileRef.current && fileRef.current.click();
+
+    const onFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (!data.positions || !Array.isArray(data.positions)) {
+                    alert('Invalid pixelmap: missing positions array');
+                    return;
+                }
+                const pm = {
+                    path: data.path || '/ws/monitor1',
+                    instance: data.instance || '',
+                    type: data.type || '2d',
+                    size: data.size || 0.01,
+                    positions: data.positions,
+                };
+                localStorage.setItem(PIXELMAP_STORAGE_KEY, JSON.stringify(pm));
+                if (onScenesChange) onScenesChange([pm]);
+            } catch (err) {
+                alert('Failed to parse pixelmap file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    };
+
+    const reset = () => {
+        localStorage.removeItem(PIXELMAP_STORAGE_KEY);
+        if (onScenesChange) onScenesChange([defaultPixelMap]);
+    };
+
+    return html`
+        <div class="pixelmap-loader">
+            <label>Pixel Map</label>
+            <div class="pixelmap-buttons">
+                <button onClick=${loadFile}>Load file</button>
+                <button onClick=${reset} disabled=${!hasCustom}>Reset</button>
+            </div>
+            <input type="file" ref=${fileRef} accept=".json" style="display:none" onChange=${onFileChange} />
+        </div>
+    `;
+};
+
+export const Monitor = ({ scenes, wasmBinary, onScenesChange }) => {
     const canvasRef = useRef(null);
     const [wasmInstance, setWasmInstance] = useState(null);
     const [showPaletteEditor, setShowPaletteEditor] = useState(false);
@@ -186,6 +240,7 @@ export const Monitor = ({ scenes, wasmBinary }) => {
                 <div class="palette-editor-btn">
                     <button onClick=${() => setShowPaletteEditor(true)}>Edit Palettes</button>
                 </div>
+                <${PixelMapLoader} onScenesChange=${onScenesChange} />
             </div>
             <canvas ref=${canvasRef} width="640" height="480"></canvas>
         </div>

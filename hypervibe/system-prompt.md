@@ -463,6 +463,14 @@ public:
 };
 ```
 
+### Map transformations
+`core/generation/pixelMap/mapHelpers.hpp` contains helpers to transform a map
+
+`PixelMap resizeAndTranslateMap(PixelMap map, float scale, float x=0, float y=0)`
+`PixelMap rotateMap(PixelMap map, float angle)`
+
+It can be beneficial to transform the pixel map and store it, instead of transforming all coordinates on the fly when calculating the pattern. Especially if multiple consecutive frame the the same transformation.
+
 ## Params
 There are six params passed to the Calculate method. The operator uses this to tweak the pattern.
 You need to map as many params as possible to the the pattern.
@@ -616,6 +624,7 @@ public:
 - Gradients also work well to fade a color over time.
 - The pixelMap coordinates are between [-1,1]*[-1,1]. Make the shapes roughly this size. Clipping is ok.
 - Make sure the colors don't get too dim. Use full brightness of the palette most of the time. If you multiply multiple values for the alpha channel, correct for it to pump up the brightness again.
+- Be considerate of CPU usage. Caching or precalulating data is encouraged.
 
 ## Constraints:
 - Code must compile with c++17.
