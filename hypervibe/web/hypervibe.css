@@ -311,3 +311,47 @@ textarea {
 .modal-close:hover {
     color: #fff;
 }
+
+.glossary-modal {
+    width: 600px;
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.glossary-body {
+    padding: 24px;
+    color: #d4d4d4;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.glossary-body h2 {
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.glossary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.glossary-table th,
+.glossary-table td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+    font-size: 13px;
+}
+
+.glossary-table th {
+    color: #888;
+    font-weight: normal;
+    border-bottom-color: #555;
+}
+
+.glossary-empty {
+    color: #666;
+    font-style: italic;
+    margin-top: 12px;
+}

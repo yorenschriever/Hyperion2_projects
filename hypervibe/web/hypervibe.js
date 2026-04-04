@@ -111,8 +111,12 @@ export const HypervibeApp = () => {
         setScenes(newScenes);
     };
 
+    const [glossaryOpen, setGlossaryOpen] = useState(false);
+    const toggleGlossary = () => setGlossaryOpen(v => !v)
+
     return html`
         <div class="vibe-patterns-app">
+            ${glossaryOpen && html`<${GlossaryModal} onClose=${toggleGlossary}/>`}
 
             <div class="monitor">
                 <${Monitor} scenes=${scenes} wasmBinary=${wasmState} key=${wasmState} onScenesChange=${onScenesChange}/>
@@ -123,6 +127,7 @@ export const HypervibeApp = () => {
             <div class="prompt-editor">
                 <textarea value=${promptState} onInput=${ (e) => setPromptState(e.target.value)} onKeyDown=${promptKeyDownHandler}></textarea>
                 <div class="buttons">
+                    <button onClick=${ () => toggleGlossary()} disabled=${codeLoading}>Glossary</button>
                     <button onClick=${ () => createCodeFromPrompt()} disabled=${codeLoading}>Generate code</button>
                 </div>
             </div>
@@ -153,5 +158,43 @@ const ErrorIcon = ({text}) => html`
             <line x1="16" y1="8" x2="8" y2="16" stroke="currentColor" stroke-width="2"/>
         </svg>
         <div class="error-text">${text || "Error"}</div>
+    </div>
+`;
+
+const glossaryItems = [
+    { term: 'Palette', description: 'Has a primary color, secondary color, highlight color, and gradient. You cannot use colors outside of this palette.' },
+    { term: 'Chaser', description: 'A wave moving through the leds, based on pixel indices.' },
+    { term: 'Sweep', description: 'A wave moving through the leds, based on their position in the map.' },
+    { term: 'Angular', description: 'Rotating, based on the angle of the polar coordinates.' },
+    { term: 'Radial', description: 'Growing from the center, based on the radius of the polar coordinates.' },
+    { term: 'Strobe', description: 'All leds on and off at the same time, fast.' },
+    { term: 'Blinder', description: 'Very bright when the pattern is on, fade out slowly when the pattern is off.' },
+    { term: 'Flash', description: 'Very bright on a beat, fade out quickly after that.' },
+    { term: 'Glow', description: 'Lets pixels will breathe to full brightness and back, with a break in between.' },
+    { term: 'LFO', description: 'Oscillator. Shapes: SawUp, SawDown, SinFast, Glow, PWM, Tri, SoftPwm, SoftSawUp, SoftSawDown. The soft variants are smoother versions of the standard shapes. LFOs can be synced to the music tempo or have independent timing.' },
+    { term: 'On Beat', description: 'Trigger things on the beat of the music.' },
+    { term: 'Transition', description: 'The Fade in/out animation when a pattern is turned on or off.' },
+    { term: 'Fade', description: 'Value that goes from 1 to 0 over time. Variants: FadeUp, FadeDown. Easing: Linear, Quadratic, Cubic.' },
+    { term: 'Params', description: 'Values tweakable by the user: velocity, amount, size, variant, offset, intensity.' },
+    { term: 'Particle system', description: 'Draw many things on screen that move around and interact. Good for fire, smoke, sparks, etc.' },
+];
+
+const GlossaryModal = ({onClose}) => html`
+    <div class="modal-overlay" onClick=${onClose}>
+        <div class="modal-content glossary-modal" onClick=${(e) => e.stopPropagation()}>
+            <button class="modal-close" onClick=${onClose}>×</button>
+            <div class="glossary-body">
+                <h2>Glossary</h2>
+                <table class="glossary-table">
+                    <thead><tr><th>Term</th><th>Description</th></tr></thead>
+                    <tbody>
+                        ${glossaryItems.map(item => html`
+                            <tr><td>${item.term}</td><td>${item.description}</td></tr>
+                        `)}
+                    </tbody>
+                </table>
+                ${glossaryItems.length === 0 && html`<p class="glossary-empty">No glossary items yet.</p>`}
+            </div>
+        </div>
     </div>
 `; 
