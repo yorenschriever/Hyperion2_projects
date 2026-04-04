@@ -1,8 +1,4 @@
-import { h, render } from 'https://esm.sh/preact@10.19.3';
-import { useState, useCallback, useRef, useEffect } from 'https://esm.sh/preact@10.19.3/hooks';
-import htm from 'https://esm.sh/htm@3.1.1';
-
-const html = htm.bind(h);
+import {html, useState, useEffect, useRef, useCallback, render} from '../common/preact-standalone.js'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
