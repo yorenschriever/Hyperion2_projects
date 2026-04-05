@@ -132,4 +132,45 @@ class WingCycleFlashesPattern : public Pattern<RGBA>
         }
     };
 
+    class WingsBeamsPattern : public Pattern<RGBA>
+    {
+        Transition transition;
+        PixelMap::Polar *map;   
+
+    public:
+        WingsBeamsPattern(PixelMap::Polar *map)
+        {
+            this->name = "Wings beams";
+            this->map = map;    
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!transition.Calculate(active))
+                return;
+
+            // float intensity = params->getIntensity(0.4, 1.0);
+            // float size = params->getSize(0.1, 0.5);
+
+            for (int index = 0; index < std::min(width, (int)map->size()); index++)
+            {
+                // float angleModulus = Utils::modulus_f(map->th(index), M_PI / 2) - M_PI/4;
+                float angleDeg = map->th(index) * 180. / M_PI;
+                int angleModulus = Utils::mod(int(angleDeg), 0,90) - 45;
+
+                bool isInAngularBeam = angleModulus < -10 || angleModulus > 7;
+                bool isInRadialBeam = map->r(index) > 0.76 || (map->r(index) > 0.45 && map->r(index) < 0.5);
+
+                if (!isInAngularBeam && !isInRadialBeam)
+                    continue;
+
+                // if (isInAngularBeam)
+                    // pixels[index] += params->getHighlightColor() * transition.getValue();
+                // if (isInRadialBeam)
+                    pixels[index] += params->getSecondaryColor() * transition.getValue();
+
+            }
+        }
+    };
+
 }

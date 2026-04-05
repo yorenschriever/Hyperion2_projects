@@ -26,11 +26,9 @@ public:
 class BaseFadePattern : public Pattern<RGBA>
 {
 public:
-    RGBA color;
     PixelMap3d *map;
-    BaseFadePattern(PixelMap3d *map, RGBA color, const char *name)
+    BaseFadePattern(PixelMap3d *map, const char *name)
     {
-        this->color = color;
         this->name = name;
         this->map = map;
     }
@@ -41,20 +39,16 @@ public:
             return;
 
         for (int i = 0; i < width; i++)
-        {
-            pixels[i] = color * (-0.5*map->y(i)); //fade out based on distance to create a nice depth effect
-        }
+            pixels[i] = params->getPrimaryColor() * (-0.5*map->y(i)); 
     }
 };
 
 class WingsFadePattern : public Pattern<RGBA>
 {
 public:
-    RGBA color;
     PixelMap3d::Cylindrical *map;
-    WingsFadePattern(PixelMap3d::Cylindrical *map, RGBA color, const char *name)
+    WingsFadePattern(PixelMap3d::Cylindrical *map,const char *name)
     {
-        this->color = color;
         this->name = name;
         this->map = map;
     }
@@ -65,9 +59,7 @@ public:
             return;
 
         for (int i = 0; i < width; i++)
-        {
-            pixels[i] = color * map->r(i); //fade out based on distance to create a nice depth effect
-        }
+            pixels[i] = params->getPrimaryColor() * map->r(i); 
     }
 };
 

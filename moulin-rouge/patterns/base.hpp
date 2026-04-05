@@ -265,4 +265,47 @@ namespace BasePatterns
             }
         }
     };
+
+    class BaseBeamsPattern : public Pattern<RGBA>
+    {
+        Transition transition;
+        PixelMap3d::Cylindrical *map;
+
+    public:
+        BaseBeamsPattern()
+        {
+            this->name = "Base beams";
+            // this->map = map;
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!transition.Calculate(active))
+                return;
+
+            for (int index = 0; index < width; index++)
+            {
+                int beamIndex = index / (3*60);
+
+                bool isVerticalBeam = 
+                    beamIndex == 0 || 
+                    beamIndex == 17 ||
+                    beamIndex == 6 || 
+                    beamIndex == 11;
+
+                int ledIndexInBeam = index % (3*60);
+                bool isHorizontalBeam = 
+                    (ledIndexInBeam >= 120 && ledIndexInBeam < 125)
+                    || ledIndexInBeam < 5
+                    || ledIndexInBeam >= 175;
+
+                if (!isVerticalBeam && !isHorizontalBeam)    
+                    continue;
+
+                pixels[index] += params->getSecondaryColor() * transition.getValue();
+
+            }
+        }
+    };
+
 }
