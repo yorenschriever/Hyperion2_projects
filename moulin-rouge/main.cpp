@@ -48,9 +48,16 @@ PixelMap3d::Cylindrical cWingsMap = *(resizeAndTranslateMap3d(wingsMap, 1, 0, 0.
 PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.to2d()), 1.45, 0, 0.06*1.45);
 PixelMap::Polar wingsPolar = *(wings2d.toPolar());
 
+PixelMap all2d = resizeAndTranslateMap(combineMaps({base2d, wings2d}), -1);
+
 int main()
 {
     auto hyp = new Hyperion();
+
+    // hyp->createChain(
+    //     new PatternInput<RGBA>(all2d.size(), new LedPatterns::PalettePattern(0, "Primary")),
+    //     new MonitorOutput(&hyp->webServer,&all2d)
+    // );
 
     addBase(hyp);
     addWings(hyp);
