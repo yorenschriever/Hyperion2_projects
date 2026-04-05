@@ -118,10 +118,8 @@ void addBase(Hyperion *hyp)
         {"hypernode2.local",9614,6*60},
     };
 
-    auto input = new ControlHubInput<RGBA>(
-        nleds,
-        &hyp->hub,
-        {
+    SlotPatternsGenerator baseSlotPatternsGenerator = [&](){
+        return std::vector<ControlHubInput<RGBA>::SlotPattern>({
             {.column = Columns::BG, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::BG, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::BG, .slot = 2, .pattern = new BaseFadePattern(&baseMap, "Primary gradient")},
@@ -214,9 +212,10 @@ void addBase(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
             {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
+    };
 
-    // distributeAndPreview<BGR, RGBA>(hyp,baseSlotPatternsGenerator,&baseMap,distribution,pixelLut);
-        distributeAndMonitor<BGR, RGBA>(hyp,input,&baseMap,distribution,pixelLut);
+    distributeAndPreview<BGR, RGBA>(hyp,baseSlotPatternsGenerator,&baseMap,distribution,pixelLut);
+    // distributeAndMonitor<BGR, RGBA>(hyp,input,&baseMap,distribution,pixelLut);
 
 }
 
@@ -240,10 +239,8 @@ void addWings(Hyperion *hyp)
         {"hypernode3.local",9618,3*60},
     };
 
-    auto input = new ControlHubInput<RGBA>(
-        nleds,
-        &hyp->hub,
-        {
+    SlotPatternsGenerator wingsSlotPatternsGenerator = [&](){
+        return std::vector<ControlHubInput<RGBA>::SlotPattern>({
             {.column = Columns::BG, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::BG, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::BG, .slot = 2, .pattern = new WingsFadePattern(&cWingsMap, "Primary gradient")},
@@ -338,87 +335,11 @@ void addWings(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
             {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
 
-
-
-
-
-
-            // {.column = Columns::WINGS, .slot = 1, .pattern = new OneColor(RGB(0,255,0),"Green")},
-            // {.column = Columns::WINGS, .slot = 2, .pattern = new OneColor(RGB(0,0,255),"Blue")},
-
-            // {.column = Columns::WINGS, .slot = 4, .pattern = new HeartZoom(&wingsMap)},
-
-            // {.column = Columns::WINGS, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            // {.column = Columns::WINGS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            // {.column = Columns::WINGS, .slot = 2, .pattern = new Static::HorizontalSaw(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 3, .pattern = new Static::HorizontalSin(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 4, .pattern = new Static::RadialSaw(&wingsPolar)},
-
-            // {.column = Columns::WINGS, .slot = 5, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap = zigzag},
-
-            // {.column = Columns::WINGS, .slot = 0, .pattern = new WingsFadePattern(&cWingsMap, RGB(255,0,0),"Red")},
-            // {.column = Columns::WINGS, .slot = 1, .pattern = new Mapped2dPatterns::Lighthouse(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 2, .pattern = new Mapped2dPatterns::GrowingCirclesPattern(&wings2d)},
-            // {.column = Columns::WINGS, .slot = 3, .pattern = new Mapped2dPatterns::DotBeatPattern(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 4, .pattern = new Mapped2dPatterns::RadialFadePattern(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 5, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 6, .pattern = new Wings::GrowShrink(&wingsPolar)},
-            // {.column = Columns::WINGS, .slot = 7, .pattern = new Wings::WingCycleFlashesPattern()},
-            // {.column = Columns::WINGS, .slot = 8, .pattern = new Wings::SegmentGlitchPattern(8*60)},
-            // {.column = Columns::WINGS, .slot = 9, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            // {.column = Columns::WINGS, .slot = 10, .pattern = new Wings::WingsBeamsPattern(&wingsPolar)},
-
-            // {.column = Columns::TRIGGER, .slot = 11, .pattern = new TriggerPatterns::DoubleFlash(&cWingsMap)},
-            // {.column = Columns::TRIGGER, .slot = 12, .pattern = new TriggerPatterns::GlitterFade(&cWingsMap)},
-            // {.column = Columns::TRIGGER, .slot = 13, .pattern = new TriggerPatterns::Meteor(16, 50, 250, "Meteor wings out"), .indexMap = zigzag},
-            // {.column = Columns::TRIGGER, .slot = 14, .pattern = new TriggerPatterns::Meteor(16, 50, 250, "Meteor wings in"), .indexMap = zigzagReverse},
-           
-            // // {.column = Columns::BASE, .slot = 11, .pattern = new VibePatterns::TriangleBurst(&wings2d)},
-            // {.column = Columns::BASE, .slot = 12, .pattern = new VibePatterns::RotatingTriangle(&wings2d)},
-            // {.column = Columns::BASE, .slot = 13, .pattern = new VibePatterns::TriangleStutter(&wings2d)},
-            // {.column = Columns::BASE, .slot = 14, .pattern = new VibePatterns::TrianglePulse(&wings2d)},
-            // {.column = Columns::BASE, .slot = 15, .pattern = new VibePatterns::TriangleOutlineGrow(&wings2d)},
-            // {.column = Columns::BASE, .slot = 20, .pattern = new VibePatterns::InfernoParticles(&wings2d)},
-            // {.column = Columns::BASE, .slot = 21, .pattern = new VibePatterns::BeerBubblesPattern(&wings2d)},
-            // {.column = Columns::BASE, .slot = 22, .pattern = new VibePatterns::FloatingOrbsPattern(&wings2d)},
-            // // {.column = Columns::BASE, .slot = 23, .pattern = new VibePatterns::MandalaZoom(&base2d)},
-            // {.column = Columns::BASE, .slot = 24, .pattern = new VibePatterns::HeartStackPattern(&wings2d)},
-            // {.column = Columns::BASE, .slot = 25, .pattern = new VibePatterns::BurningTornadoPattern(&wings2d)},
-            // // {.column = Columns::BASE, .slot = 26, .pattern = new VibePatterns::EmberTornado(&wings2d)},
-
-            // {.column = Columns::BASE, .slot = 16, .pattern = new VibePatterns::MatrixRainPattern(&wings2d)},
-            // // {.column = Columns::BASE, .slot = 17, .pattern = new VibePatterns::HeartbeatPattern(&wings2d)},
-            // {.column = Columns::BASE, .slot = 18, .pattern = new VibePatterns::FireworkBurstPattern(&wings2d)},
-            // {.column = Columns::BASE, .slot = 19, .pattern = new VibePatterns::MeteorShowerPattern(&wings2d)},
-
-
-            // {.column = Columns::MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
-            // {.column = Columns::MASK, .slot = 1, .pattern = new MaskPatterns::GlowPulseMaskPattern(), .indexMap = zigzag},
-            // // {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(8*60, true)},
-            // // {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(2*60, false)},
-            // {.column = Columns::MASK, .slot = 4, .pattern = new MaskPatterns::WingsFadePattern(&wingsPolar)},
-            // {.column = Columns::MASK, .slot = 5, .pattern = new MaskPatterns::WingsFadePattern(&wingsPolar,true)},
-
-            // {.column = Columns::FLASH, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
-            // {.column = Columns::FLASH, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
-            // {.column = Columns::FLASH, .slot = 2, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            // {.column = Columns::FLASH, .slot = 3, .pattern = new LedPatterns::PixelGlitchPattern()},
-            // {.column = Columns::FLASH, .slot = 4, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            // {.column = Columns::FLASH, .slot = 5, .pattern = new LedPatterns::FadeFromRandom()},
-
-            // {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
-            // {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
-            // {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
-            // {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
-            // {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
-            // {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-            // {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(10, 1)},
-            // {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
-            // {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-            // {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
+    };
 
-    distributeAndMonitor<BGR, RGBA>(hyp,input,&wingsMap,distribution,pixelLut);
+    // distributeAndMonitor<BGR, RGBA>(hyp,input,&wingsMap,distribution,pixelLut);
+    distributeAndPreview<BGR, RGBA>(hyp,wingsSlotPatternsGenerator,&wingsMap,distribution,pixelLut);
 }
 
 void addPaletteColumn(Hyperion *hyp)
