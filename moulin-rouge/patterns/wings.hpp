@@ -158,8 +158,8 @@ class WingCycleFlashesPattern : public Pattern<RGBA>
                 float angleDeg = map->th(index) * 180. / M_PI;
                 int angleModulus = Utils::mod(int(angleDeg), 0,90) - 45;
 
-                bool isInAngularBeam = angleModulus < -10 || angleModulus > 7;
-                bool isInRadialBeam = map->r(index) > 0.76 || (map->r(index) > 0.45 && map->r(index) < 0.5);
+                bool isInAngularBeam = angleModulus < -10 || angleModulus > 6;
+                bool isInRadialBeam = map->r(index) > 0.73 || (map->r(index) > 0.43 && map->r(index) < 0.48);
 
                 if (!isInAngularBeam && !isInRadialBeam)
                     continue;

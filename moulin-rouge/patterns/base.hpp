@@ -289,9 +289,9 @@ namespace BasePatterns
 
                 bool isVerticalBeam = 
                     beamIndex == 0 || 
-                    beamIndex == 17 ||
-                    beamIndex == 6 || 
-                    beamIndex == 11;
+                    beamIndex == 12 ||
+                    beamIndex == 4 || 
+                    beamIndex == 8;
 
                 int ledIndexInBeam = index % (3*60);
                 bool isHorizontalBeam = 

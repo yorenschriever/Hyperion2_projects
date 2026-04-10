@@ -1,3 +1,4 @@
+import math
 import sys
 import os
 from math import pi, cos, sin
@@ -20,28 +21,33 @@ def line(turtle,addPositionToTrail=True):
         turtle.move(ledDistance, addPositionToTrail)
 
 def base(turtle):
-    numBars=18
+    baseRadius = 1200/2
+    topRadius = 900/2
+    baseAngle = math.degrees(math.acos((baseRadius-topRadius)/2000))
+    print ("base angle: " + str(baseAngle) + " diff, " + str(baseRadius-topRadius) + " ")
+
+    numBars=13
     for i in range(numBars):
         turtle.setPosition(0, 0, -3000)
         turtle.setRotation(i*180/(numBars-1),0, 0)
         #radius of the circle
-        turtle.move(1000, False)
-        turtle.pitch(100)
+        turtle.move(baseRadius, False)
+        turtle.pitch(180-baseAngle)
         line(turtle)
         line(turtle)
-        turtle.pitch(-10)
+        turtle.pitch(baseAngle-90)
         line(turtle)
 
 def wings(turtle):
     for wing in range(4):
         for i in range(5):
-            angularsize = 30
+            angularsize = 2*13
             localangle = i/5*angularsize-angularsize/2
             angle = 45+wing*90 + localangle
             
             turtle.setPosition(0, -1000, -250)
             turtle.setRotation(0,angle, 0)
-            turtle.move(250, False)
+            turtle.move(200, False)
             if i%2 == 0:
                 line(turtle)
                 line(turtle)
