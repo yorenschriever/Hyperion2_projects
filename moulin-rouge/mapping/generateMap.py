@@ -42,7 +42,7 @@ def wings(turtle):
     for wing in range(4):
         for i in range(5):
             angularsize = 2*13
-            localangle = i/5*angularsize-angularsize/2
+            localangle = i/4*angularsize-angularsize/2
             angle = 45+wing*90 + localangle
             
             turtle.setPosition(0, -1000, -250)
