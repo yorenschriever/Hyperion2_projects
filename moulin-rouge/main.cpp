@@ -110,12 +110,12 @@ void addBase(Hyperion *hyp)
         {"hypernode1.local",9613,6*60},
         {"hypernode1.local",9614,6*60},
 
-        {"hypernode1.local",9615,6*60},
+        // {"hypernode1.local",9615,6*60},
 
         {"hypernode2.local",9611,6*60},
         {"hypernode2.local",9612,6*60},
-        {"hypernode2.local",9613,6*60},
-        {"hypernode2.local",9614,6*60},
+        {"hypernode2.local",9613,3*60},
+        // {"hypernode2.local",9614,6*60},
     };
 
     SlotPatternsGenerator baseSlotPatternsGenerator = [&](){
