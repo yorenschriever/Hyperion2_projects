@@ -19,6 +19,9 @@
 #include "palettes.hpp"
 #include "wings-zigzag.hpp"
 
+#define BAR_V1 BGR
+#define BAR_V2 GBR
+
 enum Columns
 {
     PALETTE,
@@ -207,14 +210,14 @@ void addBase(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
             {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
             {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 1)},
+            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
             {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
             {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
             {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
     };
 
-    distributeAndPreview<BGR, RGBA>(hyp,baseSlotPatternsGenerator,&baseMap,distribution,pixelLut);
+    distributeAndPreview<BAR_V2, RGBA>(hyp,baseSlotPatternsGenerator,&baseMap,distribution,pixelLut);
     // distributeAndMonitor<BGR, RGBA>(hyp,input,&baseMap,distribution,pixelLut);
 
 }
@@ -330,7 +333,7 @@ void addWings(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
             {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
             {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 1)},
+            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
             {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
             {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
             {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
@@ -339,7 +342,7 @@ void addWings(Hyperion *hyp)
     };
 
     // distributeAndMonitor<BGR, RGBA>(hyp,input,&wingsMap,distribution,pixelLut);
-    distributeAndPreview<BGR, RGBA>(hyp,wingsSlotPatternsGenerator,&wingsMap,distribution,pixelLut);
+    distributeAndPreview<BAR_V2, RGBA>(hyp,wingsSlotPatternsGenerator,&wingsMap,distribution,pixelLut);
 }
 
 void addPaletteColumn(Hyperion *hyp)
@@ -349,26 +352,34 @@ void addPaletteColumn(Hyperion *hyp)
         0,
         0,
         {
-&bloodMoon,
-&crimsonTide2,
 
-//kuler
+&crimsonTide2,
 &toulouse2,
-&gaslight,
 &velvetNoose,
+&champagneSin,
+&cancan,
+&laceDiable,
+
+&vhsTracking,
+&crimsonTide,
+&matador,
+
+
+// v
+&gaslight,
 &midnightCorset,
+// X
+&bloodMoon,
 &redLipLullaby,
 &sinfuleTouch,
-&champagneSin,
 &lastWaltz,
 &scarletPromise,
 &burlesqueOath,
-
-//moulin rouge
-&cancan,
 &absinthe,
 &velvetKiss,
-&laceDiable,
+//red
+
+
 &petitMort,
 
 &cancan2,
@@ -386,13 +397,12 @@ void addPaletteColumn(Hyperion *hyp)
 //synthwave
 &midnightChrome,
 &laserGrid,
-&vhsTracking,
+
 &turboNoir,
 &plasmaRewind,
 
-//red
             &emberForge,
-            &crimsonTide,
+            
             &dragonBlood,
             &volcanica,
             &emberGlow,
@@ -402,7 +412,7 @@ void addPaletteColumn(Hyperion *hyp)
             &solstice,
             &cayenne,
             &ember,
-            &matador,
+            
             &ignition,
             &crimsonRitual,
             &voltageRush,
