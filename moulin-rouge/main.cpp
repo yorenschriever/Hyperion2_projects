@@ -113,12 +113,9 @@ void addBase(Hyperion *hyp)
         {"hypernode1.local",9613,6*60},
         {"hypernode1.local",9614,6*60},
 
-        // {"hypernode1.local",9615,6*60},
-
-        {"hypernode2.local",9611,6*60},
-        {"hypernode2.local",9612,6*60},
-        {"hypernode2.local",9613,3*60},
-        // {"hypernode2.local",9614,6*60},
+        {"hypernode1.local",9615,6*60},
+        {"hypernode1.local",9616,6*60},
+        {"hypernode1.local",9617,3*60},
     };
 
     SlotPatternsGenerator baseSlotPatternsGenerator = [&](){
@@ -229,17 +226,17 @@ void addWings(Hyperion *hyp)
     IndexMap *zigzagReverse = new WingsZigZagMapper(nleds, 60, true);
 
     Distribution distribution = {
-        {"hypernode3.local",9611,5*60},
-        {"hypernode3.local",9612,3*60},
+        {"hypernode5.local",9611,5*60},
+        {"hypernode5.local",9612,3*60},
 
-        {"hypernode3.local",9613,5*60},
-        {"hypernode3.local",9614,3*60},
+        {"hypernode5.local",9613,5*60},
+        {"hypernode5.local",9614,3*60},
 
-        {"hypernode3.local",9615,5*60},
-        {"hypernode3.local",9616,3*60},
+        {"hypernode5.local",9615,5*60},
+        {"hypernode5.local",9616,3*60},
 
-        {"hypernode3.local",9617,5*60},
-        {"hypernode3.local",9618,3*60},
+        {"hypernode5.local",9617,5*60},
+        {"hypernode5.local",9618,3*60},
     };
 
     SlotPatternsGenerator wingsSlotPatternsGenerator = [&](){
