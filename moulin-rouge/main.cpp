@@ -209,8 +209,9 @@ void addBase(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
             {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
             {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
-            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
+            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
+            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
     };
 
@@ -332,8 +333,9 @@ void addWings(Hyperion *hyp)
             {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
             {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
             {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
-            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
+            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
+            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
 
         });
     };
