@@ -48,7 +48,7 @@ PixelMap base2d = resizeAndTranslateMap(*(baseMap.to2d()), 1.45, 0, 0.06*1.45);
 PixelMap::Polar basePolar = *(base2d.toPolar());
 
 PixelMap3d::Cylindrical cWingsMap = *(resizeAndTranslateMap3d(wingsMap, 1, 0, 0.06).toCylindricalXY()); 
-PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.to2d()), 1.45, 0, 0.06*1.45);
+PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.to2d()), 1.45, 0, 0.095*1.45);
 PixelMap::Polar wingsPolar = *(wings2d.toPolar());
 
 PixelMap all2d = resizeAndTranslateMap(combineMaps({base2d, wings2d}), -1);
@@ -87,7 +87,7 @@ int main()
 
     hyp->start();
     
-    Tempo::AddSource(new ConstantTempo(120));
+    // Tempo::AddSource(new ConstantTempo(120));
 
     auto viewParams = new ViewParams(
         35,
@@ -201,17 +201,17 @@ void addBase(Hyperion *hyp)
             {.column = Columns::FLASH, .slot = 6, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
 
 
-            {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
-            {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
-            {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
-            {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
-            {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
-            {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
-            {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
-            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
-            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-            {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
+            // {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
+            // {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            // {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            // {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            // {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            // {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            // {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
+            // {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            // {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
+            // {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            // {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
         });
     };
 
@@ -325,17 +325,17 @@ void addWings(Hyperion *hyp)
             {.column = Columns::FLASH, .slot = 6, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
 
 
-            {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
-            {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
-            {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
-            {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
-            {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
-            {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
-            {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
-            {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
-            {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
-            {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-            {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
+            // {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::DistributionPattern(distribution, 60)},
+            // {.column = Columns::DEBUG, .slot = 1, .pattern = new TestPatterns::OneColor(RGB(255, 0, 0), "Red")},
+            // {.column = Columns::DEBUG, .slot = 2, .pattern = new TestPatterns::OneColor(RGB(0, 255, 0), "Green")},
+            // {.column = Columns::DEBUG, .slot = 3, .pattern = new TestPatterns::OneColor(RGB(0, 0, 255), "Blue")},
+            // {.column = Columns::DEBUG, .slot = 4, .pattern = new TestPatterns::OneColor(RGB(255, 255, 255), "White")},
+            // {.column = Columns::DEBUG, .slot = 5, .pattern = new TestPatterns::OneColor(RGB(127, 127, 127), "White 50%")},
+            // {.column = Columns::DEBUG, .slot = 6, .pattern = new TestPatterns::Palette(60, 20)},
+            // {.column = Columns::DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(10)},
+            // {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
+            // {.column = Columns::DEBUG, .slot = 9, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            // {.column = Columns::DEBUG, .slot = 10, .pattern = new TestPatterns::OrderBarsPattern(distribution, 60, 4, "Order bars zigzag"),  .indexMap = zigzag},
 
         });
     };

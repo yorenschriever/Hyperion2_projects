@@ -16,6 +16,8 @@ scale = 1./4100 #scale to fit in the -1,1 canvas
 turtleBase = Turtle3d()
 turtleWings = Turtle3d()
 
+offsetWings = 140
+
 def line(turtle,addPositionToTrail=True):
     for i in range(ledsPerMeter):
         turtle.move(ledDistance, addPositionToTrail)
@@ -28,7 +30,7 @@ def base(turtle):
 
     numBars=13
     for i in range(numBars):
-        turtle.setPosition(0, 0, -3000)
+        turtle.setPosition(0, 0, -3000 + offsetWings)
         turtle.setRotation(i*180/(numBars-1),0, 0)
         #radius of the circle
         turtle.move(baseRadius, False)
@@ -45,7 +47,7 @@ def wings(turtle):
             localangle = i/4*angularsize-angularsize/2
             angle = 45+wing*90 + localangle
             
-            turtle.setPosition(0, -1000, -250)
+            turtle.setPosition(0, -1000, -250 - offsetWings)
             turtle.setRotation(0,angle, 0)
             turtle.move(200, False)
             if i%2 == 0:
