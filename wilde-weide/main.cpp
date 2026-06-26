@@ -2,6 +2,7 @@
 #include "common/distributeAndMonitor.hpp"
 #include "common/patterns/patterns-monochrome.hpp"
 #include "common/patterns/patterns-led.hpp"
+#include "common/patterns/patterns-test.hpp"
 
 void addKeyholeChain();
 void addLampshadeChain();
@@ -179,11 +180,8 @@ void addLampshadeChain()
 
 void addLedbarsChain()
 {
-    //TODO
-    // IndexMap *zigzag = new WingsZigZagMapper(nleds);
-    // IndexMap *zigzagReverse = new WingsZigZagMapper(nleds, 60, true);
-
-    int nLeds = 60*8;
+    int nLeds = 8*60;
+    IndexMap *zigzag = new ZigZagMapper(60);
     Distribution distribution = {
         {"hypernode1.local",9611,4*60},
         {"hypernode1.local",9615,4*60},
@@ -198,26 +196,31 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::GlowPattern()},
             {.column = Columns::LEDBARS, .slot = 3, .pattern = new LedPatterns::GlowPulsePattern()},
-            {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::SegmentChasePattern()},
+            {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::FlashesPattern()},
             {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::StrobePattern()},
             {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::PixelGlitchPattern()},
             {.column = Columns::LEDBARS, .slot = 8, .pattern = new LedPatterns::FadingNoisePattern()},
             {.column = Columns::LEDBARS, .slot = 9, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::SinPattern()},
-            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::GradientChasePattern()},
+            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 12, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::FadeFromRandom()},
+            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+
+            {.column = Columns::LEDBARS, .slot = 14, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
     auto map = new PixelMap(
-        combineMaps({
-            gridMap(4, 60, 0.2, 0.01, -0.7, -0.5),
-            gridMap(4, 60, 0.2, 0.01, 0.7,  -0.5)
-        })
+        applyIndexMap(
+            combineMaps({
+                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.015, 0.2), 90), 1,-1, -0.7, -0.5),
+                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.015, 0.2), 90), -1,-1, 0.7, -0.5)
+            }), 
+            zigzag
+        )
     );
 
-    distributeAndMonitor<BGR, RGBA>(&hyp,input,map,distribution,ledLut); 
+    distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
 
 void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01)
