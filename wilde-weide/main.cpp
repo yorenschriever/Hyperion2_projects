@@ -42,18 +42,12 @@ int main()
     addFogChain();
     addPaletteColumn();
 
-
-
-    // hyp->hub.setColumnName(COL_PALETTE, "Kleur");
-    // hyp->hub.setColumnName(COL_MOVINGHEAD, "Moving head");
-    // hyp->hub.setColumnName(COL_COLANDER, "Vergiet");
-    // hyp->hub.setColumnName(COL_FAIRYLIGHT_PINSPOT, "Fairylight / spiegelbol");
-    // hyp->hub.setColumnName(COL_LASERS, "Lasers");
-    // hyp->hub.setColumnName(COL_BULBS, "Peertjes");
-    // hyp->hub.setColumnName(COL_LEDSTER, "Ledster");
-    // hyp->hub.setColumnName(COL_STROBES, "Strobes");
-    // hyp->hub.setColumnName(COL_LED1, "LED 1");
-    // hyp->hub.setColumnName(COL_LED2, "LED 2");
+    hyp.hub.setColumnName(Columns::PALETTE, "Kleur");
+    hyp.hub.setColumnName(Columns::KEYHOLE, "Keyhole");
+    hyp.hub.setColumnName(Columns::LAMPSHADE, "Lampshade");
+    hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars");
+    hyp.hub.setColumnName(Columns::LETTERBOARD, "Letterboard");
+    hyp.hub.setColumnName(Columns::FOG, "Fog"); 
 
     Tempo::AddSource(new ConstantTempo(120));
 
@@ -140,6 +134,13 @@ void addKeyholeChain()
             {.column = Columns::KEYHOLE, .slot = 2, .pattern = new MonochromePatterns::SinPattern()},
             {.column = Columns::KEYHOLE, .slot = 3, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
             {.column = Columns::KEYHOLE, .slot = 4, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
+            {.column = Columns::KEYHOLE, .slot = 5, .pattern = new MonochromePatterns::SlowStrobePattern()},
+            {.column = Columns::KEYHOLE, .slot = 6, .pattern = new MonochromePatterns::BlinderPattern()},
+            {.column = Columns::KEYHOLE, .slot = 7, .pattern = new MonochromePatterns::BeatAllFadePattern()},
+            {.column = Columns::KEYHOLE, .slot = 8, .pattern = new MonochromePatterns::BeatShakePattern()},
+            {.column = Columns::KEYHOLE, .slot = 9, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::KEYHOLE, .slot = 10, .pattern = new MonochromePatterns::BeatStepPattern()},
+            {.column = Columns::KEYHOLE, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
     // auto map = new PixelMap(circleMap(size, 0.5, 0.5, 0));
@@ -161,6 +162,13 @@ void addLampshadeChain()
             {.column = Columns::LAMPSHADE, .slot = 2, .pattern = new MonochromePatterns::SinPattern()},
             {.column = Columns::LAMPSHADE, .slot = 3, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
             {.column = Columns::LAMPSHADE, .slot = 4, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
+            {.column = Columns::LAMPSHADE, .slot = 5, .pattern = new MonochromePatterns::SlowStrobePattern()},
+            {.column = Columns::LAMPSHADE, .slot = 6, .pattern = new MonochromePatterns::BlinderPattern()},
+            {.column = Columns::LAMPSHADE, .slot = 7, .pattern = new MonochromePatterns::BeatAllFadePattern()},
+            {.column = Columns::LAMPSHADE, .slot = 8, .pattern = new MonochromePatterns::BeatShakePattern()},
+            {.column = Columns::LAMPSHADE, .slot = 9, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::LAMPSHADE, .slot = 10, .pattern = new MonochromePatterns::BeatStepPattern()},
+            {.column = Columns::LAMPSHADE, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
     auto map = new PixelMap(circleMap(size, 0.25, 0, 0.7));
@@ -188,6 +196,18 @@ void addLedbarsChain()
         {
             {.column = Columns::LEDBARS, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::LEDBARS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::GlowPattern()},
+            {.column = Columns::LEDBARS, .slot = 3, .pattern = new LedPatterns::GlowPulsePattern()},
+            {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::SegmentChasePattern()},
+            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::LEDBARS, .slot = 8, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS, .slot = 9, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::SinPattern()},
+            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::GradientChasePattern()},
+            {.column = Columns::LEDBARS, .slot = 12, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::FadeFromRandom()},
         });
 
     auto map = new PixelMap(
