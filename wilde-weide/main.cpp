@@ -12,8 +12,7 @@ void addFogChain();
 void addPaletteColumn();
 
 LUT *LaserLut = new LaserLUT(0.5, 4096, 3048);
-LUT *IncandescentLut = new IncandescentLUT(2.5, 4096, 200);
-LUT *IncandescentLut8 = new IncandescentLUT(2.5, 255, 24);
+LUT *IncandescentLut8 = new IncandescentLUT(2.5, 255, 20);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 LUT *GammaLut8 = new GammaLUT(2.5, 255);
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
@@ -26,6 +25,7 @@ enum Columns
     LEDBARS,
     LETTERBOARD,
     FOG,
+    FOG_LED,
     DEBUG,
 };
 
@@ -49,6 +49,7 @@ int main()
     hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars");
     hyp.hub.setColumnName(Columns::LETTERBOARD, "Letterboard");
     hyp.hub.setColumnName(Columns::FOG, "Fog"); 
+    hyp.hub.setColumnName(Columns::FOG_LED, "Fog LED");
 
     Tempo::AddSource(new ConstantTempo(120));
 
@@ -96,7 +97,7 @@ PixelMap createKeyholeMap()
 {
     float dist = 0.07;
     Turtle turtle;
-    turtle.setPosition(-2*dist, 0);
+    turtle.setPosition(-2.5*dist, 0);
     turtle.setDirection(-90);
 
     turtle.turn(15);
@@ -119,6 +120,7 @@ PixelMap createKeyholeMap()
     for (int i = 0; i < 4; i++)
         turtle.move(dist);
 
+    // return applyIndexMap(turtle, new ReverseMapper(turtle.size()));
     return turtle;
 }
 
@@ -180,11 +182,11 @@ void addLampshadeChain()
 
 void addLedbarsChain()
 {
-    int nLeds = 8*60;
+    int nLeds = 12*60;
     IndexMap *zigzag = new ZigZagMapper(60);
     Distribution distribution = {
-        {"hypernode1.local",9611,4*60},
-        {"hypernode1.local",9615,4*60},
+        {"hypernode1.local",9611,6*60},
+        {"hypernode1.local",9615,6*60},
     };
 
     
@@ -213,8 +215,8 @@ void addLedbarsChain()
     auto map = new PixelMap(
         applyIndexMap(
             combineMaps({
-                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.015, 0.2), 90), 1,-1, -0.7, -0.5),
-                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.015, 0.2), 90), -1,-1, 0.7, -0.5)
+                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), 1,  -1, -0.7, -0.4),
+                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), -1, -1,  0.7, -0.4)
             }), 
             zigzag
         )
@@ -223,12 +225,13 @@ void addLedbarsChain()
     distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
 
+template <class T_DMX_COLOR>
 void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01)
 {
     auto clone = new Slicer(
         {
-            {0, sizeof(RGBA), true},
-            {0, sizeof(RGBA), false},
+            {0, int(sizeof(RGBA))*size, true},
+            {0, int(sizeof(RGBA))*size, false},
         });
     
     hyp.createChain(input, clone);
@@ -236,7 +239,7 @@ void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, 
     hyp.createChain(
         clone->getSlice(0),
         //TODO configurable lut
-        new ColorConverter<RGBA, RGBW>(),
+        new ColorConverter<RGBA, T_DMX_COLOR>(),
         dmxCombine.atDmxChannel(startChannel)
     );
 
@@ -263,26 +266,53 @@ void addLetterBoardChain()
         {0, 0.7}
     });
 
-    DMXAndMonitorRGB(input, size, dmxStartChannel, map, 0.1); 
+    DMXAndMonitorRGB<RGBW>(input, size, dmxStartChannel, map, 0.1); 
 }
 
 void addFogChain()
 {
     int dmxStartChannel = 150;
-    int size = 1;
-    auto input = new ControlHubInput<RGBA>(
-        size,
-        &hyp.hub,
-        {
-            {.column = Columns::FOG, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = Columns::FOG, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-        });
 
     auto map = new PixelMap({
-        {-0.5, 0.0}
+        {0, 0.2}
     });
 
-    DMXAndMonitorRGB(input, size, dmxStartChannel, map, 0.1); 
+    //////////
+
+    auto input = new ControlHubInput<RGBA>(
+        1,
+        &hyp.hub,
+        {
+            {.column = Columns::FOG_LED, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::FOG_LED, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+        });
+
+    DMXAndMonitorRGB<RGBAmber>(input, 1, dmxStartChannel + 2, map, 0.1); 
+
+    auto dimmerInput = new PatternInput<Monochrome>(
+        1,
+        new MonochromePatterns::StaticPattern("Dimmer", {{.channel = 0}})
+    );
+
+    hyp.createChain(dimmerInput, dmxCombine.atDmxChannel(dmxStartChannel+1));
+
+    ///////////
+
+    auto inputFog = new ControlHubInput<Monochrome>(
+        1,
+        &hyp.hub,
+        {
+            {.column = Columns::FOG, .slot = 0, .pattern = new MonochromePatterns::OnPattern(255, "Fog"), .noMasterDim=true},
+        
+            {.column = Columns::FOG, .slot = 1, .pattern = new MonochromePatterns::IntervalPattern(4, 64, "Interval 4/64 beats (minst)"), .noMasterDim=true},
+            {.column = Columns::FOG, .slot = 4, .pattern = new MonochromePatterns::IntervalPattern(8, 64, "Interval 8/64 beats"), .noMasterDim=true},
+            {.column = Columns::FOG, .slot = 2, .pattern = new MonochromePatterns::IntervalPattern(4, 32, "Interval 4/32 beats"), .noMasterDim=true},
+            {.column = Columns::FOG, .slot = 3, .pattern = new MonochromePatterns::IntervalPattern(4, 16, "Interval 4/16 beats"), .noMasterDim=true},
+            {.column = Columns::FOG, .slot = 5, .pattern = new MonochromePatterns::IntervalPattern(8, 16, "Interval 8/16 beats (meest)"), .noMasterDim=true},  
+        }
+    );
+
+    DMXAndMonitor(inputFog, 1, dmxStartChannel, map, 0.05); 
 }
 
 void addPaletteColumn()
