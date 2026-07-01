@@ -40,8 +40,8 @@ Combine dmxCombine;
 int keyholeStartChannel = 1;
 int lampshadeStartChannel = 50;
 int lampshade2StartChannel = 75;
-int hexparStartChannel = 125;
 int letterBoardStartChannel = 100;
+int hexparStartChannel = 125;
 int fogStartChannel = 200;
 
 int main()
@@ -325,7 +325,7 @@ void addHexparChain()
 
     auto map = new PixelMap(gridMap(size, 1, 0.5, 0.5, 0, 0.9));
 
-    DMXAndMonitorRGB<RGBWAmber>(input, size, hexparStartChannel, map, 0.04); 
+    DMXAndMonitorRGB<RGBWAmberUV>(input, size, hexparStartChannel, map, 0.04); 
 }
 
 void addFogChain()
