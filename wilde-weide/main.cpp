@@ -3,9 +3,12 @@
 #include "common/patterns/patterns-monochrome.hpp"
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-test.hpp"
+#include "common/patterns/patterns-mask.hpp"
 
 void addKeyholeChain();
 void addLampshadeChain();
+void addLampshade2Chain();
+void addHexparChain();
 void addLedbarsChain();
 void addLetterBoardChain();
 void addFogChain();
@@ -22,8 +25,10 @@ enum Columns
     PALETTE,
     KEYHOLE,
     LAMPSHADE,
+    LAMPSHADE_2,
     LEDBARS,
     LETTERBOARD,
+    HEXPAR,
     FOG,
     FOG_LED,
     DEBUG,
@@ -32,20 +37,32 @@ enum Columns
 Hyperion hyp;
 Combine dmxCombine;
 
+int keyholeStartChannel = 1;
+int lampshadeStartChannel = 50;
+int lampshade2StartChannel = 75;
+int hexparStartChannel = 125;
+int letterBoardStartChannel = 100;
+int fogStartChannel = 200;
+
 int main()
 {
     hyp.createChain(&dmxCombine,new UDPOutput("hypernode1.local",9619));
 
     addKeyholeChain();
     addLampshadeChain();
+    addLampshade2Chain();
     addLedbarsChain();
     addLetterBoardChain();
     addFogChain();
     addPaletteColumn();
+    addHexparChain();
 
     hyp.hub.setColumnName(Columns::PALETTE, "Kleur");
     hyp.hub.setColumnName(Columns::KEYHOLE, "Keyhole");
     hyp.hub.setColumnName(Columns::LAMPSHADE, "Lampshade");
+    hyp.hub.setColumnName(Columns::LAMPSHADE_2, "Lampshade 2");
+    hyp.hub.setColumnName(Columns::HEXPAR, "Hexpar");
+    hyp.hub.setColumnName(Columns::DEBUG, "Debug");
     hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars");
     hyp.hub.setColumnName(Columns::LETTERBOARD, "Letterboard");
     hyp.hub.setColumnName(Columns::FOG, "Fog"); 
@@ -69,7 +86,7 @@ int main()
         Thread::sleep(1000);
 }
 
-void DMXAndMonitor(ControlHubInput<Monochrome> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01)
+void DMXAndMonitor(ControlHubInput<Monochrome> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01, LUT *lut = nullptr)
 {
     auto clone = new Slicer(
         {
@@ -81,8 +98,7 @@ void DMXAndMonitor(ControlHubInput<Monochrome> *input, int size, int startChanne
 
     hyp.createChain(
         clone->getSlice(0),
-        //TODO configurable lut
-        new ColorConverter<Monochrome, Monochrome>(IncandescentLut8),
+        lut ? new ColorConverter<Monochrome, Monochrome>(lut) : nullptr,
         dmxCombine.atDmxChannel(startChannel)
     );
 
@@ -126,7 +142,6 @@ PixelMap createKeyholeMap()
 
 void addKeyholeChain()
 {
-    int dmxStartChannel = 1;
     int size = 30;
     auto input = new ControlHubInput<Monochrome>(
         size,
@@ -149,12 +164,11 @@ void addKeyholeChain()
     // auto map = new PixelMap(circleMap(size, 0.5, 0.5, 0));
     auto map = new PixelMap(createKeyholeMap());
 
-    DMXAndMonitor(input, size, dmxStartChannel, map, 0.02); 
+    DMXAndMonitor(input, size, keyholeStartChannel, map, 0.02, IncandescentLut8); 
 }
 
 void addLampshadeChain()
 {
-    int dmxStartChannel = 50;
     int size = 8;
     auto input = new ControlHubInput<Monochrome>(
         size,
@@ -174,11 +188,38 @@ void addLampshadeChain()
             {.column = Columns::LAMPSHADE, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
-    auto map = new PixelMap(circleMap(size, 0.25, 0, 0.7));
+    auto map = new PixelMap(circleMap(size, 0.25, -0.5, 0.5));
 
-    //TODO hier geen lut toepassen, want dat doen de dimmerpacks
-    DMXAndMonitor(input, size, dmxStartChannel, map, 0.02); 
+    DMXAndMonitor(input, size, lampshadeStartChannel, map, 0.02); 
 }
+
+void addLampshade2Chain()
+{
+    int size = 8;
+    auto input = new ControlHubInput<Monochrome>(
+        size,
+        &hyp.hub,
+        {
+            {.column = Columns::LAMPSHADE_2, .slot = 0, .pattern = new MonochromePatterns::OnPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 1, .pattern = new MonochromePatterns::GlowPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 2, .pattern = new MonochromePatterns::SinPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 3, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 4, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 5, .pattern = new MonochromePatterns::SlowStrobePattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 6, .pattern = new MonochromePatterns::BlinderPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 7, .pattern = new MonochromePatterns::BeatAllFadePattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 8, .pattern = new MonochromePatterns::BeatShakePattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 9, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 10, .pattern = new MonochromePatterns::BeatStepPattern()},
+            {.column = Columns::LAMPSHADE_2, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+        });
+
+    auto map = new PixelMap(circleMap(size, 0.25, 0.5, 0.5));
+
+    DMXAndMonitor(input, size, lampshade2StartChannel, map, 0.02); 
+}
+
+
 
 void addLedbarsChain()
 {
@@ -238,7 +279,6 @@ void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, 
 
     hyp.createChain(
         clone->getSlice(0),
-        //TODO configurable lut
         new ColorConverter<RGBA, T_DMX_COLOR>(),
         dmxCombine.atDmxChannel(startChannel)
     );
@@ -252,7 +292,6 @@ void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, 
 
 void addLetterBoardChain()
 {
-    int dmxStartChannel = 100;
     int size = 1;
     auto input = new ControlHubInput<RGBA>(
         size,
@@ -263,18 +302,36 @@ void addLetterBoardChain()
         });
 
     auto map = new PixelMap({
-        {0, 0.7}
+        {0.5, 0.5}
     });
 
-    DMXAndMonitorRGB<RGBW>(input, size, dmxStartChannel, map, 0.1); 
+    DMXAndMonitorRGB<RGBW>(input, size, letterBoardStartChannel, map, 0.1); 
+}
+
+void addHexparChain()
+{
+    int size = 4;
+    auto input = new ControlHubInput<RGBA>(
+        size,
+        &hyp.hub,
+        {
+            {.column = Columns::HEXPAR, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::HEXPAR, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::HEXPAR, .slot = 2, .pattern = new LedPatterns::SinChasePattern()},
+            {.column = Columns::HEXPAR, .slot = 3, .pattern = new LedPatterns::DuoTonePattern()},
+            {.column = Columns::HEXPAR, .slot = 4, .pattern = new MaskPatterns::SinChaseMaskPattern()},
+            {.column = Columns::HEXPAR, .slot = 5, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
+        });
+
+    auto map = new PixelMap(gridMap(size, 1, 0.5, 0.5, 0, 0.9));
+
+    DMXAndMonitorRGB<RGBWAmber>(input, size, hexparStartChannel, map, 0.04); 
 }
 
 void addFogChain()
 {
-    int dmxStartChannel = 150;
-
     auto map = new PixelMap({
-        {0, 0.2}
+        {-0.5, 0.5}
     });
 
     //////////
@@ -287,14 +344,14 @@ void addFogChain()
             {.column = Columns::FOG_LED, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
         });
 
-    DMXAndMonitorRGB<RGBAmber>(input, 1, dmxStartChannel + 2, map, 0.1); 
+    DMXAndMonitorRGB<RGBAmber>(input, 1, fogStartChannel + 2, map, 0.1); 
 
     auto dimmerInput = new PatternInput<Monochrome>(
         1,
         new MonochromePatterns::StaticPattern("Dimmer", {{.channel = 0}})
     );
 
-    hyp.createChain(dimmerInput, dmxCombine.atDmxChannel(dmxStartChannel+1));
+    hyp.createChain(dimmerInput, dmxCombine.atDmxChannel(fogStartChannel+1));
 
     ///////////
 
@@ -312,7 +369,7 @@ void addFogChain()
         }
     );
 
-    DMXAndMonitor(inputFog, 1, dmxStartChannel, map, 0.05); 
+    DMXAndMonitor(inputFog, 1, fogStartChannel, map, 0.05); 
 }
 
 void addPaletteColumn()
