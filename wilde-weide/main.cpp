@@ -27,19 +27,20 @@ enum Columns
     LAMPSHADE,
     LAMPSHADE_2,
     LEDBARS,
-    LETTERBOARD,
-    HEXPAR,
+    LEDBARS_2,
     FOG,
     FOG_LED,
-    DEBUG,
+    LETTERBOARD,
+    HEXPAR,
+    // DEBUG,
 };
 
 Hyperion hyp;
 Combine dmxCombine;
 
 int keyholeStartChannel = 1;
-int lampshadeStartChannel = 50;
-int lampshade2StartChannel = 75;
+int lampshadeStartChannel = 50;//voor
+int lampshade2StartChannel = 75; //acheer
 int letterBoardStartChannel = 100;
 int hexparStartChannel = 125;
 int fogStartChannel = 200;
@@ -52,29 +53,36 @@ int main()
     addLampshadeChain();
     addLampshade2Chain();
     addLedbarsChain();
-    addLetterBoardChain();
+    // addLetterBoardChain();
     addFogChain();
     addPaletteColumn();
-    addHexparChain();
+    // addHexparChain();
 
     hyp.hub.setColumnName(Columns::PALETTE, "Kleur");
     hyp.hub.setColumnName(Columns::KEYHOLE, "Keyhole");
-    hyp.hub.setColumnName(Columns::LAMPSHADE, "Lampshade");
-    hyp.hub.setColumnName(Columns::LAMPSHADE_2, "Lampshade 2");
+    hyp.hub.setColumnName(Columns::LAMPSHADE, "kap voor");
+    hyp.hub.setColumnName(Columns::LAMPSHADE_2, "kap achter");
     hyp.hub.setColumnName(Columns::HEXPAR, "Hexpar");
-    hyp.hub.setColumnName(Columns::DEBUG, "Debug");
+    // hyp.hub.setColumnName(Columns::DEBUG, "Debug");
     hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars");
+    hyp.hub.setColumnName(Columns::LEDBARS_2, "Ledbars flash");
     hyp.hub.setColumnName(Columns::LETTERBOARD, "Letterboard");
     hyp.hub.setColumnName(Columns::FOG, "Fog"); 
     hyp.hub.setColumnName(Columns::FOG_LED, "Fog LED");
 
-    Tempo::AddSource(new ConstantTempo(120));
+    // Tempo::AddSource(new ConstantTempo(120));
 
     // for (int i = 1; i < 10; i++)
     //     hyp->hub.setFlashColumn(i, false, true);
     // hyp->hub.setFlashRow(5);
     // hyp->hub.setFlashRow(6);
     // hyp->hub.setFlashRow(7);
+
+    hyp.hub.setFlashColumn(Columns::FOG, false, true);
+    hyp.hub.findColumn(Columns::FOG)->slots[0].flash = true;
+    hyp.hub.findColumn(Columns::FOG)->slots[0].releaseColumn = false;
+
+    hyp.hub.setFlashColumn(Columns::LEDBARS_2);
 
     hyp.hub.buttonPressed(Columns::PALETTE, 0);
     hyp.hub.setForcedSelection(Columns::PALETTE);
@@ -169,7 +177,7 @@ void addKeyholeChain()
 
 void addLampshadeChain()
 {
-    int size = 8;
+    int size = 2;
     auto input = new ControlHubInput<Monochrome>(
         size,
         &hyp.hub,
@@ -195,7 +203,7 @@ void addLampshadeChain()
 
 void addLampshade2Chain()
 {
-    int size = 8;
+    int size = 4;
     auto input = new ControlHubInput<Monochrome>(
         size,
         &hyp.hub,
@@ -240,18 +248,27 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::GlowPattern()},
             {.column = Columns::LEDBARS, .slot = 3, .pattern = new LedPatterns::GlowPulsePattern()},
             {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::FlashesPattern()},
-            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::StrobePattern()},
-            {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::PixelGlitchPattern()},
-            {.column = Columns::LEDBARS, .slot = 8, .pattern = new LedPatterns::FadingNoisePattern()},
-            {.column = Columns::LEDBARS, .slot = 9, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 12, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+            // {.column = Columns::LEDBARS, .slot = 14, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::LEDBARS, .slot = 8, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::LEDBARS, .slot = 9, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS, .slot = 12, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::StrobeHighlightPattern()},
 
-            {.column = Columns::LEDBARS, .slot = 14, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
-        });
+            {.column = Columns::LEDBARS_2, .slot = 0, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS_2, .slot = 1, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDBARS_2, .slot = 2, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDBARS_2, .slot = 3, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::LEDBARS_2, .slot = 4, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS_2, .slot = 5, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDBARS_2, .slot = 6, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS_2, .slot = 7, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::LEDBARS_2, .slot = 8, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+             });
 
     auto map = new PixelMap(
         applyIndexMap(
@@ -263,7 +280,7 @@ void addLedbarsChain()
         )
     );
 
-    distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
+    distributeAndMonitor<GBR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
 
 template <class T_DMX_COLOR>
@@ -348,7 +365,7 @@ void addFogChain()
 
     auto dimmerInput = new PatternInput<Monochrome>(
         1,
-        new MonochromePatterns::StaticPattern("Dimmer", {{.channel = 0}})
+        new MonochromePatterns::StaticPattern("Dimmer", {{.channel = 0, /*.intensity = 255*/}})
     );
 
     hyp.createChain(dimmerInput, dmxCombine.atDmxChannel(fogStartChannel+1));
