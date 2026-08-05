@@ -63,6 +63,47 @@ int main()
 void addDomeChain()
 {
 
+    auto map = new PixelMap3d(createDomeMap());
+
+    int nLeds = map->size();
+    IndexMap *zigzag = new ZigZagMapper(60, true);
+
+    Distribution distribution = {
+        {"hypernode3.local",9611,nLeds},
+    };
+
+    
+    auto input = new ControlHubInput<RGBA>(
+        nLeds,
+        &hyp.hub,
+        {
+            {.column = Columns::LEDBARS, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::LEDBARS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(6*60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::GradientPattern(6*60,60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::GradientPattern(6*60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap=zigzag},
+
+            {.column = Columns::LEDBARS2, .slot = 0, .pattern = new LedPatterns::GlowPattern()},
+            {.column = Columns::LEDBARS2, .slot = 1, .pattern = new LedPatterns::GlowPulsePattern()},
+            {.column = Columns::LEDBARS2, .slot = 2, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 3, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 4, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 5, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 2, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 3, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 4, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            
+            {.column = Columns::LEDBARS, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+        });
+
+    distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.01); 
 }
 
 void addStageChain()
