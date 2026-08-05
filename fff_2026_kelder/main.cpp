@@ -21,10 +21,12 @@ LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 enum Columns
 {
     PALETTE,
-    LEDBARS,
-    SPARKS,
     LEDPAR,
     SUNSTRIP,
+    LEDBARS,
+    LEDBARS2,
+    LEDBARS_TRIGGER,
+    SPARKS,
 };
 
 int ledparStartChannel = 125;
@@ -45,15 +47,22 @@ int main()
 
     hyp.hub.setColumnName(Columns::PALETTE, "Palette");
     hyp.hub.setColumnName(Columns::LEDPAR, "Ledpar");
-    hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars");
-    hyp.hub.setColumnName(Columns::SPARKS, "Sparks");
     hyp.hub.setColumnName(Columns::SUNSTRIP, "Sunstrip");
+    hyp.hub.setColumnName(Columns::LEDBARS, "Ledbars BG");
+    hyp.hub.setColumnName(Columns::LEDBARS2, "Ledbars FG");
+    hyp.hub.setColumnName(Columns::LEDBARS_TRIGGER, "Ledbars Tr");
+    hyp.hub.setColumnName(Columns::SPARKS, "Sparks");
+    
 
     // for (int i = 1; i < 10; i++)
     //     hyp->hub.setFlashColumn(i, false, true);
     // hyp->hub.setFlashRow(5);
     // hyp->hub.setFlashRow(6);
     // hyp->hub.setFlashRow(7);
+
+    hyp.hub.setFlashColumn(Columns::LEDBARS_TRIGGER);
+    hyp.hub.setFlashColumn(Columns::SPARKS);
+
 
     hyp.hub.buttonPressed(Columns::PALETTE, 0);
     hyp.hub.setForcedSelection(Columns::PALETTE);
@@ -70,7 +79,7 @@ int main()
 void addLedbarsChain()
 {
     int nLeds = 12*60;
-    IndexMap *zigzag = new ZigZagMapper(60);
+    IndexMap *zigzag = new ZigZagMapper(60, true);
     Distribution distribution = {
         {"hypernode1.local",9611,6*60},
         {"hypernode1.local",9615,6*60},
@@ -90,20 +99,21 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::GradientPattern(6*60), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap=zigzag},
 
-            {.column = Columns::LEDBARS, .slot = 8, .pattern = new LedPatterns::GlowPattern()},
-            {.column = Columns::LEDBARS, .slot = 9, .pattern = new LedPatterns::GlowPulsePattern()},
-            {.column = Columns::LEDBARS, .slot = 10, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 11, .pattern = new LedPatterns::FlashesPattern()},
-            {.column = Columns::LEDBARS, .slot = 12, .pattern = new LedPatterns::StrobePattern()},
-            {.column = Columns::LEDBARS, .slot = 13, .pattern = new LedPatterns::PixelGlitchPattern()},
-            {.column = Columns::LEDBARS, .slot = 14, .pattern = new LedPatterns::FadingNoisePattern()},
-            {.column = Columns::LEDBARS, .slot = 15, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            {.column = Columns::LEDBARS, .slot = 16, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 17, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 18, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            {.column = Columns::LEDBARS, .slot = 19, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 0, .pattern = new LedPatterns::GlowPattern()},
+            {.column = Columns::LEDBARS2, .slot = 1, .pattern = new LedPatterns::GlowPulsePattern()},
+            {.column = Columns::LEDBARS2, .slot = 2, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 3, .pattern = new LedPatterns::SinPattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 4, .pattern = new LedPatterns::GradientChasePattern(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS2, .slot = 5, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
 
-            {.column = Columns::LEDBARS, .slot = 20, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 2, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 3, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 4, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            
+            {.column = Columns::LEDBARS, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
     auto map = new PixelMap(
@@ -125,26 +135,30 @@ void addSparksChain()
     int size = 24;
 
     Distribution distribution = {
-        {"hypernode1.local",9621,12},
-        {"hypernode1.local",9621,12},
+        {"hyperslave7.local",9620,12},
+        {"hyperslave4.local",9620,12},
     };
 
     auto input = new ControlHubInput<Monochrome>(
         size,
         &hyp.hub,
         {
-            {.column = Columns::SPARKS, .slot = 0, .pattern = new MonochromePatterns::OnPattern()},
-            {.column = Columns::SPARKS, .slot = 1, .pattern = new MonochromePatterns::GlowPattern()},
-            {.column = Columns::SPARKS, .slot = 2, .pattern = new MonochromePatterns::SinPattern()},
-            {.column = Columns::SPARKS, .slot = 3, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
-            {.column = Columns::SPARKS, .slot = 4, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
-            {.column = Columns::SPARKS, .slot = 5, .pattern = new MonochromePatterns::SlowStrobePattern()},
-            {.column = Columns::SPARKS, .slot = 6, .pattern = new MonochromePatterns::BlinderPattern()},
-            {.column = Columns::SPARKS, .slot = 7, .pattern = new MonochromePatterns::BeatAllFadePattern()},
-            {.column = Columns::SPARKS, .slot = 8, .pattern = new MonochromePatterns::BeatShakePattern()},
-            {.column = Columns::SPARKS, .slot = 9, .pattern = new MonochromePatterns::GlitchPattern()},
-            {.column = Columns::SPARKS, .slot = 10, .pattern = new MonochromePatterns::BeatStepPattern()},
-            {.column = Columns::SPARKS, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+            // {.column = Columns::SPARKS, .slot = 0, .pattern = new MonochromePatterns::OnPattern()},
+            // {.column = Columns::SPARKS, .slot = 1, .pattern = new MonochromePatterns::GlowPattern()},
+            // {.column = Columns::SPARKS, .slot = 2, .pattern = new MonochromePatterns::SinPattern()},
+            // {.column = Columns::SPARKS, .slot = 6, .pattern = new MonochromePatterns::BlinderPattern()},
+            // {.column = Columns::SPARKS, .slot = 7, .pattern = new MonochromePatterns::BeatAllFadePattern()},
+
+            {.column = Columns::SPARKS, .slot = 0, .pattern = new MonochromePatterns::BeatStepPattern()},
+            {.column = Columns::SPARKS, .slot = 1, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
+            {.column = Columns::SPARKS, .slot = 2, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
+            {.column = Columns::SPARKS, .slot = 3, .pattern = new MonochromePatterns::BeatShakePattern()},
+            {.column = Columns::SPARKS, .slot = 4, .pattern = new MonochromePatterns::SlowStrobePattern()},
+            {.column = Columns::SPARKS, .slot = 5, .pattern = new MonochromePatterns::FastStrobePattern()}, //millis
+            {.column = Columns::SPARKS, .slot = 6, .pattern = new MonochromePatterns::FastStrobePattern2()}, //frames
+            {.column = Columns::SPARKS, .slot = 7, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::SPARKS, .slot = 8, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+            
         });
 
     auto map = new PixelMap(gridMap(6, 4, 0.3, 0.15, 0, -0.47));
@@ -154,20 +168,21 @@ void addSparksChain()
 
 void addLedparChain()
 {
-    int size = 4;
+    int size = 6;
     auto input = new ControlHubInput<RGBA>(
         size,
         &hyp.hub,
         {
             {.column = Columns::LEDPAR, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::LEDPAR, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = Columns::LEDPAR, .slot = 2, .pattern = new LedPatterns::SinChasePattern()},
-            {.column = Columns::LEDPAR, .slot = 3, .pattern = new LedPatterns::DuoTonePattern()},
-            {.column = Columns::LEDPAR, .slot = 4, .pattern = new MaskPatterns::SinChaseMaskPattern()},
-            {.column = Columns::LEDPAR, .slot = 5, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
+            {.column = Columns::LEDPAR, .slot = 2, .pattern = new LedPatterns::DuoTonePattern()},
+            {.column = Columns::LEDPAR, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(2)},
+            {.column = Columns::LEDPAR, .slot = 4, .pattern = new LedPatterns::SinChasePattern()},
+            {.column = Columns::LEDPAR, .slot = 5, .pattern = new MaskPatterns::SinChaseMaskPattern()},
+            {.column = Columns::LEDPAR, .slot = 6, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
         });
 
-    auto map = new PixelMap(gridMap(size, 1, 0.5, 0.5, 0, 0.7));
+    auto map = new PixelMap(gridMap(size, 1, 0.2, 0.5, 0, 0.7));
 
     DMXAndMonitor<RGBWAmberUV,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
 }
