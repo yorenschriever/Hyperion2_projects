@@ -10,15 +10,15 @@ void drawTripleLedBar(Turtle3d &turtle, float x, float y, float z, int size, flo
     // turtle.setDirection(-60. + angleOffset);
     // turtle.setRotation(-startAngle, 90, 90);
     turtle.setRotation(0,startAngle,90);
-    turtle.setPosition((-x - ledDistance * size / 2 - 0 * barSpacing) * scale * mirror, y * scale, z * scale);
+    turtle.setPosition((-x - ledDistance * size / 2 - 0 * barSpacing) * mirror, y, z);
 
     drawLedBar(turtle, size);
     turtle.yaw(mirror * 120);
-    turtle.move(barSpacing * scale, false);
+    turtle.move(barSpacing, false);
     turtle.yaw(mirror * 60);
     drawLedBar(turtle, size);
     turtle.yaw(mirror * -60);
-    turtle.move(barSpacing * scale, false);
+    turtle.move(barSpacing, false);
     turtle.yaw(mirror * -120);
     drawLedBar(turtle, size);
 }
@@ -46,6 +46,8 @@ PixelMap3d createStageMap()
     // voorkant. kleine punt
     drawTripleLedBar(turtle, 2000, domeRadius, 1000, 60, 1);
     drawTripleLedBar(turtle, 2000, domeRadius, 1000, 60, -1);
+
+    turtle.scale(scale);
 
     return turtle;
 }

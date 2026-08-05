@@ -15,5 +15,12 @@ void drawLedBar(Turtle3d &turtle, int size)
 {
     turtle.addPositionToTrail();
     for(int i = 0; i < size-1; i++)
-        turtle.move(ledDistance * scale);
+        turtle.move(ledDistance);
+}
+
+void drawReverseLedBar(Turtle3d &turtle, int size)
+{
+    turtle.move(ledDistance * (size-1));
+    for(int i = 0; i < size-1; i++)
+        turtle.move(-ledDistance);
 }

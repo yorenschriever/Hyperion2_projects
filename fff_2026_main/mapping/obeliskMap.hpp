@@ -5,10 +5,10 @@
 
 void moveToObeliskCenter(Turtle3d &turtle, float angle)
 {
-    turtle.setPosition(0, 0, 3000 * scale);
+    turtle.setPosition(0, 0, 3000);
     turtle.setRotation(angle+90, 0, 0);
 
-    turtle.move(obeliskRadius * scale, false);
+    turtle.move(obeliskRadius, false);
 }
 
 void drawTriangle(Turtle3d &turtle)
@@ -18,12 +18,12 @@ void drawTriangle(Turtle3d &turtle)
     // correct center point
     // move to the side along the base of the triangle
     turtle.yaw(-90);
-    turtle.move(500 * scale, false);
+    turtle.move(500, false);
     turtle.yaw(90);
     // move down a little
     turtle.pitch(-90);
     float triangleHeight = 0.5 * 1000 * sqrt(3);
-    turtle.move(0.5 * triangleHeight * scale, false);
+    turtle.move(0.5 * triangleHeight, false);
     turtle.pitch(90);
 
     turtle.yaw(90);
@@ -43,8 +43,13 @@ void drawObelisk(Turtle3d &turtle, float angle)
         moveToObeliskCenter(turtle, angle);
         turtle.yaw( i * 120);
         turtle.pitch(-90+obeliskLegAngle);
-        turtle.move(250 * scale, false);
-        drawLedBar(turtle, 120);
+        turtle.move(250, false);
+        
+        bool reverse = i == 0 || i == 2; // middle leg is reversed
+        if (reverse)
+            drawReverseLedBar(turtle, 120);
+        else
+            drawLedBar(turtle, 120);
     }
 
     moveToObeliskCenter(turtle, angle);
@@ -52,7 +57,7 @@ void drawObelisk(Turtle3d &turtle, float angle)
 
     moveToObeliskCenter(turtle, angle);
     turtle.pitch(-90);
-    turtle.move(barSpacing * scale, false);
+    turtle.move(barSpacing, false);
     turtle.pitch(90);
     drawTriangle(turtle);
 }
@@ -66,6 +71,8 @@ PixelMap3d createObeliskMap()
     drawObelisk(turtle, 360/5 * 2);
     drawObelisk(turtle, 360/5 * 3);
     drawObelisk(turtle, 360/5 * 4);
+
+    turtle.scale(scale);
 
     return turtle;
 }

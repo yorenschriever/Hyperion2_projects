@@ -1,5 +1,5 @@
 export const viewParams = {
-    fieldOfView: (80 * Math.PI) / 180,
+    fieldOfView: (70 * Math.PI) / 180,
     gridZ: 0,
     transform: [
         {
@@ -18,16 +18,16 @@ export const viewParams = {
         {
             // look slightly up
             type:'rotate',
-            amount: (_t)=>0.3,
+            amount: (_t)=>0.31,
             vector:[1,0,0]
         },
 
-        {
-            //rotate the scene
-            type:'rotate',
-            amount: (t)=>t/8,
-            vector: [0,1,0]
-        },
+        // {
+        //     //rotate the scene
+        //     type:'rotate',
+        //     amount: (t)=>t/8,
+        //     vector: [0,1,0]
+        // },
         {
             // orient xy plane to be horizontal
             type:'rotate',
@@ -35,7 +35,7 @@ export const viewParams = {
             vector:[1,0,0]
         },
         {
-            //move the camera to 2 meters above the floor
+            //move the camera to 1.5 meters above the floor
             type:'translate',
             amount: [0,0, 2 / -4.1]
         },
