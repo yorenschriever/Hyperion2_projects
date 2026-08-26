@@ -45,13 +45,16 @@ void drawObelisk(Turtle3d &turtle, float angle)
         turtle.pitch(-90+obeliskLegAngle);
         turtle.move(250, false);
         
-        bool reverse = i == 0 || i == 2; // middle leg is reversed
+        bool reverse = false; //i == 0 || i == 2; // middle leg is reversed
         if (reverse)
             drawReverseLedBar(turtle, 120);
         else
             drawLedBar(turtle, 120);
     }
+}
 
+void drawAerial(Turtle3d &turtle, float angle)
+{
     moveToObeliskCenter(turtle, angle);
     drawTriangle(turtle);
 
@@ -71,6 +74,21 @@ PixelMap3d createObeliskMap()
     drawObelisk(turtle, 360/5 * 2);
     drawObelisk(turtle, 360/5 * 3);
     drawObelisk(turtle, 360/5 * 4);
+
+    turtle.scale(scale);
+
+    return turtle;
+}
+
+PixelMap3d createObeliskAerialMap()
+{
+    Turtle3d turtle;
+
+    drawAerial(turtle, 360/5 * 0);
+    drawAerial(turtle, 360/5 * 1);
+    drawAerial(turtle, 360/5 * 2);
+    drawAerial(turtle, 360/5 * 3);
+    drawAerial(turtle, 360/5 * 4);
 
     turtle.scale(scale);
 

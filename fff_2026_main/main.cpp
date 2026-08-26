@@ -1,17 +1,29 @@
 #include "common/distributeAndMonitor.hpp"
-#include "common/dmxAndMonitor.hpp"
+// #include "common/dmxAndMonitor.hpp"
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-mask.hpp"
 #include "common/patterns/patterns-monochrome.hpp"
 #include "common/patterns/patterns-test.hpp"
+#include "common/patterns/patterns-mapped-2d.hpp"
+#include "common/patterns/patterns-mapped-3d.hpp"
+#include "common/patterns/patterns-trigger.hpp"
+
 #include "core/hyperion.hpp"
 #include "mapping/domeMap.hpp"
 #include "mapping/obeliskMap.hpp"
 #include "mapping/stageMap.hpp"
 
+#include "patterns/patterns-dome.hpp"
+#include "patterns/patterns-all.hpp"
+#include "patterns/patterns-obelisk.hpp"
+#include "patterns/patterns-stage.hpp"
+#include "patterns/patterns-vibe.hpp"
+#include "patterns/patterns-aerial.hpp"
+
 void addDomeChain();
 void addStageChain();
 void addObeliskChain();
+void addAerialChain();
 void addPaletteColumn();
 
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
@@ -22,7 +34,10 @@ enum Columns
 
     DOME,
     STAGE,
-    OBELISK
+    OBELISK,
+    AERIAL,
+
+    EYE,
 
 };
 
@@ -34,11 +49,13 @@ int main()
     addDomeChain();
     addStageChain();
     addObeliskChain();
+    addAerialChain();
 
     hyp.hub.setColumnName(Columns::PALETTE, "Palette");
     hyp.hub.setColumnName(Columns::DOME, "Dome");
     hyp.hub.setColumnName(Columns::STAGE, "Stage");
     hyp.hub.setColumnName(Columns::OBELISK, "Obelisk");
+    hyp.hub.setColumnName(Columns::AERIAL, "Aerial");
     // hyp.hub.setColumnName(Columns::LEDBARS2, "Ledbars FG");
     // hyp.hub.setColumnName(Columns::LEDBARS_TRIGGER, "Ledbars Tr");
     // hyp.hub.setColumnName(Columns::SPARKS, "Sparks");
@@ -64,9 +81,13 @@ void addDomeChain()
 {
 
     auto map = new PixelMap3d(createDomeMap());
+    auto cmap = map->toCylindricalXY();
+    auto flatmap = map->toTopView();
+    auto pmap = flatmap->toPolar();
 
     int nLeds = map->size();
-    IndexMap *zigzag = new ZigZagMapper(60, true);
+    auto *zigzag = new FlipMapper(240);
+    zigzag->flip(60, 60)->flip(180, 60);
 
     Distribution distribution = {
         {"hypernode3.local", 9611, 4 * 60},
@@ -88,21 +109,30 @@ void addDomeChain()
         // {"hypernode4.local",9618,4*60},
     };
 
+    int i=0;
+
     auto input = new ControlHubInput<RGBA>(
         nLeds,
         &hyp.hub,
         {
-            {.column = Columns::DOME, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = Columns::DOME, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = Columns::DOME, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 4, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 5, .pattern = new LedPatterns::GradientPattern(6 * 60, 60), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 6, .pattern = new LedPatterns::GradientPattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap = zigzag},
-            {.column = Columns::DOME, .slot = 8, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
-            {.column = Columns::DOME, .slot = 9, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
-            {.column = Columns::DOME, .slot = 10, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
+            {.column = Columns::DOME, .slot = i++, .pattern = new DomePatterns::XY(map)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new DomePatterns::Z(map)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new DomePatterns::DotBeatPattern(cmap)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new Mapped2dPatterns::Lighthouse(pmap)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new Mapped2dPatterns::HorizontalSin(pmap)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new Mapped2dPatterns::RadialFadePattern(pmap)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(pmap)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new Mapped2dPatterns::HorizontalGradientPattern(flatmap)},
+            
+
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(2 * 60)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap = zigzag},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::GradientPattern(60), .indexMap = zigzag},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
+            {.column = Columns::DOME, .slot = i++, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
 
             // {.column = Columns::LEDBARS2, .slot = 0, .pattern = new LedPatterns::GlowPattern()},
             // {.column = Columns::LEDBARS2, .slot = 1, .pattern = new LedPatterns::GlowPulsePattern()},
@@ -118,7 +148,7 @@ void addDomeChain()
             // {.column = Columns::LEDBARS_TRIGGER, .slot = 4, .pattern = new LedPatterns::StrobeHighlightPattern()},
             // {.column = Columns::LEDBARS_TRIGGER, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
 
-            {.column = Columns::DOME, .slot = 11, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::DOME, .slot = i++, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
     distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
@@ -128,9 +158,18 @@ void addStageChain()
 {
 
     auto map = new PixelMap3d(createStageMap());
+    auto frontMap = new PixelMap(resizeAndTranslateMap(normalizeMap(*(map->toFrontView()), true), 1, -1, 0, -0.6));
+    auto pfrontMap = frontMap->toPolar();
 
     int nLeds = map->size();
-    IndexMap *zigzag = new ZigZagMapper(60, true);
+
+    FlipMapper *zigzag = new FlipMapper(nLeds);
+    for (int i = 0, start = 0; i < stageMapSegmentSizes.size(); i++)
+    {
+        if (i%2==1 ^ (i/3)%2==0)
+            zigzag->flip(start, stageMapSegmentSizes[i]);
+        start += stageMapSegmentSizes[i];
+    }
 
     Distribution distribution = {
         // dak
@@ -150,70 +189,196 @@ void addStageChain()
         {"hypernode2.local", 9614, 3 * 60},
     };
 
+    int i=0;
+
     auto input = new ControlHubInput<RGBA>(
         nLeds,
         &hyp.hub,
         {
-            {.column = Columns::STAGE, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = Columns::STAGE, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = Columns::STAGE, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 4, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 5, .pattern = new LedPatterns::GradientPattern(6 * 60, 60), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 6, .pattern = new LedPatterns::GradientPattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap = zigzag},
-            {.column = Columns::STAGE, .slot = 8, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
-            {.column = Columns::STAGE, .slot = 9, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
-            {.column = Columns::STAGE, .slot = 10, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new StagePatterns::StaticGradientPattern(stageMapSegmentSizes), .indexMap = zigzag},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new StagePatterns::StaticGradientPattern(stageMapSegmentSizes)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new StagePatterns::StaticGradientTripletPattern(stageMapSegmentSizes)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
 
-            {.column = Columns::STAGE, .slot = 11, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::BeatShakePattern(20)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::RadialGradientPattern(pfrontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::HorizontalGradientPattern(frontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::VerticalGradientPattern(frontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::Lighthouse(pfrontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::GrowingCirclesPattern(frontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::DotBeatPattern(pfrontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::HorizontalSin(pfrontMap)},
+            {.column = Columns::STAGE, .slot=i++, .pattern = new Mapped2dPatterns::RadialFadePattern(pfrontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::RibbenFlashPattern(20)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::FadeFromRandom(60), .indexMap = zigzag},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::FireworkBurstPattern(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::SegmentChasePattern(), .indexMap = zigzag},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::MeteorShowerPattern(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::BeerBubblesPattern(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::TrianglePulse(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::TriangleStutter(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::TriangleOutlineGrow(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::RotatingTriangle(frontMap)},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new VibePatterns::FloatingOrbsPattern(frontMap)},            
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new TriggerPatterns::SlowPulsePattern()},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new TriggerPatterns::FadingNoisePattern()},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new TriggerPatterns::PulsePattern()},
+
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::STAGE, .slot = i++, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+
+            {.column = Columns::STAGE, .slot = i++, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
     distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    // distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
 {
 
     auto map = new PixelMap3d(createObeliskMap());
+    auto cmap = map->toCylindricalXY();
+    auto map2d = new PixelMap(normalizeMap(*(map->toSideView())));
 
     int nLeds = map->size();
-    IndexMap *zigzag = new ZigZagMapper(60, true);
+    // IndexMap *zigzag = new ZigZagMapper(60, true);
+    FlipMapper *reverseMap = new FlipMapper(2*60);
+    reverseMap->flip(0, 120);
 
     Distribution distribution = {
         {"hypernode5.local", 9611, 3 * 2 * 60},
-        {"hypernode5.local", 9615, 2 * 3 * 60},
+        // {"hypernode5.local", 9615, 2 * 3 * 60},
 
         {"hypernode6.local", 9611, 3 * 2 * 60},
-        {"hypernode6.local", 9615, 2 * 3 * 60},
+        // {"hypernode6.local", 9615, 2 * 3 * 60},
 
         {"hypernode7.local", 9611, 3 * 2 * 60},
-        {"hypernode7.local", 9615, 2 * 3 * 60},
+        // {"hypernode7.local", 9615, 2 * 3 * 60},
 
         {"hypernode8.local", 9611, 3 * 2 * 60},
-        {"hypernode8.local", 9615, 2 * 3 * 60},
+        // {"hypernode8.local", 9615, 2 * 3 * 60},
 
         {"hypernode9.local", 9611, 3 * 2 * 60},
-        {"hypernode9.local", 9615, 2 * 3 * 60},
+        // {"hypernode9.local", 9615, 2 * 3 * 60},
     };
+
+    int i=0;
 
     auto input = new ControlHubInput<RGBA>(
         nLeds,
         &hyp.hub,
         {
-            {.column = Columns::OBELISK, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = Columns::OBELISK, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = Columns::OBELISK, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 4, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 5, .pattern = new LedPatterns::GradientPattern(6 * 60, 60), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 6, .pattern = new LedPatterns::GradientPattern(6 * 60), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap = zigzag},
-            {.column = Columns::OBELISK, .slot = 8, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
-            {.column = Columns::OBELISK, .slot = 9, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
-            {.column = Columns::OBELISK, .slot = 10, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::HorizontalSin(cmap)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::VerticallyIsolated(cmap)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::StaticGradientPattern(map)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::OnBeatColumnChaseUpPattern(map)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::GrowShrink(cmap)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::RotatingRingsPattern(cmap)},
+            
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::BeatShakePattern(2*60)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::FadeFromRandom(2*60)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new ObeliskPatterns::FlyingEmbersPattern(3*60)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::FadingNoisePattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::LineLaunch(map2d, 100, 20)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::LineLaunch(map2d, 500, 20)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::LineLaunch(map2d, 1000, 20)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::SlowPulsePattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::FadeFromRandom(2*60) },
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base up"), .indexMap = reverseMap},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base down"), },
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::PulsePattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TriggerPatterns::GlitterFade(cmap)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::FadeFromRandom(2*60)},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::SegmentChasePattern(2*60)},
 
-            {.column = Columns::OBELISK, .slot = 11, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+            // {.column = Columns::MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
+            // {.column = Columns::MASK, .slot = 1, .pattern = new MaskPatterns::GlowPulseMaskPattern(), .indexMap = zigzag},
+            // {.column = Columns::MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern(3*60, true), .indexMap = zigzag},
+            // {.column = Columns::MASK, .slot = 3, .pattern = new MaskPatterns::SegmentGradientMaskPattern(3*60, false), .indexMap = zigzag},
+            // {.column = Columns::MASK, .slot = 6, .pattern = new MaskPatterns::SideChainCompressorMask()},
+            // {.column = Columns::MASK, .slot = 7, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+            
+
+
+
+
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new Min::SegmentChasePattern()},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new Min::LineLaunch(&columnMap3d)},
+
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(6 * 60)},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap = zigzag},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap = zigzag},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::GradientPattern(6 * 60, 60), .indexMap = zigzag},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::GradientPattern(6 * 60), .indexMap = zigzag},
+            // {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::GradientPattern(60), .indexMap = zigzag},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
+
+            {.column = Columns::OBELISK, .slot = i++, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
+        });
+
+    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+}
+
+void addAerialChain()
+{
+
+    auto map = new PixelMap3d(createObeliskAerialMap());
+
+    int nLeds = map->size();
+    IndexMap *zigzag = new ZigZagMapper(3*60, true);
+
+    Distribution distribution = {
+        // {"hypernode5.local", 9611, 3 * 2 * 60},
+        {"hypernode5.local", 9615, 2 * 3 * 60},
+
+        // {"hypernode6.local", 9611, 3 * 2 * 60},
+        {"hypernode6.local", 9615, 2 * 3 * 60},
+
+        // {"hypernode7.local", 9611, 3 * 2 * 60},
+        {"hypernode7.local", 9615, 2 * 3 * 60},
+
+        // {"hypernode8.local", 9611, 3 * 2 * 60},
+        {"hypernode8.local", 9615, 2 * 3 * 60},
+
+        // {"hypernode9.local", 9611, 3 * 2 * 60},
+        {"hypernode9.local", 9615, 2 * 3 * 60},
+    };
+
+    int i=0;
+
+    auto input = new ControlHubInput<RGBA>(
+        nLeds,
+        &hyp.hub,
+        {
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new AerialPatterns::DoubleFlash()},
+
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
+
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::DuoTonePattern(3 * 60)},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::DuoToneGradientPattern(3 * 60)},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::GradientPattern(3 * 60)},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new LedPatterns::GradientPattern(3 * 60), .indexMap = zigzag},
+
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new AerialPatterns::GradientChasePattern()},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new AerialPatterns::GradientChasePattern(), .indexMap = zigzag},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new AerialPatterns::SinChasePattern()},
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new AerialPatterns::SinChasePattern(), .indexMap = zigzag},
+
+            {.column = Columns::AERIAL, .slot = i++, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
     distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);

@@ -51,3 +51,11 @@ PixelMap3d createStageMap()
 
     return turtle;
 }
+
+std::vector<int> stageMapSegmentSizes = {
+    60, 60,60, 60,60, 60, // dak. kleine punt
+    120, 120,120, 120,120, 120, // dak. grote punt
+    60, 60, 60, 60,60, 60,// backdrop. kleine punt
+    120, 120,120, 120,120, 120, // backdrop. grote punt
+    60, 60,60, 60,60, 60 // voorkant. kleine punt
+};
