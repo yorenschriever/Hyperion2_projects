@@ -24,9 +24,11 @@ void addDomeChain();
 void addStageChain();
 void addObeliskChain();
 void addAerialChain();
+void addLightningChain();
 void addPaletteColumn();
 
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
 enum Columns
 {
@@ -36,9 +38,7 @@ enum Columns
     STAGE,
     OBELISK,
     AERIAL,
-
-    EYE,
-
+    LIGHTNING,
 };
 
 Hyperion hyp;
@@ -50,6 +50,7 @@ int main()
     addStageChain();
     addObeliskChain();
     addAerialChain();
+    addLightningChain();
 
     hyp.hub.setColumnName(Columns::PALETTE, "Palette");
     hyp.hub.setColumnName(Columns::DOME, "Dome");
@@ -382,6 +383,41 @@ void addAerialChain()
         });
 
     distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+}
+
+void addLightningChain()
+{
+    int size = 10;
+
+    Distribution distribution = {
+        {"hyperslave4.local",9620,10},
+    };
+
+    auto input = new ControlHubInput<Monochrome>(
+        size,
+        &hyp.hub,
+        {
+            {.column = Columns::LIGHTNING, .slot = 0, .pattern = new MonochromePatterns::BeatStepPattern()},
+            {.column = Columns::LIGHTNING, .slot = 1, .pattern = new MonochromePatterns::BeatSingleFadePattern()},
+            {.column = Columns::LIGHTNING, .slot = 2, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
+            {.column = Columns::LIGHTNING, .slot = 3, .pattern = new MonochromePatterns::BeatShakePattern()},
+            {.column = Columns::LIGHTNING, .slot = 4, .pattern = new MonochromePatterns::SlowStrobePattern()},
+            {.column = Columns::LIGHTNING, .slot = 5, .pattern = new MonochromePatterns::FastStrobePattern()}, //millis
+            {.column = Columns::LIGHTNING, .slot = 6, .pattern = new MonochromePatterns::FastStrobePattern2()}, //frames
+            {.column = Columns::LIGHTNING, .slot = 7, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::LIGHTNING, .slot = 8, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+            
+        });
+
+    auto map = new PixelMap3d(
+        resizeAndTranslateMap3d(
+            rotate3d(circleMap3d(size, 0.1), 90, (float[3]){1, 0, 0}),
+            1.0,
+            0, 1, 0.8
+        )
+    );
+
+    distributeAndMonitor<Monochrome12>(&hyp,input,map,distribution,GammaLut12, 0.02);
 }
 
 void addPaletteColumn()
