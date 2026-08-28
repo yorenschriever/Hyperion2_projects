@@ -20,6 +20,8 @@
 #include "patterns/patterns-stage.hpp"
 #include "patterns/patterns-vibe.hpp"
 
+#include "palettes.hpp"
+
 void addDomeChain();
 void addStageChain();
 void addObeliskChain();
@@ -133,15 +135,6 @@ void addDomeChain()
         nLeds,
         &hyp.hub,
         {
-            {.column = Columns::DOME_FG, .slot = 0, .pattern = new DomePatterns::XY(map)},
-            {.column = Columns::DOME_FG, .slot = 1, .pattern = new DomePatterns::Z(map)},
-            {.column = Columns::DOME_FG, .slot = 2, .pattern = new DomePatterns::DotBeatPattern(cmap)},
-            {.column = Columns::DOME_FG, .slot = 3, .pattern = new Mapped2dPatterns::Lighthouse(pmap)},
-            {.column = Columns::DOME_FG, .slot = 4, .pattern = new Mapped2dPatterns::HorizontalSin(pmap)},
-            {.column = Columns::DOME_FG, .slot = 5, .pattern = new Mapped2dPatterns::RadialFadePattern(pmap)},
-            {.column = Columns::DOME_FG, .slot = 6, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(pmap)},
-            {.column = Columns::DOME_FG, .slot = 7, .pattern = new Mapped2dPatterns::HorizontalGradientPattern(flatmap)},
-
             {.column = Columns::DOME_BG, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::DOME_BG, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::DOME_BG, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(2 * 60)},
@@ -150,6 +143,15 @@ void addDomeChain()
             {.column = Columns::DOME_BG, .slot = 5, .pattern = new LedPatterns::OnPattern({255, 0, 0}, "Red")},
             {.column = Columns::DOME_BG, .slot = 6, .pattern = new LedPatterns::OnPattern({0, 255, 0}, "Green")},
             {.column = Columns::DOME_BG, .slot = 7, .pattern = new LedPatterns::OnPattern({0, 0, 255}, "Blue")},
+
+            {.column = Columns::DOME_FG, .slot = 0, .pattern = new DomePatterns::XY(map)},
+            {.column = Columns::DOME_FG, .slot = 1, .pattern = new DomePatterns::Z(map)},
+            {.column = Columns::DOME_FG, .slot = 2, .pattern = new DomePatterns::DotBeatPattern(cmap)},
+            {.column = Columns::DOME_FG, .slot = 3, .pattern = new Mapped2dPatterns::Lighthouse(pmap)},
+            {.column = Columns::DOME_FG, .slot = 4, .pattern = new Mapped2dPatterns::HorizontalSin(pmap)},
+            {.column = Columns::DOME_FG, .slot = 5, .pattern = new Mapped2dPatterns::RadialFadePattern(pmap)},
+            {.column = Columns::DOME_FG, .slot = 6, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(pmap)},
+            {.column = Columns::DOME_FG, .slot = 7, .pattern = new Mapped2dPatterns::HorizontalGradientPattern(flatmap)},
 
             {.column = Columns::DOME_PULSE, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
             {.column = Columns::DOME_PULSE, .slot = 1, .pattern = new TriggerPatterns::PulsePattern()},
@@ -469,6 +471,19 @@ void addPaletteColumn()
         0,
         0,
         {
+            &rejected_hypothesis,
+            &mad_science,
+            &neon_fracture,
+            &chromatic_frost,
+            &bioluminescent_grove,
+            &metamorphosis,
+            &electro_pulse,
+            &volatile_synthesis,
+            &volatile_reactions,
+            &crimson_reverie,
+            &ionosphere,
+            &electroflux,
+
             &pinkSunset,
             &heatmap,
             &campfire,
