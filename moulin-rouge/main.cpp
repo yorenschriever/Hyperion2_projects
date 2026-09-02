@@ -44,11 +44,11 @@ LUT *pixelLut = new ColorCorrectionLUT(1.5, 255, 255, 255, 240);
 
 
 PixelMap3d::Cylindrical cBaseMap = *(baseMap.toCylindricalXZ());
-PixelMap base2d = resizeAndTranslateMap(*(baseMap.to2d()), 1.45, 0, 0.06*1.45);
+PixelMap base2d = resizeAndTranslateMap(*(baseMap.toTopView()), 1.45, 0, 0.06*1.45);
 PixelMap::Polar basePolar = *(base2d.toPolar());
 
 PixelMap3d::Cylindrical cWingsMap = *(resizeAndTranslateMap3d(wingsMap, 1, 0, 0.06).toCylindricalXY()); 
-PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.to2d()), 1.45, 0, 0.095*1.45);
+PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.toTopView()), 1.45, 0, 0.095*1.45);
 PixelMap::Polar wingsPolar = *(wings2d.toPolar());
 
 PixelMap all2d = resizeAndTranslateMap(combineMaps({base2d, wings2d}), -1);

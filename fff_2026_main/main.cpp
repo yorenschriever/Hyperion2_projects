@@ -278,8 +278,8 @@ void addStageChain()
             {.column = Columns::DEBUG, .slot = 8, .pattern = new TestPatterns::Motion()},
         });
 
-    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
-    // distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    // distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()

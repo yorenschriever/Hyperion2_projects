@@ -37,7 +37,7 @@ Combine dmxCombine;
 
 int main()
 {
-    hyp.createChain(&dmxCombine,new UDPOutput("hypernode1.local",9619));
+    hyp.createChain(&dmxCombine,new UDPOutput("hypernode1.local",9619, 40));
 
     addLedbarsChain();
     addPaletteColumn();
@@ -63,6 +63,9 @@ int main()
     hyp.hub.setFlashColumn(Columns::LEDBARS_TRIGGER);
     hyp.hub.setFlashColumn(Columns::SPARKS);
 
+    hyp.hub.setFlash(Columns::LEDPAR, 7);
+    hyp.hub.setFlash(Columns::LEDPAR, 8);
+    hyp.hub.setFlash(Columns::LEDPAR, 9);
 
     hyp.hub.buttonPressed(Columns::PALETTE, 0);
     hyp.hub.setForcedSelection(Columns::PALETTE);
@@ -180,6 +183,9 @@ void addLedparChain()
             {.column = Columns::LEDPAR, .slot = 4, .pattern = new LedPatterns::SinChasePattern()},
             {.column = Columns::LEDPAR, .slot = 5, .pattern = new MaskPatterns::SinChaseMaskPattern()},
             {.column = Columns::LEDPAR, .slot = 6, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
+            {.column = Columns::LEDPAR, .slot = 7, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDPAR, .slot = 8, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDPAR, .slot = 9, .pattern = new LedPatterns::FlashesPattern()},
         });
 
     auto map = new PixelMap(gridMap(size, 1, 0.2, 0.5, 0, 0.7));
@@ -264,32 +270,54 @@ void addPaletteColumn()
         0,
         0,
         {
+            &rejected_hypothesis,
+            &mad_science,
+            &neon_fracture,
+            &chromatic_frost,
+            &bioluminescent_grove,
+            &metamorphosis,
+            &electro_pulse,
+            &volatile_synthesis,
+            &volatile_reactions,
+            &crimson_reverie,
+            &ionosphere,
+            &electroflux,
+
+            &cancan,
+            &vhsTracking,
+            &scarletPromise,
+            &midnightChrome,
+            &laserGrid,
+            &turboNoir,
+            &plasmaRewind,
+            &velvetThorn,
+
             &pinkSunset,
             &heatmap,
             &campfire,
             &retro,
-            &sunset4,
+            // &sunset4,
             &tunnel,
-            &blueOrange,
-            &purpleGreen,
+            // &blueOrange,
+            // &purpleGreen,
 
-            &sunset2,
-            &sunset8,
+            // &sunset2,
+            // &sunset8,
             &heatmap2,
-            &sunset3,
-            &sunset6,
-            &sunset7,
-            &coralTeal,
-            &deepBlueOcean,
+            // &sunset3,
+            // &sunset6,
+            // &sunset7,
+            // &coralTeal,
+            // &deepBlueOcean,
             &redSalvation,
-            &plumBath,
-            &sunset1,
-            &candy,
-            &greatBarrierReef,
-            &peach,
-            &denseWater,
-            &sunset5,
-            &salmonOnIce,
+            // &plumBath,
+            // &sunset1,
+            // &candy,
+            // &greatBarrierReef,
+            // &peach,
+            // &denseWater,
+            // &sunset5,
+            // &salmonOnIce,
         });
     hyp.hub.subscribe(paletteColumn);
 }
