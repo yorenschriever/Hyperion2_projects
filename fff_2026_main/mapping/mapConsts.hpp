@@ -24,3 +24,15 @@ void drawReverseLedBar(Turtle3d &turtle, int size)
     for(int i = 0; i < size-1; i++)
         turtle.move(-ledDistance);
 }
+
+PixelMap3d normalizeStage(PixelMap3d map)
+{
+    PixelMap3d result = map;
+    for(auto &led : result)
+    {
+        led.x *= 0.5;
+        led.y *= 0.5;
+        led.z *= 0.5;
+    }
+    return result;
+}

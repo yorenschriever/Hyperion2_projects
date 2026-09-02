@@ -30,8 +30,8 @@ enum Columns
     SPARKS,
 };
 
-int ledparStartChannel = 125;
-int sunstripStartChannel = 200;
+int ledparStartChannel = 0;
+int sunstripStartChannel = 100;
 
 Hyperion hyp;
 Combine dmxCombine;
@@ -195,7 +195,7 @@ void addLedparChain()
 
     auto map = new PixelMap(gridMap(size, 1, 0.2, 0.5, 0, 0.7));
 
-    DMXAndMonitor<RGBWAmberUV,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
+    DMXAndMonitor<RGBW,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
 }
 
 void addSunstripChain()

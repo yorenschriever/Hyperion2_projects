@@ -37,13 +37,13 @@ LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 enum Columns
 {
     PALETTE,
-    ALL,
     STAGE_BG,
     STAGE_FG,
     STAGE_MASK,
     OBELISK,
     OBELISK_MASK,
     AERIAL,
+ALL,
 
     DOME_BG,
     DOME_FG,
@@ -113,6 +113,10 @@ void addDomeChain()
 
     auto frontMap = new PixelMap(normalizeMap(*(map->toFrontView())));
 
+    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto callMap = allMap->toCylindricalXY();
+    auto allFlatMap = allMap->toTopView();
+
     int nLeds = map->size();
     auto *zigzag = new FlipMapper(240);
     zigzag->flip(60, 60)->flip(180, 60);
@@ -158,6 +162,11 @@ void addDomeChain()
             {.column = Columns::DOME_MASK, .slot = 4, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::DOME_MASK, .slot = 5, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::DOME_MASK, .slot = 6, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+
+            {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 40, -1)},
+            {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
+            {.column = Columns::ALL, .slot = 2, .pattern = new AllPatterns::GrowingCirclesPattern(allMap)},
+            {.column = Columns::ALL, .slot = 3, .pattern = new AllPatterns::TopChase(callMap)},
 
             {.column = Columns::DOME_PULSE, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
             {.column = Columns::DOME_PULSE, .slot = 1, .pattern = new TriggerPatterns::PulsePattern()},
@@ -212,6 +221,11 @@ void addStageChain()
     auto frontMap = new PixelMap(resizeAndTranslateMap(normalizeMap(*(map->toFrontView()), true), 1, -1, 0, -0.6));
     auto pfrontMap = frontMap->toPolar();
     auto frontMapUpsideDown = new PixelMap(resizeAndTranslateMap(*frontMap, 1, -1, 0, 0));
+    auto flatmap = map->toTopView();
+
+    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto callMap = allMap->toCylindricalXY();
+    auto allFlatMap = allMap->toTopView();
 
     int nLeds = map->size();
 
@@ -280,10 +294,14 @@ void addStageChain()
             {.column = Columns::STAGE_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern()},
             {.column = Columns::STAGE_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
             {.column = Columns::STAGE_MASK, .slot = 2, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
-            // {.column = Columns::STAGE_MASK, .slot = 2, .pattern = new MaskPatterns::SegmentGradientMaskPattern()},
             {.column = Columns::STAGE_MASK, .slot = 3, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::STAGE_MASK, .slot = 4, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::STAGE_MASK, .slot = 5, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+
+            {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 150, -1)},
+            {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
+            {.column = Columns::ALL, .slot = 2, .pattern = new AllPatterns::GrowingCirclesPattern(allMap)},
+            {.column = Columns::ALL, .slot = 3, .pattern = new AllPatterns::TopChase(callMap)},
 
             {.column = Columns::STAGE_PULSE, .slot = 0, .pattern = new LedPatterns::BeatShakePattern(20)},
             {.column = Columns::STAGE_PULSE, .slot = 1, .pattern = new TriggerPatterns::GrowingCirclePattern(pfrontMap)},
@@ -316,8 +334,8 @@ void addStageChain()
             #endif
         });
 
-    // distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
-    distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    // distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
@@ -326,6 +344,11 @@ void addObeliskChain()
     auto map = new PixelMap3d(createObeliskMap());
     auto cmap = map->toCylindricalXY();
     auto map2d = new PixelMap(normalizeMap(*(map->toSideView())));
+    auto flatmap = map->toTopView();
+
+    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto callMap = allMap->toCylindricalXY();
+    auto allFlatMap = allMap->toTopView();
 
     int nLeds = map->size();
     // IndexMap *zigzag = new ZigZagMapper(60, true);
@@ -363,6 +386,11 @@ void addObeliskChain()
             {.column = Columns::OBELISK_MASK, .slot = 4, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::OBELISK_MASK, .slot = 5, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::OBELISK_MASK, .slot = 6, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+
+            {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 40, -1)},
+            {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
+            {.column = Columns::ALL, .slot = 2, .pattern = new AllPatterns::GrowingCirclesPattern(allMap)},
+            {.column = Columns::ALL, .slot = 3, .pattern = new AllPatterns::TopChase(callMap)},
 
             {.column = Columns::OBELISK_PULSE, .slot = 0, .pattern = new LedPatterns::BeatShakePattern(2*60)},
             {.column = Columns::OBELISK_PULSE, .slot = 1, .pattern = new TriggerPatterns::FadingNoisePattern()},
@@ -402,6 +430,11 @@ void addAerialChain()
 {
 
     auto map = new PixelMap3d(createObeliskAerialMap());
+    auto flatmap = map->toTopView();
+
+    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto callMap = allMap->toCylindricalXY();
+    auto allFlatMap = allMap->toTopView();
 
     int nLeds = map->size();
     IndexMap *zigzag = new ZigZagMapper(3 * 60, true);
@@ -418,7 +451,6 @@ void addAerialChain()
         nLeds,
         &hyp.hub,
         {
-            
             {.column = Columns::AERIAL, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::AERIAL, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::AERIAL, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(3 * 60)},
@@ -462,7 +494,7 @@ void addLightningChain()
     int size = 10;
 
     Distribution distribution = {
-        {"hypernodex.local", 9620, 10},
+        {"hypernodeX.local", 9620, 10},
     };
 
     auto input = new ControlHubInput<Monochrome>(
