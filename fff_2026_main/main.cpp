@@ -118,23 +118,17 @@ void addDomeChain()
     zigzag->flip(60, 60)->flip(180, 60);
 
     Distribution distribution = {
-        {"hypernode3.local", 9611, 4 * 60},
-        {"hypernode3.local", 9612, 4 * 60},
-        {"hypernode3.local", 9613, 4 * 60},
-        {"hypernode3.local", 9614, 4 * 60},
-        {"hypernode3.local", 9615, 4 * 60},
-        {"hypernode3.local", 9616, 4 * 60},
-        {"hypernode3.local", 9617, 4 * 60},
-        {"hypernode3.local", 9618, 4 * 60},
+        {"hypernode6.local", 9611, 4 * 60},
+        {"hypernode7.local", 9611, 4 * 60},
+        {"hypernode8.local", 9611, 4 * 60},
+        {"hypernode9.local", 9611, 4 * 60},
+        {"hypernode10.local", 9611, 4 * 60},
 
-        {"hypernode4.local", 9611, 4 * 60},
-        {"hypernode4.local", 9612, 4 * 60},
-        {"hypernode4.local", 9613, 4 * 60},
-        {"hypernode4.local", 9614, 4 * 60},
-        // {"hypernode4.local",9615,4*60},
-        // {"hypernode4.local",9616,4*60},
-        // {"hypernode4.local",9617,4*60},
-        // {"hypernode4.local",9618,4*60},
+        {"hypernode6.local", 9615, 4 * 60},
+        {"hypernode7.local", 9615, 4 * 60},
+        {"hypernode8.local", 9615, 4 * 60},
+        {"hypernode9.local", 9615, 4 * 60},
+        {"hypernode10.local", 9615, 4 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -235,20 +229,20 @@ void addStageChain()
 
     Distribution distribution = {
         // dak
-        {"hypernode1.local", 9611, 3 * 60},
-        {"hypernode1.local", 9612, 3 * 60},
-        {"hypernode1.local", 9613, 6 * 60},
-        {"hypernode1.local", 9614, 6 * 60},
+        {"hyperslaveX.local", 9611, 3 * 60},
+        {"hyperslaveX.local", 9612, 3 * 60},
+        {"hyperslaveX.local", 9613, 6 * 60},
+        {"hyperslaveX.local", 9614, 6 * 60},
 
         // backdrop
-        {"hypernode2.local", 9611, 3 * 60},
-        {"hypernode2.local", 9612, 3 * 60},
-        {"hypernode2.local", 9615, 6 * 60},
-        {"hypernode2.local", 9616, 6 * 60},
+        {"hyperslave1.local", 9611, 3 * 60},
+        {"hyperslave1.local", 9612, 3 * 60},
+        {"hyperslave1.local", 9613, 6 * 60},
+        {"hyperslave1.local", 9614, 6 * 60},
 
         // voorkant
-        {"hypernode2.local", 9613, 3 * 60},
-        {"hypernode2.local", 9614, 3 * 60},
+        {"hyperslave1.local", 9615, 3 * 60},
+        {"hyperslave1.local", 9616, 3 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -339,20 +333,11 @@ void addObeliskChain()
     reverseMap->flip(0, 120);
 
     Distribution distribution = {
+        {"hypernode1.local", 9611, 3 * 2 * 60},
+        {"hypernode2.local", 9611, 3 * 2 * 60},
+        {"hypernode3.local", 9611, 3 * 2 * 60},
+        {"hypernode4.local", 9611, 3 * 2 * 60},
         {"hypernode5.local", 9611, 3 * 2 * 60},
-        // {"hypernode5.local", 9615, 2 * 3 * 60},
-
-        {"hypernode6.local", 9611, 3 * 2 * 60},
-        // {"hypernode6.local", 9615, 2 * 3 * 60},
-
-        {"hypernode7.local", 9611, 3 * 2 * 60},
-        // {"hypernode7.local", 9615, 2 * 3 * 60},
-
-        {"hypernode8.local", 9611, 3 * 2 * 60},
-        // {"hypernode8.local", 9615, 2 * 3 * 60},
-
-        {"hypernode9.local", 9611, 3 * 2 * 60},
-        // {"hypernode9.local", 9615, 2 * 3 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -422,20 +407,11 @@ void addAerialChain()
     IndexMap *zigzag = new ZigZagMapper(3 * 60, true);
 
     Distribution distribution = {
-        // {"hypernode5.local", 9611, 3 * 2 * 60},
+        {"hypernode1.local", 9615, 2 * 3 * 60},
+        {"hypernode2.local", 9615, 2 * 3 * 60},
+        {"hypernode3.local", 9615, 2 * 3 * 60},
+        {"hypernode4.local", 9615, 2 * 3 * 60},
         {"hypernode5.local", 9615, 2 * 3 * 60},
-
-        // {"hypernode6.local", 9611, 3 * 2 * 60},
-        {"hypernode6.local", 9615, 2 * 3 * 60},
-
-        // {"hypernode7.local", 9611, 3 * 2 * 60},
-        {"hypernode7.local", 9615, 2 * 3 * 60},
-
-        // {"hypernode8.local", 9611, 3 * 2 * 60},
-        {"hypernode8.local", 9615, 2 * 3 * 60},
-
-        // {"hypernode9.local", 9611, 3 * 2 * 60},
-        {"hypernode9.local", 9615, 2 * 3 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -486,7 +462,7 @@ void addLightningChain()
     int size = 10;
 
     Distribution distribution = {
-        {"hyperslave4.local", 9620, 10},
+        {"hypernodex.local", 9620, 10},
     };
 
     auto input = new ControlHubInput<Monochrome>(
@@ -522,25 +498,27 @@ void addPaletteColumn()
         0,
         {
             &rejected_hypothesis,
-            &mad_science,
+            &metamorphosis,
             &neon_fracture,
+            &volatile_reactions,
+            &electroflux,
+            &vhsTracking,
+            &plasmaRewind,
+
+            &mad_science,
             &chromatic_frost,
             &bioluminescent_grove,
-            &metamorphosis,
             &electro_pulse,
             &volatile_synthesis,
-            &volatile_reactions,
             &crimson_reverie,
             &ionosphere,
-            &electroflux,
 
             &cancan,
-            &vhsTracking,
+            
             &scarletPromise,
             &midnightChrome,
             &laserGrid,
             &turboNoir,
-            &plasmaRewind,
             &velvetThorn,
 
             &pinkSunset,

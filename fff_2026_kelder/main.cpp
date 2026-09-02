@@ -5,6 +5,7 @@
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-test.hpp"
 #include "common/patterns/patterns-mask.hpp"
+#include "common/patterns/patterns-trigger.hpp"
 
 void addLedparChain();
 void addLedbarsChain();
@@ -37,7 +38,7 @@ Combine dmxCombine;
 
 int main()
 {
-    hyp.createChain(&dmxCombine,new UDPOutput("hypernode1.local",9619, 40));
+    hyp.createChain(&dmxCombine,new UDPOutput("hyperslave4.local",9619, 40));
 
     addLedbarsChain();
     addPaletteColumn();
@@ -81,11 +82,11 @@ int main()
 
 void addLedbarsChain()
 {
-    int nLeds = 12*60;
+    int nLeds = 8*60;
     IndexMap *zigzag = new ZigZagMapper(60, true);
     Distribution distribution = {
-        {"hypernode1.local",9611,6*60},
-        {"hypernode1.local",9615,6*60},
+        {"hyperslave4.local",9611,4*60},
+        {"hyperslave4.local",9615,4*60},
     };
 
     
@@ -95,11 +96,11 @@ void addLedbarsChain()
         {
             {.column = Columns::LEDBARS, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::LEDBARS, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(6*60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 2, .pattern = new LedPatterns::DuoTonePattern(4*60), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(30), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 4, .pattern = new LedPatterns::DuoTonePattern(60), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::GradientPattern(6*60,60), .indexMap=zigzag},
-            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::GradientPattern(6*60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 5, .pattern = new LedPatterns::GradientPattern(4*60,60), .indexMap=zigzag},
+            {.column = Columns::LEDBARS, .slot = 6, .pattern = new LedPatterns::GradientPattern(4*60), .indexMap=zigzag},
             {.column = Columns::LEDBARS, .slot = 7, .pattern = new LedPatterns::GradientPattern(60), .indexMap=zigzag},
 
             {.column = Columns::LEDBARS2, .slot = 0, .pattern = new LedPatterns::GlowPattern()},
@@ -112,9 +113,13 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS_TRIGGER, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
             {.column = Columns::LEDBARS_TRIGGER, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
             {.column = Columns::LEDBARS_TRIGGER, .slot = 2, .pattern = new LedPatterns::PixelGlitchPattern()},
-            {.column = Columns::LEDBARS_TRIGGER, .slot = 3, .pattern = new LedPatterns::FadingNoisePattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 3, .pattern = new TriggerPatterns::FadingNoisePattern()},
             {.column = Columns::LEDBARS_TRIGGER, .slot = 4, .pattern = new LedPatterns::StrobeHighlightPattern()},
             {.column = Columns::LEDBARS_TRIGGER, .slot = 5, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 6, .pattern = new TriggerPatterns::FadeFromRandom()},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 7, .pattern = new TriggerPatterns::Meteor(), .indexMap=zigzag},
+            {.column = Columns::LEDBARS_TRIGGER, .slot = 8, .pattern = new TriggerPatterns::PulsePattern()},
+
             
             {.column = Columns::LEDBARS, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
@@ -122,8 +127,8 @@ void addLedbarsChain()
     auto map = new PixelMap(
         applyIndexMap(
             combineMaps({
-                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 00), 1,  -1, -0.45, -0.4),
-                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 00), -1, -1,  0.45, -0.4)
+                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), 1,  -1, -0.45, -0.4),
+                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), -1, -1,  0.45, -0.4)
             }), 
             zigzag
         )
@@ -270,7 +275,13 @@ void addPaletteColumn()
         0,
         0,
         {
+            // &regalia,
+            &aurelion,
+            &plasmaRewind,
+            // &regal_alchemy,
+
             &rejected_hypothesis,
+            &volatile_reactions,
             &mad_science,
             &neon_fracture,
             &chromatic_frost,
@@ -278,7 +289,7 @@ void addPaletteColumn()
             &metamorphosis,
             &electro_pulse,
             &volatile_synthesis,
-            &volatile_reactions,
+            
             &crimson_reverie,
             &ionosphere,
             &electroflux,
@@ -289,9 +300,10 @@ void addPaletteColumn()
             &midnightChrome,
             &laserGrid,
             &turboNoir,
-            &plasmaRewind,
+           
             &velvetThorn,
 
+            &redSalvation,
             &pinkSunset,
             &heatmap,
             &campfire,
@@ -309,7 +321,7 @@ void addPaletteColumn()
             // &sunset7,
             // &coralTeal,
             // &deepBlueOcean,
-            &redSalvation,
+            
             // &plumBath,
             // &sunset1,
             // &candy,
