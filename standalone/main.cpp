@@ -74,7 +74,7 @@ int main()
     hyp->createChain(pwmCombine,new PWMOutput());
     hyp->createChain(dmxCombine,new DMXOutput());
     #else
-    hyp->createChain(dmxCombine,new UDPOutput("hypernode1.local",9619));
+    hyp->createChain(dmxCombine,new UDPOutput("hyperslave7.local",9619));
     #endif
 
     addPaletteColumn(hyp);
