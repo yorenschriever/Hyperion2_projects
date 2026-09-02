@@ -6,13 +6,13 @@
 #include "common/setViewParams.hpp"
 #include "patterns.hpp"
 #include "hyperion.hpp"
-// #include "mapping/freak-map.hpp"
+#include "mapping/freak-map.hpp"
 
 void addPaletteColumn(Hyperion *hyp);
 
 LUT *pixelLut = new ColorCorrectionLUT(2.27, 255, 255, 255, 230);
 
-PixelMap freakMap = gridMap(20,20);
+// PixelMap freakMap = gridMap(20,20);
 
 PixelMap freakMapBig = resizeAndTranslateMap(freakMap, 1.2);
 PixelMap nFreakMap = normalizeMap(freakMap);
