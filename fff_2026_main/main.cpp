@@ -32,7 +32,7 @@ void addAerialChain();
 void addLightningChain();
 void addPaletteColumn();
 
-LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 220);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
 #define SHOW_DEBUG true
@@ -263,20 +263,21 @@ void addStageChain()
 
     Distribution distribution = {
         // dak
-        {"hyperslaveX.local", 9611, 3 * 60},
-        {"hyperslaveX.local", 9612, 3 * 60},
-        {"hyperslaveX.local", 9613, 6 * 60},
-        {"hyperslaveX.local", 9614, 6 * 60},
+        {"hyperslave6.local", 9611, 3 * 60},
+        {"hyperslave6.local", 9612, 3 * 60},
+        {"hyperslave6.local", 9613, 6 * 60},
+        {"hyperslave6.local", 9614, 6 * 60},
 
         // backdrop
-        {"hyperslave1.local", 9611, 3 * 60},
-        {"hyperslave1.local", 9612, 3 * 60},
+        {"hyperslave3.local", 9611, 3 * 60},
+        {"hyperslave3.local", 9615, 3 * 60},
+
         {"hyperslave1.local", 9613, 6 * 60},
         {"hyperslave1.local", 9614, 6 * 60},
 
         // voorkant
-        {"hyperslave1.local", 9615, 3 * 60},
-        {"hyperslave1.local", 9616, 3 * 60},
+        {"hyperslave1.local", 9611, 3 * 60},
+        {"hyperslave1.local", 9612, 3 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -362,7 +363,7 @@ void addStageChain()
         });
 
     // distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
-    distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
@@ -539,7 +540,7 @@ void addLightningChain()
     int size = 10;
 
     Distribution distribution = {
-        {"hypernodeX.local", 9620, 10},
+        {"hyperslave6.local", 9620, 10},
     };
 
     auto input = new ControlHubInput<Monochrome>(
