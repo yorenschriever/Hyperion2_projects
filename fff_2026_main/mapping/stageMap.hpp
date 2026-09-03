@@ -32,8 +32,8 @@ PixelMap3dPtr createStageMap()
     drawTripleLedBar(turtle, 0,    domeRadius +2200, 3000+500, 60, -1);
 
     // dak. grote punt
-    drawTripleLedBar(turtle, 500,  domeRadius, 3000, 120, 1);
-    drawTripleLedBar(turtle, 500,  domeRadius, 3000, 120, -1);
+    drawTripleLedBar(turtle, 1000,  domeRadius, 3000, 120, 1);
+    drawTripleLedBar(turtle, 1000,  domeRadius, 3000, 120, -1);
 
     // backdrop. kleine punt
     drawTripleLedBar(turtle, 0,    domeRadius + 2200 + 3000, 1000+500, 60, 1);
@@ -44,8 +44,8 @@ PixelMap3dPtr createStageMap()
     drawTripleLedBar(turtle, 0,    domeRadius + 2200, 1000, 120, -1);
 
     // voorkant. kleine punt
-    drawTripleLedBar(turtle, 2000, domeRadius, 1000, 60, 1);
-    drawTripleLedBar(turtle, 2000, domeRadius, 1000, 60, -1);
+    drawTripleLedBar(turtle, 1000, domeRadius, 1000, 60, 1);
+    drawTripleLedBar(turtle, 1000, domeRadius, 1000, 60, -1);
 
     turtle.scale(scale);
 

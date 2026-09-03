@@ -32,7 +32,7 @@ void addAerialChain();
 void addLightningChain();
 void addPaletteColumn();
 
-LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 220);
+LUT *ledLut = new ColorCorrectionLUT(2.4, 255, 255, 255, 220); //2.7
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
 #define SHOW_DEBUG true
@@ -68,7 +68,7 @@ Hyperion hyp;
 int main()
 {
     addPaletteColumn();
-    addDomeChain();
+    // addDomeChain();
     addStageChain();
     addObeliskChain();
     addAerialChain();
@@ -362,8 +362,8 @@ void addStageChain()
             #endif
         });
 
-    // distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
-    distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
+    // distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
@@ -490,11 +490,11 @@ void addAerialChain()
     auto convertedOldBars = new ColorConverter<RGBA, BAR_OLD>(ledLut);
 
     Distribution distribution = {
-        {"hypernode1.local", 9615, 2 * 3 * 60},
-        {"hypernode2.local", 9615, 2 * 3 * 60},
-        {"hypernode3.local", 9615, 2 * 3 * 60},
-        {"hypernode4.local", 9615, 2 * 3 * 60},
-        {"hypernode5.local", 9615, 2 * 3 * 60},
+        {"hypernode1.local", 9612, 2 * 3 * 60, convertedOldBars},
+        {"hypernode2.local", 9612, 2 * 3 * 60},
+        {"hypernode3.local", 9612, 2 * 3 * 60},
+        {"hypernode4.local", 9612, 2 * 3 * 60},
+        {"hypernode5.local", 9612, 2 * 3 * 60},
 
         //if we dont have enough bars for the aerial, eg because of broken units
         //we can take them away from the dome. in that case, we need a different color space

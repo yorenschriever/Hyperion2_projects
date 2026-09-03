@@ -18,7 +18,7 @@ void drawTriangle(Turtle3d &turtle)
     // correct center point
     // move to the side along the base of the triangle
     turtle.yaw(-90);
-    turtle.move(500, false);
+    turtle.move(-500, false);
     turtle.yaw(90);
     // move down a little
     turtle.pitch(-90);
@@ -26,7 +26,7 @@ void drawTriangle(Turtle3d &turtle)
     turtle.move(0.5 * triangleHeight, false);
     turtle.pitch(90);
 
-    turtle.yaw(90);
+    turtle.yaw(-90);
 
     for(int i = 0; i < 3; i++)
     {
