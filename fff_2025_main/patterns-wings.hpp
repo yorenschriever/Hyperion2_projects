@@ -10,12 +10,12 @@ namespace Wings
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap *map;
+        PixelMapPtr map;
         LFO<Sin> lfoX = LFO<Sin>(2000);
         LFO<Sin> lfoZ = LFO<Sin>(2000);
 
     public:
-        XY(PixelMap *map)
+        XY(PixelMapPtr map)
         {
             this->name = "XY";
             this->map = map;

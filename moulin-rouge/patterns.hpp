@@ -26,8 +26,8 @@ public:
 class BaseFadePattern : public Pattern<RGBA>
 {
 public:
-    PixelMap3d *map;
-    BaseFadePattern(PixelMap3d *map, const char *name)
+    PixelMap3dPtr map;
+    BaseFadePattern(PixelMap3dPtr map, const char *name)
     {
         this->name = name;
         this->map = map;
@@ -46,8 +46,8 @@ public:
 class WingsFadePattern : public Pattern<RGBA>
 {
 public:
-    PixelMap3d::Cylindrical *map;
-    WingsFadePattern(PixelMap3d::Cylindrical *map,const char *name)
+    PixelMap3d::CylindricalPtr map;
+    WingsFadePattern(PixelMap3d::CylindricalPtr map,const char *name)
     {
         this->name = name;
         this->map = map;
@@ -87,12 +87,12 @@ public:
 class Heart : public Pattern<RGBA>
 {
 public:
-    PixelMap3d *map;
+    PixelMap3dPtr map;
     Timeline timeline;
     BeatWatcher beat;
     FadeUp fade = FadeUp(250);
 
-    Heart(PixelMap3d *map)
+    Heart(PixelMap3dPtr map)
     {
         this->name = "Heart";
         this->map = map;
@@ -130,11 +130,11 @@ public:
 class HeartZoom : public Pattern<RGBA>
 {
 public:
-    PixelMap3d *map;
+    PixelMap3dPtr map;
     BeatWatcher beat;
     FadeDown fade = FadeDown(500);
 
-    HeartZoom(PixelMap3d *map)
+    HeartZoom(PixelMap3dPtr map)
     {
         this->name = "Heart zoom";
         this->map = map;

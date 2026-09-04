@@ -1,3 +1,4 @@
+#include <memory>
 #include "core/hyperion.hpp"
 #include "movingheadPatterns.hpp"
 #include "patterns.hpp"
@@ -54,6 +55,9 @@ LUT *IncandescentLut8 = new IncandescentLUT(2.5, 255, 24);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 LUT *GammaLut8 = new GammaLUT(2.5, 255);
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
+
+auto ledMap1 = std::make_shared<PixelMap>(ledMap1Data);
+auto ledMap2 = std::make_shared<PixelMap>(ledMap2Data);
 
 int main()
 {
@@ -165,7 +169,7 @@ void addColanderPipe(Hyperion *hyp, Combine *pwmCombine, Combine *dmxCombine)
         new ColorConverter<Monochrome, Monochrome12>(IncandescentLut),
         new UDPOutput("hyperslave6.local", 9620, 60));
 
-    auto map = new PixelMap(circleMap(12,0.5));
+    auto map = circleMap(12,0.5);
     hyp->createChain(
         splitInput->getSlice(3),
         new ColorConverter<Monochrome, RGB>(),
@@ -380,7 +384,7 @@ void addLed1Column(Hyperion *hyp)
     distributeAndMonitor<BGR, RGBA>(
         hyp,
         input,
-        &ledMap1,
+        ledMap1,
         {
             {"hypernode1.local",9611,nleds/4},
             {"hypernode1.local",9612,nleds/4},
@@ -449,7 +453,7 @@ void addLed2Column(Hyperion *hyp)
     distributeAndMonitor<BGR>(
         hyp,
         input,
-        &ledMap2,
+        ledMap2,
         {
             {"hypernode1.local",9615,nleds/4},
             {"hypernode1.local",9616,nleds/4},

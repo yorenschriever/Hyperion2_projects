@@ -181,12 +181,12 @@ namespace Min
             FadeDown(200)};
         std::vector<float> radii[6];
         BeatWatcher watcher = BeatWatcher();
-        // PixelMap3d::Cylindrical *map;
+        // PixelMap3d::CylindricalPtr map;
         Permute perm;
         int pos = 0;
 
     public:
-        GrowingCirclesPattern(PixelMap3d *map)
+        GrowingCirclesPattern(PixelMap3dPtr map)
         {
             // this->map = map.toCylindricalXZ();
             for (int i = 0; i < 6; i++)
@@ -234,10 +234,10 @@ namespace Min
     {
         FadeDown fade = FadeDown(50);
         BeatWatcher watcher = BeatWatcher();
-        PixelMap3d *map;
+        PixelMap3dPtr map;
 
     public:
-        LineLaunch(PixelMap3d *map)
+        LineLaunch(PixelMap3dPtr map)
         {
             this->map = map;
             this->name = "Line launch";
@@ -301,11 +301,11 @@ namespace Min
     class SpiralPattern : public Pattern<RGBA>
     {
         Transition transition = Transition();
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<SinFast> lfo;
 
     public:
-        SpiralPattern(PixelMap3d::Cylindrical *map)
+        SpiralPattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Spiral";

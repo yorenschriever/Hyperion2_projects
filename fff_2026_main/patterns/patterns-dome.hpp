@@ -10,12 +10,12 @@ namespace DomePatterns
     class XY : public Pattern<RGBA>
     {
         Transition transition = Transition(200,1000);
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         LFOTempo<Sin> lfoX = LFOTempo<Sin>(8);
         LFOTempo<Sin> lfoZ = LFOTempo<Sin>(12);
 
     public:
-        XY(PixelMap3d *map)
+        XY(PixelMap3dPtr map)
         {
             this->map = map;
             this->name="XY";
@@ -52,11 +52,11 @@ class Z : public Pattern<RGBA>
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         LFOTempo<Sin> lfoZ = LFOTempo<Sin>(16);
 
     public:
-        Z(PixelMap3d *map)
+        Z(PixelMap3dPtr map)
         {
             this->map = map;
             this->name="Z";
@@ -88,12 +88,12 @@ class Z : public Pattern<RGBA>
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         FadeDown fade = FadeDown(200);
         BeatWatcher watcher = BeatWatcher();
 
     public:
-        DotBeatPattern(PixelMap3d::Cylindrical *map)
+        DotBeatPattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Dot beat";

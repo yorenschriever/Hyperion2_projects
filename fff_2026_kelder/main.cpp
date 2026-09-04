@@ -124,15 +124,14 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
-    auto map = new PixelMap(
+    auto map = 
         applyIndexMap(
             combineMaps({
                 resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), 1,  -1, -0.45, -0.4),
                 resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), -1, -1,  0.45, -0.4)
             }), 
             zigzag
-        )
-    );
+        );
 
     distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
@@ -169,7 +168,7 @@ void addSparksChain()
             
         });
 
-    auto map = new PixelMap(gridMap(6, 4, 0.3, 0.15, 0, -0.47));
+    auto map = gridMap(6, 4, 0.3, 0.15, 0, -0.47);
 
     distributeAndMonitor<Monochrome12>(&hyp,input,map,distribution,GammaLut12, 0.02);
 }
@@ -193,7 +192,7 @@ void addLedparChain()
             {.column = Columns::LEDPAR, .slot = 9, .pattern = new LedPatterns::FlashesPattern()},
         });
 
-    auto map = new PixelMap(gridMap(size, 1, 0.2, 0.5, 0, 0.7));
+    auto map = gridMap(size, 1, 0.2, 0.5, 0, 0.7);
 
     DMXAndMonitor<RGBW,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
 }
@@ -219,7 +218,9 @@ void addSunstripChain()
             {.column = Columns::SUNSTRIP, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
-    auto map = new PixelMap(gridMap(10, 2, 0.1, 0.1, 0, 0.4));
+    auto map = gridMap(10, 2, 0.1, 0.1, 0, 0.4);
+
+    // Log::info("TEST","Sunstrip map created, size = %d / %d", size, map->size());
 
     DMXAndMonitor<Monochrome12>(&hyp, input, size, &dmxCombine, sunstripStartChannel, map, 0.02, GammaLut12);
 }

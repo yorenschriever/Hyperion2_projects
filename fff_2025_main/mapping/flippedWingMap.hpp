@@ -1,9 +1,10 @@
 #pragma once
 #include "generation/pixelMap/pixelMap.hpp"
 #include <algorithm>
+#include <memory>
 
 //flip all the bars individually
-PixelMap flipWingMap(PixelMap wingMap)
+PixelMapPtr flipWingMap(PixelMap wingMap)
 {
     PixelMap flippedWingMap;
 
@@ -15,5 +16,5 @@ PixelMap flipWingMap(PixelMap wingMap)
         flippedWingMap.push_back(wingMap[flippedIndex]);
     }
 
-    return flippedWingMap;
+    return std::make_shared<PixelMap>(flippedWingMap);
 }

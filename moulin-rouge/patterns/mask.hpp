@@ -11,9 +11,9 @@ class WingsFadePattern : public Pattern<RGBA>
 {
 public:
     RGBA color = RGBA(0,0,0,255);
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     bool invert;
-    WingsFadePattern(PixelMap::Polar *map, bool invert=false)
+    WingsFadePattern(PixelMap::PolarPtr map, bool invert=false)
     {
         this->map = map;
         this->invert = invert;

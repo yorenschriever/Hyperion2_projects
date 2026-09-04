@@ -17,12 +17,12 @@ namespace Hi
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         LFO<Sin> lfoX = LFO<Sin>(2000);
         LFO<Sin> lfoZ = LFO<Sin>(2000);
 
     public:
-        XY(PixelMap3d *map)
+        XY(PixelMap3dPtr map)
         {
             this->map = map;
             this->name="XY";
@@ -58,12 +58,12 @@ class DotBeatPattern : public Pattern<RGBA>
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Spherical *map;
+        PixelMap3d::SphericalPtr map;
         FadeDown fade = FadeDown(200);
         BeatWatcher watcher = BeatWatcher();
 
     public:
-        DotBeatPattern(PixelMap3d::Spherical *map)
+        DotBeatPattern(PixelMap3d::SphericalPtr map)
         {
             this->map = map;
             this->name = "Dot beat";

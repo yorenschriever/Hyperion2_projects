@@ -1,4 +1,4 @@
-PixelMap ledMap1 = {
+PixelMap ledMap1Data = {
     {.x = -1.0, .y = -0.875},
     {.x = -0.99625, .y = -0.875},
     {.x = -0.9925, .y = -0.875},
@@ -1921,7 +1921,7 @@ PixelMap ledMap1 = {
     {.x = 0.97125, .y = -0.125},
 };
 
-PixelMap ledMap2 = {
+PixelMap ledMap2Data = {
     {.x = -1.0, .y = 0.125},
     {.x = -0.99625, .y = 0.125},
     {.x = -0.9925, .y = 0.125},

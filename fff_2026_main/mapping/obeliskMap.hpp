@@ -65,7 +65,7 @@ void drawAerial(Turtle3d &turtle, float angle)
     drawTriangle(turtle);
 }
 
-PixelMap3d createObeliskMap()
+PixelMap3dPtr createObeliskMap()
 {
     Turtle3d turtle;
 
@@ -77,10 +77,10 @@ PixelMap3d createObeliskMap()
 
     turtle.scale(scale);
 
-    return turtle;
+    return std::make_shared<Turtle3d>(turtle);
 }
 
-PixelMap3d createObeliskAerialMap()
+PixelMap3dPtr createObeliskAerialMap()
 {
     Turtle3d turtle;
 
@@ -92,5 +92,5 @@ PixelMap3d createObeliskAerialMap()
 
     turtle.scale(scale);
 
-    return turtle;
+    return std::make_shared<Turtle3d>(turtle);
 }

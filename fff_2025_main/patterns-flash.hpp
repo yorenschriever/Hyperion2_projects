@@ -48,10 +48,10 @@ namespace Flash
             0, Transition::none, 0,
             500, Transition::none, 0);
 
-        PixelMap3d *map;
+        PixelMap3dPtr map;
 
     public:
-        SquareGlitchPattern(PixelMap3d *map)
+        SquareGlitchPattern(PixelMap3dPtr map)
         {
             this->map = map;
             this->name = "Square glitch";
@@ -243,10 +243,10 @@ namespace Flash
     class StrobeFadePattern : public Pattern<RGBA>
     {
         FadeDown fade = FadeDown(1500);
-        PixelMap3d::Spherical *map;
+        PixelMap3d::SphericalPtr map;
 
     public:
-        StrobeFadePattern(PixelMap3d::Spherical *map)
+        StrobeFadePattern(PixelMap3d::SphericalPtr map)
         {
             this->map = map;
             this->name = "Strobe fade noise";

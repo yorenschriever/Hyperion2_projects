@@ -4,6 +4,8 @@
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-test.hpp"
 #include "common/patterns/patterns-mask.hpp"
+#include "common/dmxAndMonitor.hpp"
+#include <memory>
 
 void addKeyholeChain();
 void addLampshadeChain();
@@ -94,28 +96,28 @@ int main()
         Thread::sleep(1000);
 }
 
-void DMXAndMonitor(ControlHubInput<Monochrome> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01, LUT *lut = nullptr)
-{
-    auto clone = new Slicer(
-        {
-            {0, size, true},
-            {0, size, false},
-        });
+// void DMXAndMonitor(ControlHubInput<Monochrome> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01, LUT *lut = nullptr)
+// {
+//     auto clone = new Slicer(
+//         {
+//             {0, size, true},
+//             {0, size, false},
+//         });
     
-    hyp.createChain(input, clone);
+//     hyp.createChain(input, clone);
 
-    hyp.createChain(
-        clone->getSlice(0),
-        lut ? new ColorConverter<Monochrome, Monochrome>(lut) : nullptr,
-        dmxCombine.atDmxChannel(startChannel)
-    );
+//     hyp.createChain(
+//         clone->getSlice(0),
+//         lut ? new ColorConverter<Monochrome, Monochrome>(lut) : nullptr,
+//         dmxCombine.atDmxChannel(startChannel)
+//     );
 
-    hyp.createChain(
-        clone->getSlice(1),
-        new ColorConverter<Monochrome, RGB>(),
-        new MonitorOutput(&hyp.webServer, pixelMap, nullptr,  60, monitorDotSize)
-    );
-}
+//     hyp.createChain(
+//         clone->getSlice(1),
+//         new ColorConverter<Monochrome, RGB>(),
+//         new MonitorOutput(&hyp.webServer, pixelMap, nullptr,  60, monitorDotSize)
+//     );
+// }
 
 PixelMap createKeyholeMap()
 {
@@ -170,9 +172,9 @@ void addKeyholeChain()
         });
 
     // auto map = new PixelMap(circleMap(size, 0.5, 0.5, 0));
-    auto map = new PixelMap(createKeyholeMap());
+    auto map = std::make_shared<PixelMap>(createKeyholeMap());
 
-    DMXAndMonitor(input, size, keyholeStartChannel, map, 0.02, IncandescentLut8); 
+    DMXAndMonitor(&hyp, input, size, &dmxCombine, keyholeStartChannel, map, 0.02, IncandescentLut8); 
 }
 
 void addLampshadeChain()
@@ -196,9 +198,9 @@ void addLampshadeChain()
             {.column = Columns::LAMPSHADE, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
-    auto map = new PixelMap(circleMap(size, 0.25, -0.5, 0.5));
+    auto map = circleMap(size, 0.25, -0.5, 0.5);
 
-    DMXAndMonitor(input, size, lampshadeStartChannel, map, 0.02); 
+    DMXAndMonitor(&hyp, input, size, &dmxCombine, lampshadeStartChannel, map, 0.02); 
 }
 
 void addLampshade2Chain()
@@ -222,9 +224,9 @@ void addLampshade2Chain()
             {.column = Columns::LAMPSHADE_2, .slot = 11, .pattern = new MonochromePatterns::SingleGlitchPattern()},
         });
 
-    auto map = new PixelMap(circleMap(size, 0.25, 0.5, 0.5));
+    auto map = circleMap(size, 0.25, 0.5, 0.5);
 
-    DMXAndMonitor(input, size, lampshade2StartChannel, map, 0.02); 
+    DMXAndMonitor(&hyp, input, size, &dmxCombine, lampshade2StartChannel, map, 0.02); 
 }
 
 
@@ -270,42 +272,40 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS_2, .slot = 8, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
              });
 
-    auto map = new PixelMap(
-        applyIndexMap(
-            combineMaps({
-                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), 1,  -1, -0.7, -0.4),
-                resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), -1, -1,  0.7, -0.4)
-            }), 
-            zigzag
-        )
+    auto map = applyIndexMap(
+        combineMaps({
+            resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), 1,  -1, -0.7, -0.4),
+            resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), -1, -1,  0.7, -0.4)
+        }), 
+        zigzag
     );
 
     distributeAndMonitor<GBR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
 
-template <class T_DMX_COLOR>
-void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01)
-{
-    auto clone = new Slicer(
-        {
-            {0, int(sizeof(RGBA))*size, true},
-            {0, int(sizeof(RGBA))*size, false},
-        });
+// template <class T_DMX_COLOR>
+// void DMXAndMonitorRGB(ControlHubInput<RGBA> *input, int size, int startChannel, PixelMap *pixelMap, float monitorDotSize = 0.01)
+// {
+//     auto clone = new Slicer(
+//         {
+//             {0, int(sizeof(RGBA))*size, true},
+//             {0, int(sizeof(RGBA))*size, false},
+//         });
     
-    hyp.createChain(input, clone);
+//     hyp.createChain(input, clone);
 
-    hyp.createChain(
-        clone->getSlice(0),
-        new ColorConverter<RGBA, T_DMX_COLOR>(),
-        dmxCombine.atDmxChannel(startChannel)
-    );
+//     hyp.createChain(
+//         clone->getSlice(0),
+//         new ColorConverter<RGBA, T_DMX_COLOR>(),
+//         dmxCombine.atDmxChannel(startChannel)
+//     );
 
-    hyp.createChain(
-        clone->getSlice(1),
-        new ColorConverter<RGBA, RGB>(),
-        new MonitorOutput(&hyp.webServer, pixelMap, nullptr,  60, monitorDotSize)
-    );
-}
+//     hyp.createChain(
+//         clone->getSlice(1),
+//         new ColorConverter<RGBA, RGB>(),
+//         new MonitorOutput(&hyp.webServer, pixelMap, nullptr,  60, monitorDotSize)
+//     );
+// }
 
 void addLetterBoardChain()
 {
@@ -318,11 +318,11 @@ void addLetterBoardChain()
             {.column = Columns::LETTERBOARD, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
         });
 
-    auto map = new PixelMap({
+    auto map = std::make_shared<PixelMap>(PixelMap({
         {0.5, 0.5}
-    });
+    }));
 
-    DMXAndMonitorRGB<RGBW>(input, size, letterBoardStartChannel, map, 0.1); 
+    DMXAndMonitor<RGBW,RGBA>(&hyp, input, size, &dmxCombine, letterBoardStartChannel, map, 0.1); 
 }
 
 void addHexparChain()
@@ -340,16 +340,16 @@ void addHexparChain()
             {.column = Columns::HEXPAR, .slot = 5, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
         });
 
-    auto map = new PixelMap(gridMap(size, 1, 0.5, 0.5, 0, 0.9));
+    auto map = gridMap(size, 1, 0.5, 0.5, 0, 0.9);
 
-    DMXAndMonitorRGB<RGBWAmberUV>(input, size, hexparStartChannel, map, 0.04); 
+    DMXAndMonitor<RGBWAmberUV,RGBA>(&hyp, input, size, &dmxCombine, hexparStartChannel, map, 0.04); 
 }
 
 void addFogChain()
 {
-    auto map = new PixelMap({
+    auto map = std::make_shared<PixelMap>(PixelMap({
         {-0.5, 0.5}
-    });
+    }));
 
     //////////
 
@@ -361,7 +361,7 @@ void addFogChain()
             {.column = Columns::FOG_LED, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
         });
 
-    DMXAndMonitorRGB<RGBAmber>(input, 1, fogStartChannel + 2, map, 0.1); 
+    DMXAndMonitor<RGBAmber,RGBA>(&hyp, input, 1, &dmxCombine, fogStartChannel + 2, map, 0.1); 
 
     auto dimmerInput = new PatternInput<Monochrome>(
         1,
@@ -386,7 +386,7 @@ void addFogChain()
         }
     );
 
-    DMXAndMonitor(inputFog, 1, fogStartChannel, map, 0.05); 
+    DMXAndMonitor(&hyp, inputFog, 1, &dmxCombine, fogStartChannel, map, 0.05); 
 }
 
 void addPaletteColumn()

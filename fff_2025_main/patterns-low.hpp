@@ -15,13 +15,13 @@ namespace Low
 
     class StaticGradientPattern : public Pattern<RGBA>
     {
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
 
     public:
-        StaticGradientPattern(PixelMap3d *map)
+        StaticGradientPattern(PixelMap3dPtr map)
         {
             this->map = map;
             this->name = "Static gradient";
@@ -54,11 +54,11 @@ namespace Low
             FadeDown(200),
             FadeDown(200)};
         BeatWatcher watcher = BeatWatcher();
-        PixelMap3d::Spherical *map;
+        PixelMap3d::SphericalPtr map;
         int pos = 0;
 
     public:
-        OnBeatColumnChaseUpPattern(PixelMap3d::Spherical *map)
+        OnBeatColumnChaseUpPattern(PixelMap3d::SphericalPtr map)
         {
             this->map = map;
             this->name = "On beat column chase up";
@@ -129,10 +129,10 @@ namespace Low
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFOTempo<Glow> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        HorizontalSin(PixelMap3d::Cylindrical *map)
+        HorizontalSin(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Horizontal sin";
@@ -169,10 +169,10 @@ namespace Low
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<SawDown> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        HorizontalSaw(PixelMap3d::Cylindrical *map)
+        HorizontalSaw(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Horzontal saw";
@@ -202,10 +202,10 @@ namespace Low
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<SinFast> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        GrowShrink(PixelMap3d::Cylindrical *map)
+        GrowShrink(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Grow shrink";
@@ -247,10 +247,10 @@ namespace Low
         Permute perm;
         LFO<Glow> lfo = LFO<Glow>(10000);
         Transition transition;
-        PixelMap3d *map;
+        PixelMap3dPtr map;
 
     public:
-        GlowPulsePattern(PixelMap3d *map)
+        GlowPulsePattern(PixelMap3dPtr map)
         {
             this->map = map;
             this->name = "Glow pulse";
@@ -282,10 +282,10 @@ namespace Low
         Transition transition = Transition(
                 200, Transition::fromStart, 1200,
                 500, Transition::fromEnd, 1500);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        VerticallyIsolated(PixelMap3d::Cylindrical *map)
+        VerticallyIsolated(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Vertically isolated";
@@ -311,12 +311,12 @@ namespace Low
      class RotatingRingsPattern : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<Sin> ring1;
         LFO<Sin> ring2;
 
     public:
-        RotatingRingsPattern(PixelMap3d::Cylindrical *map)
+        RotatingRingsPattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Rotating rings";

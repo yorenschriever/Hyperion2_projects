@@ -1,6 +1,6 @@
 #pragma once
 
-float fromMid(PixelMap3d::CylindricalPixelPosition pos)
+float fromMid(CylindricalPixelPosition pos)
 {
     // if (pos.z >= 0.44)
     //     //ledster, bovenin
@@ -19,10 +19,10 @@ namespace Mid
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<Glow> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        Lighthouse(PixelMap3d::Cylindrical *map)
+        Lighthouse(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Lighthouse";
@@ -51,10 +51,10 @@ namespace Mid
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        Halo(PixelMap3d::Cylindrical *map)
+        Halo(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Halo";
@@ -88,10 +88,10 @@ namespace Mid
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        Halo2(PixelMap3d::Cylindrical *map)
+        Halo2(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Halo 2";
@@ -121,10 +121,10 @@ namespace Mid
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        SnowflakePatternColumn(PixelMap3d::Cylindrical *map)
+        SnowflakePatternColumn(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Snowflake";
@@ -151,10 +151,10 @@ namespace Mid
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<SawDown> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        TakkenChase(PixelMap3d::Cylindrical *map)
+        TakkenChase(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Takken chase";
@@ -188,11 +188,11 @@ namespace Mid
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<SoftSawDown> lfo1;
 
     public:
-        PetalChase(PixelMap3d::Cylindrical *map)
+        PetalChase(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Petal chase";
@@ -223,12 +223,12 @@ namespace Mid
 
     class DoubleFlash : public Pattern<RGBA>
     {
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         Timeline timeline = Timeline();
         BeatWatcher watcher;
 
     public:
-        DoubleFlash(PixelMap3d::Cylindrical *map)
+        DoubleFlash(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Double flash";
@@ -284,7 +284,7 @@ namespace Mid
         int pos = 0;
 
     public:
-        FireworksPattern(PixelMap3d *map)
+        FireworksPattern(PixelMap3dPtr map)
         {
             for (int i = 0; i < 6; i++)
             {

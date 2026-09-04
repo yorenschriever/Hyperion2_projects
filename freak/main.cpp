@@ -14,9 +14,10 @@ LUT *pixelLut = new ColorCorrectionLUT(2.27, 255, 255, 255, 230);
 
 // PixelMap freakMap = gridMap(20,20);
 
-PixelMap freakMapBig = resizeAndTranslateMap(freakMap, 1.2);
-PixelMap nFreakMap = normalizeMap(freakMap);
-PixelMap::Polar pFreakMap = *(freakMapBig.toPolarRotate90());
+PixelMapPtr freakMap = std::make_shared<PixelMap>(freakMapData);
+PixelMapPtr freakMapBig = resizeAndTranslateMap(freakMap, 1.2);
+PixelMapPtr nFreakMap = normalizeMap(freakMap);
+PixelMap::PolarPtr pFreakMap = freakMapBig->toPolar()->rotate(90);
 
 //timing for ws2801 500kHz
 NeoPixels::Timing timing = {
@@ -45,7 +46,7 @@ int main()
 {
     auto hyp = new Hyperion();
 
-    int nleds = freakMapBig.size();
+    int nleds = freakMapBig->size();
 
     std::vector<Slave> distribution =
     {
@@ -62,42 +63,42 @@ int main()
         {
             {.column = FULL, .slot = 0, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = FULL, .slot = 1, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
-            {.column = FULL, .slot = 2, .pattern = new Mapped2dPatterns::HorizontalSaw(&pFreakMap)},
-            {.column = FULL, .slot = 3, .pattern = new RadialGradient(&pFreakMap)},
-            {.column = FULL, .slot = 4, .pattern = new LinearGradient(&freakMap)},
-            {.column = FULL, .slot = 5, .pattern = new PulseRing(&freakMap)},
-            {.column = FULL, .slot = 6, .pattern = new RotatingTriangle(&freakMap)},
-            {.column = FULL, .slot = 7, .pattern = new TriangleBurst(&freakMap)},
-            {.column = FULL, .slot = 8, .pattern = new ExpandingTriangle(&freakMap)},
-            {.column = FULL, .slot = 9, .pattern = new ExpandingTriangle2(&freakMap)},
-            {.column = FULL, .slot = 10, .pattern = new TrianglePulse(&freakMap)},
-            {.column = FULL, .slot = 11, .pattern = new TriangleOutlineGrow(&pFreakMap)},
+            {.column = FULL, .slot = 2, .pattern = new Mapped2dPatterns::HorizontalSaw(pFreakMap)},
+            {.column = FULL, .slot = 3, .pattern = new RadialGradient(pFreakMap)},
+            {.column = FULL, .slot = 4, .pattern = new LinearGradient(freakMap)},
+            {.column = FULL, .slot = 5, .pattern = new PulseRing(freakMap)},
+            {.column = FULL, .slot = 6, .pattern = new RotatingTriangle(freakMap)},
+            {.column = FULL, .slot = 7, .pattern = new TriangleBurst(freakMap)},
+            {.column = FULL, .slot = 8, .pattern = new ExpandingTriangle(freakMap)},
+            {.column = FULL, .slot = 9, .pattern = new ExpandingTriangle2(freakMap)},
+            {.column = FULL, .slot = 10, .pattern = new TrianglePulse(freakMap)},
+            {.column = FULL, .slot = 11, .pattern = new TriangleOutlineGrow(pFreakMap)},
             {.column = FULL, .slot = 12, .pattern = new LetterStrobeFlash()},
-            {.column = FULL, .slot = 13, .pattern = new CosmicJellyfish(&pFreakMap)},
+            {.column = FULL, .slot = 13, .pattern = new CosmicJellyfish(pFreakMap)},
 
             {.column = LETTER, .slot = 0, .pattern = new LedPatterns::RibbenFlashPattern(50)},
             {.column = LETTER, .slot = 1, .pattern = new LedPatterns::RibbenClivePattern<Glow>(1000, 1, 0.25, 50)},
-            {.column = LETTER, .slot = 2, .pattern = new OnLetterChaseUpPattern(&freakMap)},
-            {.column = LETTER, .slot = 3, .pattern = new OnLetterChaseCenterPattern(&freakMap)},
+            {.column = LETTER, .slot = 2, .pattern = new OnLetterChaseUpPattern(freakMap)},
+            {.column = LETTER, .slot = 3, .pattern = new OnLetterChaseCenterPattern(freakMap)},
 
-            {.column = SWEEP, .slot = 0, .pattern = new Mapped2dPatterns::Lighthouse(&pFreakMap)},
-            {.column = SWEEP, .slot = 1, .pattern = new Mapped2dPatterns::HorizontalSin(&pFreakMap)},
-            {.column = SWEEP, .slot = 2, .pattern = new Mapped2dPatterns::RadialFadePattern(&pFreakMap)},
-            {.column = SWEEP, .slot = 3, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(&pFreakMap)},
-            {.column = SWEEP, .slot = 4, .pattern = new Mapped2dPatterns::RadialSaw(&pFreakMap)},
+            {.column = SWEEP, .slot = 0, .pattern = new Mapped2dPatterns::Lighthouse(pFreakMap)},
+            {.column = SWEEP, .slot = 1, .pattern = new Mapped2dPatterns::HorizontalSin(pFreakMap)},
+            {.column = SWEEP, .slot = 2, .pattern = new Mapped2dPatterns::RadialFadePattern(pFreakMap)},
+            {.column = SWEEP, .slot = 3, .pattern = new Mapped2dPatterns::RadialGlitterFadePattern(pFreakMap)},
+            {.column = SWEEP, .slot = 4, .pattern = new Mapped2dPatterns::RadialSaw(pFreakMap)},
 
             {.column = SPARSE, .slot = 0, .pattern = new LedPatterns::GlowPulsePattern()},
-            {.column = SPARSE, .slot = 1, .pattern = new Mapped2dPatterns::GrowingCirclesPattern(&freakMap)},
-            {.column = SPARSE, .slot = 2, .pattern = new Mapped2dPatterns::LineLaunch(&freakMap)},
-            {.column = SPARSE, .slot = 3, .pattern = new Mapped2dPatterns::DotBeatPattern(&pFreakMap)},
+            {.column = SPARSE, .slot = 1, .pattern = new Mapped2dPatterns::GrowingCirclesPattern(freakMap)},
+            {.column = SPARSE, .slot = 2, .pattern = new Mapped2dPatterns::LineLaunch(freakMap)},
+            {.column = SPARSE, .slot = 3, .pattern = new Mapped2dPatterns::DotBeatPattern(pFreakMap)},
             {.column = SPARSE, .slot = 4, .pattern = new SinChase()},
             {.column = SPARSE, .slot = 5, .pattern = new SawChasePattern()},
 
             {.column = TRIGGER, .slot = 0, .pattern = new TriggerPatterns::FadingNoisePattern()},
             {.column = TRIGGER, .slot = 1, .pattern = new TriggerPatterns::PulsePattern()},
             {.column = TRIGGER, .slot = 2, .pattern = new TriggerPatterns::SlowPulsePattern()},
-            {.column = TRIGGER, .slot = 3, .pattern = new TriggerPatterns::GrowingCirclePattern(&pFreakMap)},
-            {.column = TRIGGER, .slot = 4, .pattern = new TriggerPatterns::LineLaunch(&nFreakMap)},
+            {.column = TRIGGER, .slot = 3, .pattern = new TriggerPatterns::GrowingCirclePattern(pFreakMap)},
+            {.column = TRIGGER, .slot = 4, .pattern = new TriggerPatterns::LineLaunch(nFreakMap)},
 
             {.column = FLASH, .slot = 0, .pattern = new LedPatterns::FlashesPattern()},
             {.column = FLASH, .slot = 1, .pattern = new LedPatterns::StrobePattern()},
@@ -116,7 +117,7 @@ int main()
             {.column = DEBUG, .slot = 7, .pattern = new TestPatterns::Gamma(50)},
         });
 
-    distributeAndMonitor<RGB, RGBA>(hyp,input,&freakMap,distribution,pixelLut,0.01,timing);
+    distributeAndMonitor<RGB, RGBA>(hyp,input,freakMap,distribution,pixelLut,0.01,timing);
 
     addPaletteColumn(hyp);
 

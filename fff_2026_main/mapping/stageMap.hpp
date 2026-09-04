@@ -23,7 +23,7 @@ void drawTripleLedBar(Turtle3d &turtle, float x, float y, float z, int size, flo
     drawLedBar(turtle, size);
 }
 
-PixelMap3d createStageMap()
+PixelMap3dPtr createStageMap()
 {
     Turtle3d turtle;
 
@@ -49,7 +49,7 @@ PixelMap3d createStageMap()
 
     turtle.scale(scale);
 
-    return turtle;
+    return std::make_shared<Turtle3d>(turtle);
 }
 
 std::vector<int> stageMapSegmentSizes = {

@@ -14,10 +14,10 @@ namespace AllPatterns
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<SawDown> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        TopChase(PixelMap3d::Cylindrical *map)
+        TopChase(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Top chase";
@@ -49,10 +49,10 @@ namespace AllPatterns
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<Glow> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        Lighthouse(PixelMap3d::Cylindrical *map)
+        Lighthouse(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Lighthouse";
@@ -91,14 +91,12 @@ namespace AllPatterns
             FadeDown(200)};
         std::vector<float> radii[6];
         BeatWatcher watcher = BeatWatcher();
-        // PixelMap3d::Cylindrical *map;
         Permute perm;
         int pos = 0;
 
     public:
-        GrowingCirclesPattern(PixelMap3d *map)
+        GrowingCirclesPattern(PixelMap3dPtr map)
         {
-            // this->map = map.toCylindricalXZ();
             for (int i = 0; i < 6; i++)
             {
                 float xc = cos(float(i) / 6 * 2 * M_PI);

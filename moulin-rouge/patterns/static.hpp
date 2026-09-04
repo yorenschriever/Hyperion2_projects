@@ -13,10 +13,10 @@ namespace Static
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFOTempo<Glow> lfo;
-        PixelMap::Polar *map;
+        PixelMap::PolarPtr map;
 
     public:
-        AngularSweep(PixelMap::Polar *map)
+        AngularSweep(PixelMap::PolarPtr map)
         {
             this->map = map;
             this->name = "Angular sweep";
@@ -45,10 +45,10 @@ namespace Static
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFOTempo<SawUp> lfo;
-        PixelMap::Polar *map;
+        PixelMap::PolarPtr map;
 
     public:
-        RadialSaw(PixelMap::Polar *map)
+        RadialSaw(PixelMap::PolarPtr map)
         {
             this->map = map;
             this->name = "Radial saw";
@@ -77,10 +77,10 @@ namespace Static
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFOTempo<Glow> lfo;
-        PixelMap *map;
+        PixelMapPtr map;
 
     public:
-        HorizontalWave(PixelMap *map)
+        HorizontalWave(PixelMapPtr map)
         {
             this->map = map;
             this->name = "Horizontal wave";

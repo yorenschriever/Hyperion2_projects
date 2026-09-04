@@ -101,7 +101,7 @@ namespace Buttons
         // BeatWatcher watcher = BeatWatcher();
 
     public:
-        ButtonPressedPattern(PixelMap3d *map, int buttonIndex)
+        ButtonPressedPattern(PixelMap3dPtr map, int buttonIndex)
         {
             float r = 2360. / 4100;
             float xc = r * cos(float(buttonIndex) / 6 * 2 * M_PI);
@@ -143,12 +143,12 @@ namespace Buttons
     class SyncToMeasurePattern : public Pattern<RGBA>
     {
         RedButtonManager &redButtonManager = RedButtonManager::getInstance();
-        PixelMap3d::Spherical *map ;
+        PixelMap3d::SphericalPtr map ;
         FadeDown fade = FadeDown(200);
 
 
     public:
-        SyncToMeasurePattern(PixelMap3d::Spherical *map)
+        SyncToMeasurePattern(PixelMap3d::SphericalPtr map)
         {
             this->map = map;
             this->name = "Sync to measure";

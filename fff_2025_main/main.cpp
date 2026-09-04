@@ -1,3 +1,5 @@
+
+#include <memory>
 #include "hyperion.hpp"
 #include "mappingHelpers.hpp"
 #include "common/distributeAndMonitor.hpp"
@@ -30,20 +32,23 @@
 
 LUT *ledBarLut = new ColorCorrectionLUT(1.8, 255, 200, 200, 200);
 
-PixelMap3d::Cylindrical cCageMap = cageMap.toCylindricalXZ();
-PixelMap3d::Cylindrical cCageMap90 = cCageMap.rotate(M_PI * 35. /180.);
-PixelMap3d::Spherical sCageMap = cageMap.toSphericalXZ();
 
-PixelMap flippedWingMap = flipWingMap(wingMap);
-PixelMap::Polar pWingMap = flippedWingMap.toPolarRotate90();
+auto cageMap = std::make_shared<PixelMap3d>(cageMapData);
+auto cCageMap = cageMap->toCylindricalXZ();
+auto cCageMap90 = cCageMap->rotate(35);
+auto sCageMap = cageMap->toSphericalXZ();
+
+auto wingMap = std::make_shared<PixelMap>(wingMapData);
+auto flippedWingMap = flipWingMap(wingMapData);
+auto pWingMap = flippedWingMap->toPolar()->rotate(90);
 
 void addCagePipe(Hyperion *hyp)
 {
 
-    PixelMap3d *map = &cageMap;
-    PixelMap3d::Cylindrical *cmap = &cCageMap;
-    PixelMap3d::Cylindrical *cmap90 = &cCageMap90;
-    PixelMap3d::Spherical *smap = &sCageMap;
+    auto map = cageMap;
+    auto cmap = cCageMap;
+    auto cmap90 = cCageMap90;
+    auto smap = sCageMap;
 
     std::vector<Slave> distribution = {
         {"hypernode1.local", 9611, 8 * 60},
@@ -176,10 +181,10 @@ void addCagePipe(Hyperion *hyp)
 
 void addWingsPipe(Hyperion *hyp)
 {
-    PixelMap *map = &flippedWingMap;
-    PixelMap::Polar *pmap = &pWingMap;
-    PixelMap *displayMap = new PixelMap(resizeAndTranslateMap(flippedWingMap, 0.9));
-    IndexMap *zigzag = new ZigZagMapper(60, false);
+    auto map = flippedWingMap;
+    auto pmap = pWingMap;
+    auto displayMap = resizeAndTranslateMap(flippedWingMap, 0.9);
+    auto zigzag = new ZigZagMapper(60, false);
 
     std::vector<Slave> distribution = {
         {"hyperslave4.local", 9611, 8 * 60},
@@ -337,12 +342,12 @@ void addVulturePipe(Hyperion *hyp)
 
     const int wingSize = 50;
 
-    PixelMap *map = new PixelMap(combineMaps({
+     auto map = combineMaps({
         gridMap(wingSize, 3, -0.01, 0.07, -0.5, -0.5),
         gridMap(wingSize, 3, 0.01, 0.07, 0.5, -0.5),
         circleMap(100, 0.25, 0, -0.5),
-    }));
-    PixelMap::Polar *pmap = new PixelMap::Polar(map->toPolarRotate90());
+    });
+    auto pmap = map->toPolar()->rotate(90);
 
     Distribution distribution = {
         {"hyperslave3.local", 9611, wingSize},
@@ -402,23 +407,23 @@ void addVulturePipe(Hyperion *hyp)
 
 void addDMXPipe(Hyperion *hyp)
 {
-    PixelMap *map = new PixelMap(combineMaps({
-        PixelMap({{.x = -0.02, .y = 0}, {.x = 0.02, .y = 0}}), // eyes
-        PixelMap({{.x = 0, .y = 0.85}}),     // motor wings
-        PixelMap({{.x = 0.4, .y = 0.95}}),     // spiegelbol
+    auto map = combineMaps({
+        PixelMap({{.x = -0.02, .y = 0}, {.x = 0.02, .y = 0}}).getPtr(), // eyes
+        PixelMap({{.x = 0, .y = 0.85}}).getPtr(),     // motor wings
+        PixelMap({{.x = 0.4, .y = 0.95}}).getPtr(),     // spiegelbol
 
         gridMap(4, 1, 0.1, 0.1, -0.4, 0.85), // fire 1, marten
 
         gridMap(4, 1, 0.1, 0.1, 0.4, 0.85),  // pinspots
 
-        {{.x = -0, .y = 0.5}},               //fog
+        PixelMap({{.x = -0, .y = 0.5}}).getPtr(),               //fog
 
         gridMap(1, 179 - 13 -1 , 0, 0, -0.9, -2),  // reserve
 
         gridMap(2, 1, 0.1, 0.1, -0.4, 0.95),  // fire 2, joel  
         
         gridMap(1, 1  , 0, 0, -0.9, -2),  // reserve
-    }));
+    });
 
     // channel mapping:
     //  1-2: eyes
@@ -506,7 +511,7 @@ void addDMXPipe(Hyperion *hyp)
 
 void addLightningPipe(Hyperion *hyp)
 {
-    PixelMap *map = new PixelMap(gridMap(6, 1, 0.1, 0.1, 0, 0.7));
+    auto map = gridMap(6, 1, 0.1, 0.1, 0, 0.7);
 
     Distribution distribution = {{"hyperslave4.local", 9620, (int)map->size()}};
 

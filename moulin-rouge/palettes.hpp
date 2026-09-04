@@ -63,18 +63,18 @@ Palette volcanica{
     .highlight = RGB(255, 240, 220),
     .name = "Ember Glow"};
 
-Palette velvetThorn{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 80, .color = RGB(120, 0, 50)},
-        {.position = 150, .color = RGB(220, 0, 40)},
-        {.position = 200, .color = RGB(255, 0, 100)},
-        {.position = 255, .color = RGB(255, 0, 180)}
-    }),
-    .primary = RGB(220, 0, 40),
-    .secondary = RGB(255, 0, 100),
-    .highlight = RGB(255, 220, 240),
-    .name = "Velvet Thorn"};
+// Palette velvetThorn{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 80, .color = RGB(120, 0, 50)},
+//         {.position = 150, .color = RGB(220, 0, 40)},
+//         {.position = 200, .color = RGB(255, 0, 100)},
+//         {.position = 255, .color = RGB(255, 0, 180)}
+//     }),
+//     .primary = RGB(220, 0, 40),
+//     .secondary = RGB(255, 0, 100),
+//     .highlight = RGB(255, 220, 240),
+//     .name = "Velvet Thorn"};
 
 Palette dragonScale{
     .gradient = Gradient({
@@ -237,87 +237,87 @@ Palette throneOfThorns{
     .highlight = RGB(255, 240, 200),
     .name = "Throne Of Thorns"};
 
-Palette midnightChrome{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 64, .color = RGB(20, 0, 80)},
-        {.position = 128, .color = RGB(180, 0, 180)},
-        {.position = 192, .color = RGB(255, 0, 255)},
-        {.position = 255, .color = RGB(255, 50, 200)}
-    }),
-    .primary = RGB(255, 0, 255),
-    .secondary = RGB(120, 0, 200),
-    .highlight = RGB(255, 200, 255),
-    .name = "Midnight Chrome"};
+// Palette midnightChrome{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 64, .color = RGB(20, 0, 80)},
+//         {.position = 128, .color = RGB(180, 0, 180)},
+//         {.position = 192, .color = RGB(255, 0, 255)},
+//         {.position = 255, .color = RGB(255, 50, 200)}
+//     }),
+//     .primary = RGB(255, 0, 255),
+//     .secondary = RGB(120, 0, 200),
+//     .highlight = RGB(255, 200, 255),
+//     .name = "Midnight Chrome"};
 
-Palette laserGrid{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 60, .color = RGB(0, 10, 120)},
-        {.position = 130, .color = RGB(0, 180, 255)},
-        {.position = 200, .color = RGB(255, 0, 100)},
-        {.position = 255, .color = RGB(255, 0, 150)}
-    }),
-    .primary = RGB(0, 180, 255),
-    .secondary = RGB(255, 0, 120),
-    .highlight = RGB(200, 220, 255),
-    .name = "Laser Grid"};
+// Palette laserGrid{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 60, .color = RGB(0, 10, 120)},
+//         {.position = 130, .color = RGB(0, 180, 255)},
+//         {.position = 200, .color = RGB(255, 0, 100)},
+//         {.position = 255, .color = RGB(255, 0, 150)}
+//     }),
+//     .primary = RGB(0, 180, 255),
+//     .secondary = RGB(255, 0, 120),
+//     .highlight = RGB(200, 220, 255),
+//     .name = "Laser Grid"};
 
-Palette vhsTracking{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 50, .color = RGB(80, 0, 120)},
-        {.position = 120, .color = RGB(200, 0, 80)},
-        {.position = 190, .color = RGB(255, 60, 0)},
-        {.position = 255, .color = RGB(255, 100, 0)}
-    }),
-    .primary = RGB(255, 30, 60),
-    .secondary = RGB(160, 0, 120),
-    .highlight = RGB(255, 220, 180),
-    .name = "VHS Tracking"};
+// Palette vhsTracking{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 50, .color = RGB(80, 0, 120)},
+//         {.position = 120, .color = RGB(200, 0, 80)},
+//         {.position = 190, .color = RGB(255, 60, 0)},
+//         {.position = 255, .color = RGB(255, 100, 0)}
+//     }),
+//     .primary = RGB(255, 30, 60),
+//     .secondary = RGB(160, 0, 120),
+//     .highlight = RGB(255, 220, 180),
+//     .name = "VHS Tracking"};
 
-Palette turboNoir{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 70, .color = RGB(0, 40, 80)},
-        {.position = 140, .color = RGB(0, 200, 180)},
-        {.position = 200, .color = RGB(80, 255, 200)},
-        {.position = 255, .color = RGB(0, 255, 180)}
-    }),
-    .primary = RGB(0, 255, 200),
-    .secondary = RGB(0, 120, 180),
-    .highlight = RGB(200, 255, 240),
-    .name = "Turbo Noir"};
+// Palette turboNoir{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 70, .color = RGB(0, 40, 80)},
+//         {.position = 140, .color = RGB(0, 200, 180)},
+//         {.position = 200, .color = RGB(80, 255, 200)},
+//         {.position = 255, .color = RGB(0, 255, 180)}
+//     }),
+//     .primary = RGB(0, 255, 200),
+//     .secondary = RGB(0, 120, 180),
+//     .highlight = RGB(200, 255, 240),
+//     .name = "Turbo Noir"};
 
-Palette plasmaRewind{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 55, .color = RGB(60, 0, 150)},
-        {.position = 110, .color = RGB(180, 0, 255)},
-        {.position = 180, .color = RGB(255, 80, 200)},
-        {.position = 230, .color = RGB(255, 200, 50)},
-        {.position = 255, .color = RGB(255, 220, 0)}
-    }),
-    .primary = RGB(180, 0, 255),
-    .secondary = RGB(255, 80, 180),
-    .highlight = RGB(255, 240, 200),
-    .name = "Plasma Rewind"};
-
-
+// Palette plasmaRewind{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 55, .color = RGB(60, 0, 150)},
+//         {.position = 110, .color = RGB(180, 0, 255)},
+//         {.position = 180, .color = RGB(255, 80, 200)},
+//         {.position = 230, .color = RGB(255, 200, 50)},
+//         {.position = 255, .color = RGB(255, 220, 0)}
+//     }),
+//     .primary = RGB(180, 0, 255),
+//     .secondary = RGB(255, 80, 180),
+//     .highlight = RGB(255, 240, 200),
+//     .name = "Plasma Rewind"};
 
 
-    Palette cancan{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 64, .color = RGB(128, 0, 32)},
-        {.position = 128, .color = RGB(220, 0, 60)},
-        {.position = 192, .color = RGB(255, 20, 100)},
-        {.position = 255, .color = RGB(255, 0, 80)}
-    }),
-    .primary = RGB(220, 0, 60),
-    .secondary = RGB(180, 0, 90),
-    .highlight = RGB(255, 220, 230),
-    .name = "Cancan"};
+
+
+    // Palette cancan{
+    // .gradient = Gradient({
+    //     {.position = 0, .color = RGB(0, 0, 0)},
+    //     {.position = 64, .color = RGB(128, 0, 32)},
+    //     {.position = 128, .color = RGB(220, 0, 60)},
+    //     {.position = 192, .color = RGB(255, 20, 100)},
+    //     {.position = 255, .color = RGB(255, 0, 80)}
+    // }),
+    // .primary = RGB(220, 0, 60),
+    // .secondary = RGB(180, 0, 90),
+    // .highlight = RGB(255, 220, 230),
+    // .name = "Cancan"};
 
 Palette absinthe{
     .gradient = Gradient({
@@ -664,20 +664,20 @@ Palette lastWaltz{
     .highlight = RGB(255, 235, 220),
     .name = "LastWaltz"};
 
-// Palette 5a - Elegant dancer orange/red
-Palette scarletPromise{
-    .gradient = Gradient({
-        {.position = 0, .color = RGB(0, 0, 0)},
-        {.position = 60, .color = RGB(89, 2, 2)},
-        {.position = 120, .color = RGB(166, 3, 3)},
-        {.position = 175, .color = RGB(242, 29, 29)},
-        {.position = 225, .color = RGB(217, 121, 37)},
-        {.position = 255, .color = RGB(240, 150, 40)}
-    }),
-    .primary = RGB(242, 29, 29),
-    .secondary = RGB(217, 121, 37),
-    .highlight = RGB(255, 235, 180),
-    .name = "ScarletPromise"};
+// // Palette 5a - Elegant dancer orange/red
+// Palette scarletPromise{
+//     .gradient = Gradient({
+//         {.position = 0, .color = RGB(0, 0, 0)},
+//         {.position = 60, .color = RGB(89, 2, 2)},
+//         {.position = 120, .color = RGB(166, 3, 3)},
+//         {.position = 175, .color = RGB(242, 29, 29)},
+//         {.position = 225, .color = RGB(217, 121, 37)},
+//         {.position = 255, .color = RGB(240, 150, 40)}
+//     }),
+//     .primary = RGB(242, 29, 29),
+//     .secondary = RGB(217, 121, 37),
+//     .highlight = RGB(255, 235, 180),
+//     .name = "ScarletPromise"};
 
 // Palette 5b - Variation
 Palette burlesqueOath{

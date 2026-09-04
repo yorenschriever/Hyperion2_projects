@@ -9,7 +9,7 @@ namespace VibePatterns
 
 class TriangleBurst : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition;
     BeatWatcher watcher;
     FadeDown fade = FadeDown(900);
@@ -29,7 +29,7 @@ class TriangleBurst : public Pattern<RGBA>
     }
 
 public:
-    TriangleBurst(PixelMap *map)
+    TriangleBurst(PixelMapPtr map)
     {
         this->name = "Triangle Burst";
         this->map = map;
@@ -75,12 +75,12 @@ class RotatingTriangle : public Pattern<RGBA>
     Transition transition;
     BeatWatcher watcher;
     LFO<SawUp> rotateLfo;
-    PixelMap *map;
+    PixelMapPtr map;
     float size = 0.0f;
     int lastTimestamp = 0;
 
 public:
-    RotatingTriangle(PixelMap *map)
+    RotatingTriangle(PixelMapPtr map)
     {
         this->name = "Rotating Triangle";
         this->map = map;
@@ -147,7 +147,7 @@ public:
 
 class TriangleStutter : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition;
     LFOTempo<SawDown> growLfo = LFOTempo<SawDown>(4);
     LFOTempo<SawUp> rotateLfo = LFOTempo<SawUp>(16);
@@ -156,7 +156,7 @@ class TriangleStutter : public Pattern<RGBA>
     static float growScale;
 
 public:
-    TriangleStutter(PixelMap *map)
+    TriangleStutter(PixelMapPtr map)
     {
         this->name = "Triangle Stutter";
         this->map = map;
@@ -247,7 +247,7 @@ BeatWatcher TriangleStutter::watcher;
 
 class TrianglePulse : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition;
     LFO<SawUp> rotationLfo;
     LFOTempo<SawUp> growLfo;
@@ -286,7 +286,7 @@ class TrianglePulse : public Pattern<RGBA>
     }
 
 public:
-    TrianglePulse(PixelMap *map)
+    TrianglePulse(PixelMapPtr map)
     {
         this->name = "Triangle pulse";
         this->map = map;
@@ -327,14 +327,14 @@ public:
 
 class TriangleOutlineGrow : public Pattern<RGBA>
 {
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     Transition transition = Transition(200, 1000);
     LFO<SawUp> rotationLfo;
     BeatWatcher watcher;
     FadeUp growFade = FadeUp(1000);
 
 public:
-    TriangleOutlineGrow(PixelMap *map)
+    TriangleOutlineGrow(PixelMapPtr map)
     {
         this->map = map->toPolar();
         this->name = "Triangle outline grow";
@@ -399,7 +399,7 @@ class MatrixRainPattern : public Pattern<RGBA>
 
     static Drop drops[MAX_DROPS];
     Transition transition = Transition(500, 1500);
-    PixelMap *map;
+    PixelMapPtr map;
     unsigned long frameCounter = 0;
 
     void spawnDrop(Drop &d, float speedMin, float speedMax, float sizeParam)
@@ -412,7 +412,7 @@ class MatrixRainPattern : public Pattern<RGBA>
     }
 
 public:
-    MatrixRainPattern(PixelMap *map)
+    MatrixRainPattern(PixelMapPtr map)
     {
         this->name = "Notre dame";
         this->map = map;
@@ -514,7 +514,7 @@ MatrixRainPattern::Drop MatrixRainPattern::drops[MAX_DROPS] = {};
 class HeartbeatPattern : public Pattern<RGBA>
 {
     Transition transition = Transition(200, 1000);
-    PixelMap *map;
+    PixelMapPtr map;
     BeatWatcher watcher;
     FadeDown pulse1 = FadeDown(250);
     FadeDown pulse2 = FadeDown(250);
@@ -524,7 +524,7 @@ class HeartbeatPattern : public Pattern<RGBA>
     int frameAtTrigger = 0;
 
 public:
-    HeartbeatPattern(PixelMap *map)
+    HeartbeatPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "Heartbeat";
@@ -598,7 +598,7 @@ public:
 class FireworkBurstPattern : public Pattern<RGBA>
 {
     Transition transition = Transition(200, 1500);
-    PixelMap *map;
+    PixelMapPtr map;
     static BeatWatcher watcher;
     static FadeDown fade;
 
@@ -609,7 +609,7 @@ class FireworkBurstPattern : public Pattern<RGBA>
     // const float speeds[4] = {0.25, 0.45, 0.7, 1.0f};
 
 public:
-    FireworkBurstPattern(PixelMap *map)
+    FireworkBurstPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "Blast wave";
@@ -683,13 +683,13 @@ class MeteorShowerPattern : public Pattern<RGBA>
 {
     static const int MAX_METEORS = 30;
     Transition transition = Transition(300, 1000);
-    PixelMap *map;
+    PixelMapPtr map;
     LFO<SawUp> meteorLFOs[MAX_METEORS];
     LFO<SinFast> strobeLFO;
     static float angles[MAX_METEORS];
 
 public:
-    MeteorShowerPattern(PixelMap *map)
+    MeteorShowerPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "Plasma orb";
@@ -808,7 +808,7 @@ class InfernoParticles : public Pattern<RGBA>
     };
 
     static Particle particles[MAX_PARTICLES];
-    PixelMap *map;
+    PixelMapPtr map;
     SpatialGrid grid;
     std::vector<int> candidates;
     Transition transition = Transition(300, 2000);
@@ -827,7 +827,7 @@ class InfernoParticles : public Pattern<RGBA>
     }
 
 public:
-    InfernoParticles(PixelMap *map)
+    InfernoParticles(PixelMapPtr map)
     {
         this->name = "Inferno";
         this->map = map;
@@ -949,7 +949,7 @@ class BeerBubblesPattern : public Pattern<RGBA>
     };
 
     Bubble bubbles[MAX_BUBBLES];
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition = Transition(500, 1500);
     Timeline time;
     SpatialGrid grid;
@@ -967,7 +967,7 @@ class BeerBubblesPattern : public Pattern<RGBA>
     }
 
 public:
-    BeerBubblesPattern(PixelMap *map)
+    BeerBubblesPattern(PixelMapPtr map)
     {
         this->name = "Beer bubbles";
         this->map = map;
@@ -1060,7 +1060,7 @@ class FloatingOrbsPattern : public Pattern<RGBA>
     };
 
     Orb orbs[MAX_ORBS];
-    PixelMap *map;
+    PixelMapPtr map;
     SpatialGrid grid;
     std::vector<int> candidates;
     Transition transition = Transition(800, 1500);
@@ -1087,7 +1087,7 @@ class FloatingOrbsPattern : public Pattern<RGBA>
     }
 
 public:
-    FloatingOrbsPattern(PixelMap *map)
+    FloatingOrbsPattern(PixelMapPtr map)
     {
         this->name = "Floating orbs";
         this->map = map;
@@ -1181,12 +1181,12 @@ public:
 
 class MandalaZoom : public Pattern<RGBA>
 {
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     Transition transition = Transition(400, 1500);
     LFO<SawDown> zoomLfo;
 
 public:
-    MandalaZoom(PixelMap *map)
+    MandalaZoom(PixelMapPtr map)
     {
         this->map = map->toPolar();
         this->name = "Mandala Zoom";
@@ -1243,7 +1243,7 @@ public:
 
 class HeartStackPattern : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition = Transition(400, 800);
     LFO<SinFast> lfoY;
 
@@ -1280,7 +1280,7 @@ class HeartStackPattern : public Pattern<RGBA>
     }
 
 public:
-    HeartStackPattern(PixelMap *map)
+    HeartStackPattern(PixelMapPtr map)
     {
         this->name = "Heart stack";
         this->map = map;
@@ -1345,7 +1345,7 @@ class BurningTornadoPattern : public Pattern<RGBA>
     };
     
     Ember embers[NUM_EMBERS];
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition = Transition(400, 1500);
     LFO<SawUp> timeLfo;
     unsigned long frameCount = 0;
@@ -1361,7 +1361,7 @@ class BurningTornadoPattern : public Pattern<RGBA>
     }
 
 public:
-    BurningTornadoPattern(PixelMap *map)
+    BurningTornadoPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "Burning Tornado";
@@ -1443,14 +1443,14 @@ public:
 
 class EmberTornado : public Pattern<RGBA>
 {
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     Transition transition = Transition(400, 1500);
     LFO<SawUp> spinLfo;
     LFO<SinFast> radiusPulse;
     Permute perm;
 
 public:
-    EmberTornado(PixelMap *map)
+    EmberTornado(PixelMapPtr map)
     {
         this->name = "Ember Tornado";
         this->map = map->toPolar();

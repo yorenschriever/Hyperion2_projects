@@ -11,7 +11,7 @@ Multiple patterns will be stacked, so keep the background transparent.
 
 The pattern class must derive from a parent `Pattern` class. This needs a template argument which is always `RGBA`. The constructor must always set the name of the pattern. Keep the name short and concise. Be creative. 30 characters max. 
 
-The constructor can have arguments if necessary. Most common is the PixelMap, which contains information on where the leds are located. 
+The constructor can have arguments if necessary. Most common is the PixelMapPtr, which contains information on where the leds are located. 
 
 The class must always contain a method Calculate, with these arguments:
 - RGBA *pixels: The array with pixel data that you need to fill. This is initialized with transparent pixels (0,0,0,0)
@@ -250,13 +250,13 @@ class GrowingCirclePattern : public Pattern<RGBA>
 {
 public:
     LFOTempo<SawUp> lfo;
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     Transition transition = Transition(0, 2000); // fade out over 2 seconds, instant fade in.
 
-    GrowingCirclePattern(PixelMap *map) 
+    GrowingCirclePattern(PixelMap::PolarPtr map) 
     {
         this->name = "Growing Circle";
-        this->map = map->toPolar();
+        this->map = map;
     }
 
     inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -410,7 +410,7 @@ class BeerBubblesPattern : public Pattern<RGBA>
     };
 
     Bubble bubbles[MAX_BUBBLES];
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition = Transition(500, 1500);
     Timeline time;
     SpatialGrid grid;
@@ -428,7 +428,7 @@ class BeerBubblesPattern : public Pattern<RGBA>
     }
 
 public:
-    BeerBubblesPattern(PixelMap *map)
+    BeerBubblesPattern(PixelMapPtr map)
     {
         this->name = "Beer bubbles";
         this->map = map;
@@ -519,10 +519,10 @@ class MappedPattern : public Pattern<RGBA>
 {
 public:
     LFO<SinFast> lfo;
-    PixelMap *map;
+    PixelMapPtr map;
 
     // For mapped patterns, the constructor needs to receive the map and store it in a property
-    MappedPattern(PixelMap *map)
+    MappedPattern(PixelMapPtr map)
     {
         this->name = "Mapped";
         this->map = map;
@@ -548,7 +548,7 @@ public:
 
 ### Polar coordinates
 If you are working with circular patterns, it can be useful to use a polar coordinate system. 
-In that case, let the constructor receive a PixelMap, and call toPolar() or toPolarRotate90() before storing it in the class property.
+In that case, let the constructor receive a PixelMap::PolarPtr.
 
 Polar maps use `r` and `th` for the radius and angle. r[0,1] and th[0,2*pi], where th=0 is the rightmost point of the circle and it goes counter clockwise.
 example: `map->r(index)` and `map->th(index)` 
@@ -559,15 +559,14 @@ example: `map->r(index)` and `map->th(index)`
 class DotBeatPattern : public Pattern<RGBA>
 {
     Transition transition = Transition(200,1000);
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     FadeDown fade = FadeDown();
     BeatWatcher watcher = BeatWatcher();
 
 public:
-    DotBeatPattern(PixelMap *map)
+    DotBeatPattern(PixelMap::PolarPtr map)
     {
-        this->map = map->toPolar(); //th=0 is on the right.
-        //alternatively use this->map = map->toPolarRotate90(); if you need the seam to be at the top.
+        this->map = map; //th=0 is on the right.
         this->name = "Dot beat";
     }
 
@@ -599,8 +598,8 @@ public:
 ### Map transformations
 `core/generation/pixelMap/mapHelpers.hpp` contains helpers to transform a map
 
-`PixelMap resizeAndTranslateMap(PixelMap map, float scale, float x=0, float y=0)`
-`PixelMap rotateMap(PixelMap map, float angle)`
+`PixelMapPtr resizeAndTranslateMap(PixelMapPtr map, float scale, float x=0, float y=0)`
+`PixelMapPtr rotateMap(PixelMapPtr map, float angle)`
 
 It can be beneficial to transform the pixel map and store it, instead of transforming all coordinates on the fly when calculating the pattern. Especially if multiple consecutive frame the the same transformation.
 
@@ -768,7 +767,7 @@ public:
 - Be Neutral.
 - Base all the information only on this document.
 - Output only the class
-- Constructor must always have a PixelMap* argument, even if no map is used.
+- Constructor must always have a PixelMapPtr argument, even if no map is used.
 - Do not wrap the output in a markdown codeblock
 - End with a typedef to `VibePattern` with the class you generated. example: `typedef DotBeatPattern VibePattern;`
 

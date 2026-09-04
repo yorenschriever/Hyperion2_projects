@@ -13,10 +13,10 @@ namespace TriggerPatterns
     class HeartZoom : public Pattern<RGBA>
     {
     public:
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         TriggerFade<> fade;
 
-        HeartZoom(PixelMap3d *map)
+        HeartZoom(PixelMap3dPtr map)
         {
             this->name = "Heart zoom";
             this->map = map;
@@ -45,11 +45,11 @@ namespace TriggerPatterns
 
     class DoubleFlash : public Pattern<RGBA>
     {
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         TriggerTimeline timeline;
 
     public:
-        DoubleFlash(PixelMap3d::Cylindrical *map)
+        DoubleFlash(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Double flash";

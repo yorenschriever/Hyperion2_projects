@@ -15,7 +15,7 @@ namespace Max
 
     class ChevronsPattern : public Pattern<RGBA>
     {
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         LFO<SawDown> lfo;
         LFO<Square> lfoColor;
         Transition transition = Transition(
@@ -24,7 +24,7 @@ namespace Max
         FadeDown fade1 = FadeDown(1400);
 
     public:
-        ChevronsPattern(PixelMap3d *map)
+        ChevronsPattern(PixelMap3dPtr map)
         {
             this->map = map;
             this->lfo = LFO<SawDown>(1000);
@@ -53,7 +53,7 @@ namespace Max
 
     class ChevronsConePattern : public Pattern<RGBA>
     {
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<SawDown> lfo;
         LFO<Square> lfoColor;
         Transition transition = Transition(
@@ -61,7 +61,7 @@ namespace Max
             1000, Transition::none, 0);
 
     public:
-        ChevronsConePattern(PixelMap3d::Cylindrical *map)
+        ChevronsConePattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Chevrons cone";
@@ -92,7 +92,7 @@ namespace Max
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         FadeDown fade1 = FadeDown(200);
         FadeDown fade2 = FadeDown(200);
         BeatWatcher watcher = BeatWatcher();
@@ -101,7 +101,7 @@ namespace Max
         int fadeNr =0;
 
     public:
-        RadialGlitterFadePattern(PixelMap3d::Cylindrical *map)
+        RadialGlitterFadePattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->perm1 = Permute(map->size());
@@ -178,7 +178,7 @@ namespace Max
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         static const int numFades = 4;
         int fadeNr=0;
         FadeDown fade[numFades] = {
@@ -190,7 +190,7 @@ namespace Max
         BeatWatcher watcher = BeatWatcher();
 
     public:
-        AngularFadePattern(PixelMap3d::Cylindrical *map)
+        AngularFadePattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Angular fade";
@@ -236,11 +236,11 @@ namespace Max
 
     class GrowingStrobePattern : public Pattern<RGBA>
     {
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         FadeDown fade = FadeDown(5000);
 
     public:
-        GrowingStrobePattern(PixelMap3d::Cylindrical *map)
+        GrowingStrobePattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Growing strobe";
@@ -275,12 +275,12 @@ namespace Max
         Transition transition = Transition(
             200, Transition::none, 0,
             1000, Transition::none, 0);
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         FadeDown fade = FadeDown(200);
         BeatWatcher watcher = BeatWatcher();
 
     public:
-        RadialFadePattern(PixelMap3d::Cylindrical *map)
+        RadialFadePattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Radial fade";

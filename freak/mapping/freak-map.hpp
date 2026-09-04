@@ -1,7 +1,8 @@
 #pragma once
+
 #include "core/generation/pixelMap/pixelMap.hpp"
 
-PixelMap freakMap = {
+PixelMap freakMapData = {
     {.x = -0.9208333333333334, .y = -0.17958333333333337}, 
     {.x = -0.8975, .y = -0.18052083333333335}, 
     {.x = -0.8715624999999999, .y = -0.17989583333333337}, 

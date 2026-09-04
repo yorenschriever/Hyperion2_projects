@@ -15,10 +15,10 @@ class GrowShrink : public Pattern<RGBA>
             200, Transition::none, 0,
             1000, Transition::none, 0);
         LFO<SinFast> lfo;
-        PixelMap::Polar *map;
+        PixelMap::PolarPtr map;
 
     public:
-        GrowShrink(PixelMap::Polar *map)
+        GrowShrink(PixelMap::PolarPtr map)
         {
             this->map = map;
             this->name = "Grow shrink";
@@ -135,10 +135,10 @@ class WingCycleFlashesPattern : public Pattern<RGBA>
     class WingsBeamsPattern : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap::Polar *map;   
+        PixelMap::PolarPtr map;   
 
     public:
-        WingsBeamsPattern(PixelMap::Polar *map)
+        WingsBeamsPattern(PixelMap::PolarPtr map)
         {
             this->name = "Wings beams";
             this->map = map;    

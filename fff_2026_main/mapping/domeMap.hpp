@@ -77,7 +77,7 @@ void drawDoubleArrow(Turtle3d &turtle, float pitch, float yaw)
     drawLedBar(turtle,60);
 }
 
-PixelMap3d createDomeMap()
+PixelMap3dPtr createDomeMap()
 {
     Turtle3d turtle;
 
@@ -88,5 +88,5 @@ PixelMap3d createDomeMap()
 
     turtle.scale(scale);
 
-    return turtle;
+    return std::make_shared<Turtle3d>(turtle);
 }

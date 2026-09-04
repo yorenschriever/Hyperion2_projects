@@ -29,9 +29,9 @@ public:
 class RadialGradient: public Pattern<RGBA>
 {
     Transition transition;
-    PixelMap::Polar *map;   
+    PixelMap::PolarPtr map;   
 public:
-    RadialGradient(PixelMap::Polar *map)
+    RadialGradient(PixelMap::PolarPtr map)
     {
         this->map = map;
         this->name = "Radial gradient";
@@ -53,9 +53,9 @@ public:
 class LinearGradient: public Pattern<RGBA>
 {
     Transition transition;
-    PixelMap *map;   
+    PixelMapPtr map;   
 public:
-    LinearGradient(PixelMap *map)
+    LinearGradient(PixelMapPtr map)
     {
         this->map = map;
         this->name = "Linear gradient";
@@ -108,10 +108,10 @@ class OnLetterChaseCenterPattern : public Pattern<RGBA>
     FadeDown fade[5];
     int currentLetter = 0;
     BeatWatcher watcher;
-    PixelMap *map;
+    PixelMapPtr map;
 
 public:
-    OnLetterChaseCenterPattern(PixelMap *map)
+    OnLetterChaseCenterPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "On letter chase center";
@@ -150,10 +150,10 @@ class OnLetterChaseUpPattern : public Pattern<RGBA>
     FadeDown fade[5];
     int currentLetter = 0;
     BeatWatcher watcher;
-    PixelMap *map;
+    PixelMapPtr map;
 
 public:
-    OnLetterChaseUpPattern(PixelMap *map)
+    OnLetterChaseUpPattern(PixelMapPtr map)
     {
         this->map = map;
         this->name = "On letter chase up";
@@ -191,9 +191,9 @@ class PulseRing : public Pattern<RGBA>
 public:
     FadeDown fade;
     BeatWatcher watcher;
-    PixelMap *map;
+    PixelMapPtr map;
 
-    PulseRing(PixelMap *map)
+    PulseRing(PixelMapPtr map)
     {
         this->name = "Pulse Ring";
         this->map = map;
@@ -223,7 +223,7 @@ public:
 
 class TriangleBurst : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition;
     BeatWatcher watcher;
     FadeDown fade = FadeDown(900);
@@ -243,7 +243,7 @@ class TriangleBurst : public Pattern<RGBA>
     }
 
 public:
-    TriangleBurst(PixelMap *map)
+    TriangleBurst(PixelMapPtr map)
     {
         this->name = "Triangle Burst";
         this->map = map;
@@ -289,12 +289,12 @@ class RotatingTriangle : public Pattern<RGBA>
     Transition transition;
     BeatWatcher watcher;
     LFO<SawUp> rotateLfo;
-    PixelMap *map;
+    PixelMapPtr map;
     float size = 0.0f;
     int lastTimestamp = 0;
 
 public:
-    RotatingTriangle(PixelMap *map)
+    RotatingTriangle(PixelMapPtr map)
     {
         this->name = "Rotating Triangle";
         this->map = map;
@@ -370,7 +370,7 @@ class ExpandingTriangle : public Pattern<RGBA>
     float growPhase = 0.0f;
 
 public:
-    ExpandingTriangle(PixelMap *map)
+    ExpandingTriangle(PixelMapPtr map)
     {
         this->name = "Expanding Triangle";
         this->map = map;
@@ -378,7 +378,7 @@ public:
         growLfo.setPeriod(1);
     }
 
-    PixelMap *map;
+    PixelMapPtr map;
 
     inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
     {
@@ -490,7 +490,7 @@ class ExpandingTriangle2 : public Pattern<RGBA>
     float lastPhase = 0.0f;
 
 public:
-    ExpandingTriangle2(PixelMap *map)
+    ExpandingTriangle2(PixelMapPtr map)
     {
         this->name = "Expanding Triangle";
         this->map = map;
@@ -498,7 +498,7 @@ public:
         rotateLfo.setPeriod(8000);
     }
 
-    PixelMap *map;
+    PixelMapPtr map;
 
     inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
     {
@@ -582,7 +582,7 @@ private:
 
 class TrianglePulse : public Pattern<RGBA>
 {
-    PixelMap *map;
+    PixelMapPtr map;
     Transition transition;
     LFO<SawUp> rotationLfo;
     LFOTempo<SawUp> growLfo;
@@ -621,7 +621,7 @@ class TrianglePulse : public Pattern<RGBA>
     }
 
 public:
-    TrianglePulse(PixelMap *map)
+    TrianglePulse(PixelMapPtr map)
     {
         this->name = "Triangle pulse";
         this->map = map;
@@ -662,14 +662,14 @@ public:
 
 class TriangleOutlineGrow : public Pattern<RGBA>
 {
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     Transition transition = Transition(200, 1000);
     LFO<SawUp> rotationLfo;
     BeatWatcher watcher;
     FadeUp growFade = FadeUp(1000);
 
 public:
-    TriangleOutlineGrow(PixelMap::Polar *map)
+    TriangleOutlineGrow(PixelMap::PolarPtr map)
     {
         this->map = map;
         this->name = "Triangle outline grow";
@@ -774,7 +774,7 @@ public:
 class CosmicJellyfish : public Pattern<RGBA>
 {
     Transition transition = Transition(800, 2000);
-    PixelMap::Polar *map;
+    PixelMap::PolarPtr map;
     LFO<SinFast> breathLfo;
     LFO<SawDown> tentacleLfo;
     LFO<SinFast> wobbleLfo;
@@ -782,7 +782,7 @@ class CosmicJellyfish : public Pattern<RGBA>
     BeatWatcher watcher;
 
 public:
-    CosmicJellyfish(PixelMap::Polar *map)
+    CosmicJellyfish(PixelMap::PolarPtr map)
     {
         this->map = map;
         this->name = "Cosmic Jellyfish";

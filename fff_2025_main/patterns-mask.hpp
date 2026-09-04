@@ -17,11 +17,11 @@ class GradientMaskPattern : public Pattern<RGBA>
     {
 
         Transition transition;
-        PixelMap3d *map;
+        PixelMap3dPtr map;
         bool direction = false; 
 
     public:
-        GradientMaskPattern(PixelMap3d *map, bool direction = false)
+        GradientMaskPattern(PixelMap3dPtr map, bool direction = false)
         {
             this->name = direction ? "Gradient mask bottom" : "Gradient mask top";
             this->direction = direction;

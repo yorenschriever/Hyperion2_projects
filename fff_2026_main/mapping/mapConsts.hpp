@@ -25,14 +25,14 @@ void drawReverseLedBar(Turtle3d &turtle, int size)
         turtle.move(-ledDistance);
 }
 
-PixelMap3d normalizeStage(PixelMap3d map)
+PixelMap3dPtr normalizeStage(PixelMap3dPtr map)
 {
-    PixelMap3d result = map;
+    PixelMap3d result = *map;
     for(auto &led : result)
     {
         led.x *= 0.5;
         led.y *= 0.5;
         led.z *= 0.5;
     }
-    return result;
+    return std::make_shared<PixelMap3d>(result);
 }

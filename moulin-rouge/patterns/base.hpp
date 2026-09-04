@@ -53,10 +53,10 @@ namespace BasePatterns
     class PaletteGradient : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap *map;
+        PixelMapPtr map;
 
     public:
-        PaletteGradient(PixelMap *map)
+        PaletteGradient(PixelMapPtr map)
         {
             this->name = "Palette gradient";
             this->map = map;
@@ -79,10 +79,10 @@ namespace BasePatterns
     {
         Transition transition;
         LFO<Glow> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        AngularWave(PixelMap3d::Cylindrical *map)
+        AngularWave(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Angular wave";
@@ -154,10 +154,10 @@ namespace BasePatterns
     {
         Transition transition;
         LFO<SoftSawDown> lfo;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
-        BarberPole(PixelMap3d::Cylindrical *map)
+        BarberPole(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Barber pole";
@@ -185,12 +185,12 @@ namespace BasePatterns
     class RotatingRingsPattern : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<Sin> ring1;
         LFO<Sin> ring2;
 
     public:
-        RotatingRingsPattern(PixelMap3d::Cylindrical *map)
+        RotatingRingsPattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Rotating rings";
@@ -232,12 +232,12 @@ namespace BasePatterns
     class MeshPattern : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
         LFO<Sin> ring1;
         LFO<Sin> ring2;
 
     public:
-        MeshPattern(PixelMap3d::Cylindrical *map)
+        MeshPattern(PixelMap3d::CylindricalPtr map)
         {
             this->map = map;
             this->name = "Moire Mesh";
@@ -269,7 +269,7 @@ namespace BasePatterns
     class BaseBeamsPattern : public Pattern<RGBA>
     {
         Transition transition;
-        PixelMap3d::Cylindrical *map;
+        PixelMap3d::CylindricalPtr map;
 
     public:
         BaseBeamsPattern()

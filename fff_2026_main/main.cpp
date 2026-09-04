@@ -95,9 +95,9 @@ int main()
     hyp.hub.setFlashColumn(Columns::DOME_PULSE);
     hyp.hub.setFlashColumn(Columns::LIGHTNING);
 
-    hyp.start();
+    // Tempo::AddSource(new ConstantTempo(120));
 
-    Tempo::AddSource(new ConstantTempo(120));
+    hyp.start();
 
     while (1)
         Thread::sleep(1000);
@@ -106,14 +106,14 @@ int main()
 void addDomeChain()
 {
 
-    auto map = new PixelMap3d(createDomeMap());
+    auto map = createDomeMap();
     auto cmap = map->toCylindricalXY();
     auto flatmap = map->toTopView();
     auto pmap = flatmap->toPolar();
 
-    auto frontMap = new PixelMap(normalizeMap(*(map->toFrontView())));
+    auto frontMap = normalizeMap(map->toFrontView());
 
-    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto allMap = normalizeStage(map);
     auto callMap = allMap->toCylindricalXY();
     auto allFlatMap = allMap->toTopView();
 
@@ -217,13 +217,13 @@ void addDomeChain()
 void addStageChain()
 {
 
-    auto map = new PixelMap3d(createStageMap());
-    auto frontMap = new PixelMap(resizeAndTranslateMap(normalizeMap(*(map->toFrontView()), true), 1, -1, 0, -0.6));
+    auto map = createStageMap();
+    auto frontMap = resizeAndTranslateMap(normalizeMap(map->toFrontView(), true), 1, -1, 0, -0.6);
     auto pfrontMap = frontMap->toPolar();
-    auto frontMapUpsideDown = new PixelMap(resizeAndTranslateMap(*frontMap, 1, -1, 0, 0));
+    auto frontMapUpsideDown = resizeAndTranslateMap(frontMap, 1, -1, 0, 0);
     auto flatmap = map->toTopView();
 
-    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto allMap = normalizeStage(map);
     auto callMap = allMap->toCylindricalXY();
     auto allFlatMap = allMap->toTopView();
 
@@ -287,7 +287,7 @@ void addStageChain()
             {.column = Columns::STAGE_FG, .slot = 11, .pattern = new VibePatterns::BeerBubblesPattern(frontMap)},
             {.column = Columns::STAGE_FG, .slot = 12, .pattern = new VibePatterns::TrianglePulse(frontMap)},
             {.column = Columns::STAGE_FG, .slot = 13, .pattern = new VibePatterns::TriangleStutter(frontMap)},
-            {.column = Columns::STAGE_FG, .slot = 14, .pattern = new VibePatterns::TriangleOutlineGrow(frontMap)},
+            {.column = Columns::STAGE_FG, .slot = 14, .pattern = new VibePatterns::TriangleOutlineGrow(pfrontMap)},
             {.column = Columns::STAGE_FG, .slot = 15, .pattern = new VibePatterns::RotatingTriangle(frontMap)},
             {.column = Columns::STAGE_FG, .slot = 16, .pattern = new VibePatterns::FloatingOrbsPattern(frontMap)},
 
@@ -341,12 +341,12 @@ void addStageChain()
 void addObeliskChain()
 {
 
-    auto map = new PixelMap3d(createObeliskMap());
+    auto map = createObeliskMap();
     auto cmap = map->toCylindricalXY();
-    auto map2d = new PixelMap(normalizeMap(*(map->toSideView())));
+    auto map2d = normalizeMap(map->toSideView());
     auto flatmap = map->toTopView();
 
-    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto allMap = normalizeStage(map);
     auto callMap = allMap->toCylindricalXY();
     auto allFlatMap = allMap->toTopView();
 
@@ -429,10 +429,10 @@ void addObeliskChain()
 void addAerialChain()
 {
 
-    auto map = new PixelMap3d(createObeliskAerialMap());
+    auto map = createObeliskAerialMap();
     auto flatmap = map->toTopView();
 
-    auto allMap = new PixelMap3d(normalizeStage(*map));
+    auto allMap = normalizeStage(map);
     auto callMap = allMap->toCylindricalXY();
     auto allFlatMap = allMap->toTopView();
 
@@ -513,11 +513,10 @@ void addLightningChain()
 
         });
 
-    auto map = new PixelMap3d(
-        resizeAndTranslateMap3d(
+    auto map = resizeAndTranslateMap3d(
             rotate3d(circleMap3d(size, 0.1), 90, (float[3]){1, 0, 0}),
             1.0,
-            0, 1, 0.8));
+            0, 1, 0.8);
 
     distributeAndMonitor<Monochrome12>(&hyp, input, map, distribution, GammaLut12, 0.02);
 }
