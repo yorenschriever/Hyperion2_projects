@@ -291,7 +291,7 @@ fade takes 2 template arguments:
 
 Use FadeUp as an alias for Fade<Up, Linear>, FadeDown for Fade<Down, Linear>.
 
-The constructor takes 2 optional argumens:
+The constructor takes 2 optional arguments:
 - duration = 1000: the duration of the fade in milliseconds. 
 - waitPosition = WaitAtEnd: This determines the position of the fade when it is not active. Allowed values are WaitAtEnd or WaitAtStart.
 
@@ -566,7 +566,7 @@ class DotBeatPattern : public Pattern<RGBA>
 public:
     DotBeatPattern(PixelMap::PolarPtr map)
     {
-        this->map = map; //th=0 is on the right.
+        this->map = map;
         this->name = "Dot beat";
     }
 
@@ -601,7 +601,7 @@ public:
 `PixelMapPtr resizeAndTranslateMap(PixelMapPtr map, float scale, float x=0, float y=0)`
 `PixelMapPtr rotateMap(PixelMapPtr map, float angle)`
 
-It can be beneficial to transform the pixel map and store it, instead of transforming all coordinates on the fly when calculating the pattern. Especially if multiple consecutive frame the the same transformation.
+It can be beneficial to transform the pixel map and store it, instead of transforming all coordinates on the fly when calculating the pattern. Especially if multiple consecutive frames use the same transformation.
 
 ## Params
 There are six params passed to the Calculate method. The operator uses this to tweak the pattern.
@@ -767,8 +767,8 @@ public:
 - Be Neutral.
 - Base all the information only on this document.
 - Output only the class
-- Constructor must always have a PixelMapPtr argument, even if no map is used.
 - Do not wrap the output in a markdown codeblock
 - End with a typedef to `VibePattern` with the class you generated. example: `typedef DotBeatPattern VibePattern;`
+- If the constructor needs a pixel map as argument, define that. example: `#define NEEDS_MAP` or `#define NEEDS_POLAR_MAP`. 
 
 Now create a pattern according to the instructions below.

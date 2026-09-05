@@ -36,13 +36,25 @@ PatternInput<RGBA> *patternInput;
 TempoSource tempo;
 PixelMap pixelMap;
 
+
 EXTERN EMSCRIPTEN_KEEPALIVE void init(int size, uint8_t *outputArray, float *pixelMapData) {
     // printf("init called\n");
 
     for (int i = 0; i < size; i++)
         pixelMap.push_back({.x = pixelMapData[i * 2], .y = pixelMapData[i * 2 + 1]});
 
-    pattern = new VibePattern(&pixelMap);
+#ifdef NEEDS_MAP
+    auto pixelMapPtr = pixelMap.getPtr();
+    pattern = new VibePattern(pixelMapPtr);
+#elifdef NEEDS_POLAR_MAP
+    auto pixelMapPolarPtr = pixelMap.toPolar();
+    pattern = new VibePattern(pixelMapPolarPtr);
+#else
+    pattern = new VibePattern();
+#endif
+
+
+
     patternInput = new PatternInput<RGBA>(size, pattern);
 
     chain = new Chain(
