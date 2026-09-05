@@ -83,7 +83,7 @@ int main()
 void addLedbarsChain()
 {
     int nLeds = 8*60;
-    IndexMap *zigzag = new ZigZagMapper(60, true);
+    IndexMap *zigzag = new ZigZagMapper(60, false);
     Distribution distribution = {
         {"hyperslave4.local",9611,4*60},
         {"hyperslave4.local",9615,4*60},
@@ -125,8 +125,8 @@ void addLedbarsChain()
         });
 
     auto map =  combineMaps({
-            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(1, -1, -0.45, -0.4),
-            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(1, -1,  0.45, -0.4),
+            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(1, -1, 0.45, -0.4),
+            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(-1, -1,  -0.45, -0.4),
         })->applyIndexMap(zigzag);
 
     distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
