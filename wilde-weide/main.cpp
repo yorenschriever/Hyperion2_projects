@@ -272,13 +272,10 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS_2, .slot = 8, .pattern = new LedPatterns::FadeFromRandom(), .indexMap=zigzag},
              });
 
-    auto map = applyIndexMap(
-        combineMaps({
-            resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), 1,  -1, -0.7, -0.4),
-            resizeAndTranslateMap(rotateMap(gridMap(60, 6, 0.012, 0.15), 90), -1, -1,  0.7, -0.4)
-        }), 
-        zigzag
-    );
+    auto map = combineMaps({
+        gridMap(60, 6, 0.012, 0.15)->rotate(90)->translate(-0.7, -0.4),
+        gridMap(60, 6, 0.012, 0.15)->rotate(90)->translate(0.7, -0.4)
+    })->applyIndexMap(zigzag);
 
     distributeAndMonitor<GBR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }

@@ -111,7 +111,7 @@ void addDomeChain()
     auto flatmap = map->toTopView();
     auto pmap = flatmap->toPolar();
 
-    auto frontMap = normalizeMap(map->toFrontView());
+    auto frontMap = map->toFrontView()->normalize();
 
     auto allMap = normalizeStage(map);
     auto callMap = allMap->toCylindricalXY();
@@ -218,9 +218,9 @@ void addStageChain()
 {
 
     auto map = createStageMap();
-    auto frontMap = resizeAndTranslateMap(normalizeMap(map->toFrontView(), true), 1, -1, 0, -0.6);
+    auto frontMap = map->toFrontView()->normalize(true)->resizeAndTranslate(1, -1, 0, -0.6);
     auto pfrontMap = frontMap->toPolar();
-    auto frontMapUpsideDown = resizeAndTranslateMap(frontMap, 1, -1, 0, 0);
+    auto frontMapUpsideDown = frontMap->resize(1, -1);
     auto flatmap = map->toTopView();
 
     auto allMap = normalizeStage(map);
@@ -343,7 +343,7 @@ void addObeliskChain()
 
     auto map = createObeliskMap();
     auto cmap = map->toCylindricalXY();
-    auto map2d = normalizeMap(map->toSideView());
+    auto map2d = map->toSideView()->normalize();
     auto flatmap = map->toTopView();
 
     auto allMap = normalizeStage(map);
@@ -513,11 +513,10 @@ void addLightningChain()
 
         });
 
-    auto map = resizeAndTranslateMap3d(
-            rotate3d(circleMap3d(size, 0.1), 90, (float[3]){1, 0, 0}),
-            1.0,
-            0, 1, 0.8);
-
+    auto map = circleMap3d(size, 0.1)
+        ->rotate(90, (float[3]){1, 0, 0})
+        ->translate(0, 1, 0.8);
+    
     distributeAndMonitor<Monochrome12>(&hyp, input, map, distribution, GammaLut12, 0.02);
 }
 

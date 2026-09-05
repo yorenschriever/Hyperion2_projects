@@ -124,14 +124,10 @@ void addLedbarsChain()
             {.column = Columns::LEDBARS, .slot = 8, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
         });
 
-    auto map = 
-        applyIndexMap(
-            combineMaps({
-                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), 1,  -1, -0.45, -0.4),
-                resizeAndTranslateMap(rotateMap(gridMap(60, 4, 0.012, 0.15), 00), -1, -1,  0.45, -0.4)
-            }), 
-            zigzag
-        );
+    auto map =  combineMaps({
+            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(1, -1, -0.45, -0.4),
+            gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(1, -1,  0.45, -0.4),
+        })->applyIndexMap(zigzag);
 
     distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
 }

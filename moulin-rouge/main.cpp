@@ -47,24 +47,14 @@ auto baseMap = std::make_shared<PixelMap3d>(baseMapData);
 auto wingsMap = std::make_shared<PixelMap3d>(wingsMapData);
 
 auto cBaseMap = baseMap->toCylindricalXZ();
-auto base2d = resizeAndTranslateMap(baseMap->toTopView(), 1.45, 0, 0.06*1.45);
+auto base2d = baseMap->toTopView()->resize(1.45)->translate(0, 0.06*1.45);
 auto basePolar = base2d->toPolar();
 
-auto cWingsMap = resizeAndTranslateMap3d(wingsMap, 1, 0, 0.06)->toCylindricalXY();
-auto wings2d = resizeAndTranslateMap(wingsMap->toTopView(), 1.45, 0, 0.095*1.45);
+auto cWingsMap = wingsMap->translate(0, 0.06, 0)->toCylindricalXY();
+auto wings2d = wingsMap->toTopView()->resize(1.45)->translate(0, 0.095*1.45);
 auto wingsPolar = wings2d->toPolar();
 
-auto all2d = resizeAndTranslateMap(combineMaps({base2d, wings2d}), -1);
-
-// PixelMap3d::Cylindrical cBaseMap = *(baseMap.toCylindricalXZ());
-// PixelMap base2d = resizeAndTranslateMap(*(baseMap.toTopView()), 1.45, 0, 0.06*1.45);
-// PixelMap::Polar basePolar = *(base2d.toPolar());
-
-// PixelMap3d::Cylindrical cWingsMap = *(resizeAndTranslateMap3d(wingsMap, 1, 0, 0.06).toCylindricalXY()); 
-// PixelMap wings2d = resizeAndTranslateMap(*(wingsMap.toTopView()), 1.45, 0, 0.095*1.45);
-// PixelMap::Polar wingsPolar = *(wings2d.toPolar());
-
-// PixelMap all2d = resizeAndTranslateMap(combineMaps({base2d, wings2d}), -1);
+auto all2d = combineMaps({base2d, wings2d})->resize(-1);
 
 int main()
 {

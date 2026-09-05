@@ -595,14 +595,6 @@ public:
 };
 ```
 
-### Map transformations
-`core/generation/pixelMap/mapHelpers.hpp` contains helpers to transform a map
-
-`PixelMapPtr resizeAndTranslateMap(PixelMapPtr map, float scale, float x=0, float y=0)`
-`PixelMapPtr rotateMap(PixelMapPtr map, float angle)`
-
-It can be beneficial to transform the pixel map and store it, instead of transforming all coordinates on the fly when calculating the pattern. Especially if multiple consecutive frames use the same transformation.
-
 ## Params
 There are six params passed to the Calculate method. The operator uses this to tweak the pattern.
 You need to map as many params as possible to the the pattern.

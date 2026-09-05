@@ -15,8 +15,8 @@ LUT *pixelLut = new ColorCorrectionLUT(2.27, 255, 255, 255, 230);
 // PixelMap freakMap = gridMap(20,20);
 
 PixelMapPtr freakMap = std::make_shared<PixelMap>(freakMapData);
-PixelMapPtr freakMapBig = resizeAndTranslateMap(freakMap, 1.2);
-PixelMapPtr nFreakMap = normalizeMap(freakMap);
+PixelMapPtr freakMapBig = freakMap->resize(1.2);
+PixelMapPtr nFreakMap = freakMap->normalize();
 PixelMap::PolarPtr pFreakMap = freakMapBig->toPolar()->rotate(90);
 
 //timing for ws2801 500kHz

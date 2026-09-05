@@ -1,7 +1,6 @@
 
 #include <memory>
 #include "hyperion.hpp"
-#include "mappingHelpers.hpp"
 #include "common/distributeAndMonitor.hpp"
 #include "common/distributeAndPreview.hpp"
 // #include "common/mapHelpers.hpp"
@@ -183,7 +182,7 @@ void addWingsPipe(Hyperion *hyp)
 {
     auto map = flippedWingMap;
     auto pmap = pWingMap;
-    auto displayMap = resizeAndTranslateMap(flippedWingMap, 0.9);
+    auto displayMap = flippedWingMap->resize(0.9);
     auto zigzag = new ZigZagMapper(60, false);
 
     std::vector<Slave> distribution = {
