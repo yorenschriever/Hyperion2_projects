@@ -6,6 +6,8 @@
 #include "common/patterns/patterns-test.hpp"
 #include "common/patterns/patterns-mask.hpp"
 #include "common/patterns/patterns-trigger.hpp"
+#include "columns.hpp"
+#include "buttonMidiControllerFactory.hpp"
 
 void addLedparChain();
 void addLedbarsChain();
@@ -19,17 +21,6 @@ LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 LUT *GammaLut8 = new GammaLUT(2.5, 255);
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 
-enum Columns
-{
-    PALETTE,
-    LEDPAR,
-    SUNSTRIP,
-    LEDBARS,
-    LEDBARS2,
-    LEDBARS_TRIGGER,
-    SPARKS,
-};
-
 int ledparStartChannel = 0;
 int sunstripStartChannel = 100;
 
@@ -38,6 +29,8 @@ Combine dmxCombine;
 
 int main()
 {
+    hyp.setMidiControllerFactory(new ButtonMidiControllerFactory());
+
     hyp.createChain(&dmxCombine,new UDPOutput("hyperslave4.local",9619, 40));
 
     addLedbarsChain();
