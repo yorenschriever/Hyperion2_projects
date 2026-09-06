@@ -1,0 +1,172 @@
+<html>
+
+<head>
+    <title>Dome Calibration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #101820;
+            color: #f4f7f8;
+        }
+
+        body {
+            box-sizing: border-box;
+            max-width: 720px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 48px 24px;
+            background: linear-gradient(145deg, #162733 0%, #101820 62%, #0c1217 100%);
+        }
+
+        @keyframes measurement-flash {
+            0% {
+                background: #fffdf0;
+            }
+
+            100% {
+                background: linear-gradient(145deg, #162733 0%, #101820 62%, #0c1217 100%);
+            }
+        }
+
+        body.measurement-flash {
+            animation: measurement-flash 420ms ease-out;
+        }
+
+        h1 {
+            margin: 0 0 36px;
+            text-align: center;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            letter-spacing: 0.02em;
+        }
+
+        button {
+            display: block;
+            width: min(100%, 560px);
+            min-height: 112px;
+            margin: 0 auto 20px;
+            padding: 24px;
+            border: 1px solid #6fe7d2;
+            border-radius: 16px;
+            background: #21b89e;
+            color: #071512;
+            font: inherit;
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+            transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
+        }
+
+        #instructions,
+        #yaw,
+        #pitch,
+        #status,
+        #measurements {
+            width: min(100%, 560px);
+            margin: 16px auto 0;
+            font-size: 3.0rem;
+        }
+
+        #instructions {
+            font-size: 2.2rem;
+            padding: 16px;
+        }
+
+        #status {
+            color: #6fe7d2;
+            font-weight: 700;
+        }
+
+        #measure{
+            display:none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Calibrate the Dome</h1>
+    <div id="instructions">Point phone to the center of the stage and press "Start Calibration"</div>
+    <button id="start" onclick="handleClick()">Start Calibration</button>
+    <button id="measure" onclick="measure()">Measure</button>
+
+    <div id="pitch"></div>
+    <div id="yaw"></div>
+    <div id="status"></div>
+
+    <div id="measurements"></div>
+
+</body>
+
+<script>
+
+    var measurements = [];
+    var yaw;
+    var pitch;
+    var baseYaw;
+
+
+    function handleClick() {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+            // The API requires permission — request it
+            Promise.all([
+                DeviceMotionEvent.requestPermission(),
+                DeviceOrientationEvent.requestPermission(),
+            ]).then(([motionPermission, orientationPermission]) => {
+                if (
+                    motionPermission === "granted" &&
+                    orientationPermission === "granted"
+                ) {
+                    window.addEventListener("deviceorientation", handleOrientation);
+                    document.getElementById("measure").style.display = "block";
+                    document.getElementById("start").style.display = "none";
+                    document.getElementById("instructions").style.display = "none";
+                }
+                
+            });
+        } else {
+            window.addEventListener("deviceorientation", handleOrientation);
+            document.getElementById("measure").style.display = "block";
+            document.getElementById("start").style.display = "none";
+            document.getElementById("instructions").style.display = "none";
+        }
+
+    }
+
+    function handleOrientation(event) {
+        yaw = event.alpha; // alpha: rotation around z-axis
+        pitch = event.beta; // beta: front back motion
+
+        if (baseYaw === undefined) {
+            baseYaw = yaw;
+        }
+
+        yaw -= baseYaw;
+        yaw = 360 - yaw;
+        yaw = (yaw + 360) % 360; // Normalize yaw to be within 0-360 degrees
+
+        document.getElementById("yaw").innerText = `Yaw: ${Math.round(yaw)}`;
+        document.getElementById("pitch").innerText = `Pitch: ${Math.round(pitch)}`;
+        document.getElementById("status").innerText = `Measuring`;
+    }
+
+    function measure() {
+        if (yaw === undefined || pitch === undefined)
+            return;
+
+        measurements.push({ yaw, pitch });
+        var page = document.body;
+        page.classList.remove("measurement-flash");
+        void page.offsetWidth;
+        page.classList.add("measurement-flash");
+        document.getElementById("status").innerText = `Measured`;
+        document.getElementById("measurements").innerHTML = measurements
+            .map((m, i) => `#${i + 1}: Pitch: ${Math.round(m.pitch)}, Yaw: ${Math.round(m.yaw)}`)
+            .join("<br>");
+
+    }
+</script>
+
+</html>
