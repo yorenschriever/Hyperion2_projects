@@ -3,7 +3,6 @@
 #include "common/patterns/patterns-led.hpp"
 #include "common/patterns/patterns-mapped-2d.hpp"
 #include "common/patterns/patterns-trigger.hpp"
-#include "common/setViewParams.hpp"
 #include "patterns.hpp"
 #include "hyperion.hpp"
 #include "mapping/freak-map.hpp"
@@ -143,14 +142,6 @@ int main()
     hyp->start();
 
     Tempo::AddSource(new ConstantTempo(120));
-
-    auto viewParams = new ViewParams(
-        35,
-        -0.75,
-        Vector{0, 0.1, -2.5},
-        Rotation{M_PI, 0, 1, 0},
-        Rotation{0, 0, 1, 0});
-    setViewParams(hyp, viewParams);
 
     while (1)
         Thread::sleep(1000);

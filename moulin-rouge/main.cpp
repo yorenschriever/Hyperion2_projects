@@ -95,9 +95,10 @@ int main()
     auto viewParams = new ViewParams(
         35,
         -0.75,
-        Vector{0, 0.15, -2.5},
-        Rotation{M_PI, 0, 1, 0},
-        Rotation{0, 0, 1, 0});
+        2.5,
+        0*M_PI,
+        M_PI/2,
+        0.15);
     setViewParams(hyp, viewParams);
 
     while (1)

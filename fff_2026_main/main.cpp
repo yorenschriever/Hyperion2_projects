@@ -7,6 +7,7 @@
 #include "common/patterns/patterns-monochrome.hpp"
 #include "common/patterns/patterns-test.hpp"
 #include "common/patterns/patterns-trigger.hpp"
+#include "common/setViewParams.hpp"
 
 #include "core/hyperion.hpp"
 #include "mapping/domeMap.hpp"
@@ -104,6 +105,15 @@ int main()
     Tempo::AddSource(new ConstantTempo(120));
 
     hyp.start();
+
+    auto viewParams = new ViewParams(
+        80,
+        0,
+        1.5,
+        0,
+        0.25,
+        0.7);
+    setViewParams(&hyp, viewParams);
 
     while (1)
         Thread::sleep(1000);

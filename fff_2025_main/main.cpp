@@ -584,9 +584,10 @@ int main()
     auto viewParams = new ViewParams(
         35,
         -0.45,
-        Vector{0, 0.1, -2.5},
-        Rotation{.5, 1, 0, 0},
-        Rotation{0, 0, 1, 0});
+        2.5,
+        0,
+        M_PI/2,
+        0.1);
     setViewParams(hyp, viewParams);
 
     //   auto viewParamsBottom = new ViewParams(
