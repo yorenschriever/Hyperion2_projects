@@ -19,6 +19,8 @@
 #include "patterns/patterns-obelisk.hpp"
 #include "patterns/patterns-stage.hpp"
 #include "patterns/patterns-vibe.hpp"
+#include "patterns/patterns-mask.hpp"
+
 
 #include "palettes.hpp"
 
@@ -33,6 +35,9 @@ LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
 #define SHOW_DEBUG true
+
+typedef GBR BAR_NEW;
+typedef BGR BAR_OLD;
 
 enum Columns
 {
@@ -163,6 +168,8 @@ void addDomeChain()
             {.column = Columns::DOME_MASK, .slot = 4, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::DOME_MASK, .slot = 5, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::DOME_MASK, .slot = 6, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+            {.column = Columns::DOME_MASK, .slot = 7, .pattern = new MaskPatterns::DomeTipsMaskPattern()},
+            {.column = Columns::DOME_MASK, .slot = 8, .pattern = new MaskPatterns::CliveMaskPattern(120)},
 
             {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 40, -1)},
             {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
@@ -214,7 +221,7 @@ void addDomeChain()
 
         });
 
-    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_OLD>(&hyp, input, map, distribution, ledLut, 0.01);
 }
 
 void addStageChain()
@@ -275,6 +282,9 @@ void addStageChain()
             {.column = Columns::STAGE_BG, .slot = 6, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
             {.column = Columns::STAGE_BG, .slot = 7, .pattern = new LedPatterns::PalettePattern(1, "Secondary")},
             {.column = Columns::STAGE_BG, .slot = 8, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::STAGE_BG, .slot = 9, .pattern = new StagePatterns::LFOPattern<Tri>(stageMapSegmentSizes)},
+            {.column = Columns::STAGE_BG, .slot = 10, .pattern = new StagePatterns::LFOPattern<Tri>(stageMapSegmentSizes), .indexMap = zigzag},
+            {.column = Columns::STAGE_BG, .slot = 11, .pattern = new StagePatterns::LFOPattern<Glow>(stageMapSegmentSizes,0.5), .indexMap = zigzag},
      
             {.column = Columns::STAGE_FG, .slot = 0, .pattern = new Mapped2dPatterns::Lighthouse(pfrontMap)},
             {.column = Columns::STAGE_FG, .slot = 1, .pattern = new Mapped2dPatterns::GrowingCirclesPattern(frontMap)},
@@ -292,6 +302,8 @@ void addStageChain()
             {.column = Columns::STAGE_FG, .slot = 13, .pattern = new VibePatterns::TriangleOutlineGrow(pfrontMap)},
             {.column = Columns::STAGE_FG, .slot = 14, .pattern = new VibePatterns::RotatingTriangle(frontMap)},
             {.column = Columns::STAGE_FG, .slot = 15, .pattern = new VibePatterns::FloatingOrbsPattern(frontMap)},
+            {.column = Columns::STAGE_FG, .slot = 16, .pattern = new LedPatterns::GlowPattern(0.1)},
+            {.column = Columns::STAGE_FG, .slot = 17, .pattern = new LedPatterns::GlowPulsePattern(0.1)},
 
             {.column = Columns::STAGE_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern()},
             {.column = Columns::STAGE_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
@@ -299,6 +311,7 @@ void addStageChain()
             {.column = Columns::STAGE_MASK, .slot = 3, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::STAGE_MASK, .slot = 4, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::STAGE_MASK, .slot = 5, .pattern = new MaskPatterns::RibbenFlashMaskPattern(20)},
+            {.column = Columns::STAGE_MASK, .slot = 6, .pattern = new MaskPatterns::HorizontalSinMask(pfrontMap)},
 
             {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 150, -1)},
             {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
@@ -338,8 +351,8 @@ void addStageChain()
             #endif
         });
 
-    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
-    // distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    // distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
@@ -429,7 +442,7 @@ void addObeliskChain()
             #endif
         });
 
-    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
 }
 
 void addAerialChain()
@@ -445,12 +458,20 @@ void addAerialChain()
     int nLeds = map->size();
     IndexMap *zigzag = new ZigZagMapper(3 * 60, true);
 
+    auto convertedOldBars = new ColorConverter<RGBA, BAR_OLD>(ledLut);
+
     Distribution distribution = {
         {"hypernode1.local", 9615, 2 * 3 * 60},
         {"hypernode2.local", 9615, 2 * 3 * 60},
         {"hypernode3.local", 9615, 2 * 3 * 60},
         {"hypernode4.local", 9615, 2 * 3 * 60},
         {"hypernode5.local", 9615, 2 * 3 * 60},
+
+        //if we dont have enough bars for the aerial, eg because of broken units
+        //we can take them away from the dome. in that case, we need a different color space
+        //example:
+        // {"hypernode5.local", 9615, 2 * 3 * 60, convertedOldBars},
+        //This wil use an alternative color space and ignore the default one.
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -466,6 +487,8 @@ void addAerialChain()
             {.column = Columns::AERIAL, .slot = 6, .pattern = new LedPatterns::RibbenFlashPattern(3 * 60)},
             {.column = Columns::AERIAL, .slot = 7, .pattern = new LedPatterns::RibbenClivePattern<Glow>(1000, 1, 0.025, 3 * 60)},
             {.column = Columns::AERIAL, .slot = 8, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
+            {.column = Columns::AERIAL, .slot = 9, .pattern = new MaskPatterns::AerialTipsMaskPattern()},
+            {.column = Columns::AERIAL, .slot = 10, .pattern = new MaskPatterns::CliveMaskPattern(3*60)},
             
             {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 40, -1)},
             {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
@@ -498,7 +521,7 @@ void addAerialChain()
             #endif
         });
 
-    distributeAndMonitor<BGR>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
 }
 
 void addLightningChain()

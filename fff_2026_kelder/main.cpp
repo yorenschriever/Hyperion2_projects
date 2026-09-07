@@ -21,6 +21,9 @@ LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 LUT *GammaLut8 = new GammaLUT(2.5, 255);
 LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 
+typedef GBR BAR_NEW;
+typedef BGR BAR_OLD;
+
 int ledparStartChannel = 0;
 int sunstripStartChannel = 100;
 
@@ -122,7 +125,7 @@ void addLedbarsChain()
             gridMap(60, 4, 0.012, 0.15)->resizeAndTranslate(-1, -1,  -0.45, -0.4),
         })->applyIndexMap(zigzag);
 
-    distributeAndMonitor<BGR>(&hyp,input,map,distribution,ledLut, 0.02); 
+    distributeAndMonitor<BAR_OLD>(&hyp,input,map,distribution,ledLut, 0.02); 
 }
 
 
