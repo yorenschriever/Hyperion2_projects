@@ -28,16 +28,16 @@ PixelMap3dPtr createStageMap()
     Turtle3d turtle;
 
     // dak. kleine punt om oog
-    drawTripleLedBar(turtle, 0,    domeRadius, 3000, 60, 1);
-    drawTripleLedBar(turtle, 0,    domeRadius, 3000, 60, -1);
+    drawTripleLedBar(turtle, 0,    domeRadius +2200, 3000+500, 60, 1);
+    drawTripleLedBar(turtle, 0,    domeRadius +2200, 3000+500, 60, -1);
 
     // dak. grote punt
-    drawTripleLedBar(turtle, 500,  domeRadius + 1000, 3000, 120, 1);
-    drawTripleLedBar(turtle, 500,  domeRadius + 1000, 3000, 120, -1);
+    drawTripleLedBar(turtle, 500,  domeRadius, 3000, 120, 1);
+    drawTripleLedBar(turtle, 500,  domeRadius, 3000, 120, -1);
 
     // backdrop. kleine punt
-    drawTripleLedBar(turtle, 0,    domeRadius + 2200 + 3000, 1000, 60, 1);
-    drawTripleLedBar(turtle, 0,    domeRadius + 2200 + 3000, 1000, 60, -1);
+    drawTripleLedBar(turtle, 0,    domeRadius + 2200 + 3000, 1000+500, 60, 1);
+    drawTripleLedBar(turtle, 0,    domeRadius + 2200 + 3000, 1000+500, 60, -1);
 
     // backdrop. grote punt
     drawTripleLedBar(turtle, 0,    domeRadius + 2200, 1000, 120, 1);

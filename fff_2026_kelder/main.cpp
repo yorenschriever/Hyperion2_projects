@@ -8,6 +8,7 @@
 #include "common/patterns/patterns-trigger.hpp"
 #include "columns.hpp"
 #include "buttonMidiControllerFactory.hpp"
+#include "RGBWZoom.hpp"
 
 void addLedparChain();
 void addLedbarsChain();
@@ -168,7 +169,7 @@ void addSparksChain()
 
 void addLedparChain()
 {
-    int size = 6;
+    int size = 4;
     auto input = new ControlHubInput<RGBA>(
         size,
         &hyp.hub,
@@ -187,7 +188,7 @@ void addLedparChain()
 
     auto map = gridMap(size, 1, 0.2, 0.5, 0, 0.7);
 
-    DMXAndMonitor<RGBW,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
+    DMXAndMonitor<RGBWZoom,RGBA>(&hyp, input, size, &dmxCombine, ledparStartChannel, map, 0.04);
 }
 
 void addSunstripChain()

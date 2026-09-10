@@ -32,7 +32,7 @@ void addAerialChain();
 void addLightningChain();
 void addPaletteColumn();
 
-LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
+LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 220);
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
 #define SHOW_DEBUG true
@@ -263,20 +263,21 @@ void addStageChain()
 
     Distribution distribution = {
         // dak
-        {"hyperslaveX.local", 9611, 3 * 60},
-        {"hyperslaveX.local", 9612, 3 * 60},
-        {"hyperslaveX.local", 9613, 6 * 60},
-        {"hyperslaveX.local", 9614, 6 * 60},
+        {"hyperslave6.local", 9611, 3 * 60},
+        {"hyperslave6.local", 9612, 3 * 60},
+        {"hyperslave6.local", 9613, 6 * 60},
+        {"hyperslave6.local", 9614, 6 * 60},
 
         // backdrop
-        {"hyperslave1.local", 9611, 3 * 60},
-        {"hyperslave1.local", 9612, 3 * 60},
+        {"hyperslave3.local", 9611, 3 * 60},
+        {"hyperslave3.local", 9615, 3 * 60},
+
         {"hyperslave1.local", 9613, 6 * 60},
         {"hyperslave1.local", 9614, 6 * 60},
 
         // voorkant
-        {"hyperslave1.local", 9615, 3 * 60},
-        {"hyperslave1.local", 9616, 3 * 60},
+        {"hyperslave1.local", 9611, 3 * 60},
+        {"hyperslave1.local", 9612, 3 * 60},
     };
 
     auto input = new ControlHubInput<RGBA>(
@@ -362,7 +363,7 @@ void addStageChain()
         });
 
     // distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
-    distributeAndMonitor<BGR>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLut, 0.01);
 }
 
 void addObeliskChain()
@@ -378,9 +379,27 @@ void addObeliskChain()
     auto allFlatMap = allMap->toTopView();
 
     int nLeds = map->size();
-    // IndexMap *zigzag = new ZigZagMapper(60, true);
-    FlipMapper *reverseMap = new FlipMapper(2 * 60);
-    reverseMap->flip(0, 120);
+    // // IndexMap *zigzag = new ZigZagMapper(60, true);
+    // FlipMapper *reverseMap = new FlipMapper(2 * 60);
+    // reverseMap->flip(0, 120);
+
+    FlipMapper *zigzag = new FlipMapper(3*120);
+    FlipMapper *zigzagReverse = new FlipMapper(3*120);
+
+    zigzag->flip(0*120,120);
+    zigzag->flip(2*120,120);
+    zigzagReverse->flip(1*120,120);
+
+    // for (int i = 0, start = 0; i < stageMapSegmentSizes.size(); i++)
+    // {
+    //     if (i % 2 == 1 ^ (i / 3) % 2 == 0){
+    //         zigzag->flip(start, stageMapSegmentSizes[i]);
+    //     } else {
+    //         zigzagReverse->flip(start, stageMapSegmentSizes[i]);
+    //     }
+    //     start += stageMapSegmentSizes[i];
+    // }
+
 
     Distribution distribution = {
         {"hypernode1.local", 9611, 3 * 2 * 60},
@@ -402,14 +421,14 @@ void addObeliskChain()
             {.column = Columns::OBELISK, .slot = 5, .pattern = new ObeliskPatterns::OnBeatColumnChaseUpPattern(map)},
             {.column = Columns::OBELISK, .slot = 6, .pattern = new ObeliskPatterns::RotatingRingsPattern(cmap)},
             {.column = Columns::OBELISK, .slot = 7, .pattern = new LedPatterns::FadeFromRandom(2 * 60)},
-            {.column = Columns::OBELISK, .slot = 8, .pattern = new ObeliskPatterns::FlyingEmbersPattern(3 * 60)},
-            {.column = Columns::OBELISK, .slot = 9, .pattern = new LedPatterns::SegmentChasePattern(2 * 60)},
+            {.column = Columns::OBELISK, .slot = 8, .pattern = new ObeliskPatterns::FlyingEmbersPattern(3 * 60), .indexMap = zigzag},
+            {.column = Columns::OBELISK, .slot = 9, .pattern = new LedPatterns::SegmentChasePattern(2 * 60), .indexMap = zigzag},
             {.column = Columns::OBELISK, .slot = 10, .pattern = new TriggerPatterns::GlitterFade(cmap)},
             
-            {.column = Columns::OBELISK_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern()},
-            {.column = Columns::OBELISK_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = reverseMap},
+            {.column = Columns::OBELISK_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzag},
+            {.column = Columns::OBELISK_MASK, .slot = 1, .pattern = new MaskPatterns::SinChaseMaskPattern(), .indexMap = zigzagReverse},
             {.column = Columns::OBELISK_MASK, .slot = 2, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
-            {.column = Columns::OBELISK_MASK, .slot = 3, .pattern = new MaskPatterns::SegmentGradientMaskPattern(120)},
+            {.column = Columns::OBELISK_MASK, .slot = 3, .pattern = new MaskPatterns::SegmentGradientMaskPattern(120), .indexMap = zigzag},
             {.column = Columns::OBELISK_MASK, .slot = 4, .pattern = new MaskPatterns::SideChainCompressorMask()},
             {.column = Columns::OBELISK_MASK, .slot = 5, .pattern = new MaskPatterns::SegmentGlitchMaskPattern()},
             {.column = Columns::OBELISK_MASK, .slot = 6, .pattern = new MaskPatterns::RibbenFlashMaskPattern(120)},
@@ -423,8 +442,8 @@ void addObeliskChain()
 
             {.column = Columns::OBELISK_PULSE, .slot = 0, .pattern = new LedPatterns::BeatShakePattern(2*60)},
             {.column = Columns::OBELISK_PULSE, .slot = 1, .pattern = new TriggerPatterns::FadingNoisePattern()},
-            {.column = Columns::OBELISK_PULSE, .slot = 2, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base up"), .indexMap = reverseMap},
-            {.column = Columns::OBELISK_PULSE, .slot = 3, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base down"),},{.column = Columns::STAGE_PULSE, .slot = 5, .pattern = new TriggerPatterns::PulsePattern()},
+            {.column = Columns::OBELISK_PULSE, .slot = 2, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base up"), .indexMap = zigzagReverse},
+            {.column = Columns::OBELISK_PULSE, .slot = 3, .pattern = new TriggerPatterns::Meteor(15, 50, 600, "Meteor base down"), .indexMap = zigzag},
             {.column = Columns::OBELISK_PULSE, .slot = 4, .pattern = new TriggerPatterns::FadeFromRandom(2*60)},
             {.column = Columns::OBELISK_PULSE, .slot = 5, .pattern = new LedPatterns::StrobeHighlightPattern()},
             {.column = Columns::OBELISK_PULSE, .slot = 6, .pattern = new LedPatterns::SegmentGlitchPattern()},
@@ -539,7 +558,7 @@ void addLightningChain()
     int size = 10;
 
     Distribution distribution = {
-        {"hypernodeX.local", 9620, 10},
+        {"hyperslave6.local", 9620, 10},
     };
 
     auto input = new ControlHubInput<Monochrome>(

@@ -45,7 +45,7 @@ void drawObelisk(Turtle3d &turtle, float angle)
         turtle.pitch(-90+obeliskLegAngle);
         turtle.move(250, false);
         
-        bool reverse = false; //i == 0 || i == 2; // middle leg is reversed
+        bool reverse = i == 0 || i == 2; // middle leg is reversed
         if (reverse)
             drawReverseLedBar(turtle, 120);
         else
