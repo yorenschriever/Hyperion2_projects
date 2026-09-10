@@ -24,7 +24,7 @@ LUT *ledLut = new ColorCorrectionLUT(2.7, 255, 255, 255, 255);
 typedef GBR BAR_NEW;
 typedef BGR BAR_OLD;
 
-int ledparStartChannel = 0;
+int ledparStartChannel = 1;
 int sunstripStartChannel = 100;
 
 Hyperion hyp;
@@ -153,10 +153,11 @@ void addSparksChain()
             {.column = Columns::SPARKS, .slot = 2, .pattern = new MonochromePatterns::BeatMultiFadePattern()},
             {.column = Columns::SPARKS, .slot = 3, .pattern = new MonochromePatterns::BeatShakePattern()},
             {.column = Columns::SPARKS, .slot = 4, .pattern = new MonochromePatterns::SlowStrobePattern()},
-            {.column = Columns::SPARKS, .slot = 5, .pattern = new MonochromePatterns::FastStrobePattern()}, //millis
-            {.column = Columns::SPARKS, .slot = 6, .pattern = new MonochromePatterns::FastStrobePattern2()}, //frames
-            {.column = Columns::SPARKS, .slot = 7, .pattern = new MonochromePatterns::GlitchPattern()},
-            {.column = Columns::SPARKS, .slot = 8, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+            {.column = Columns::SPARKS, .slot = 5, .pattern = new MonochromePatterns::FastStrobePattern2()}, //frames
+            {.column = Columns::SPARKS, .slot = 6, .pattern = new MonochromePatterns::GlitchPattern()},
+            {.column = Columns::SPARKS, .slot = 7, .pattern = new MonochromePatterns::SingleGlitchPattern()},
+            {.column = Columns::SPARKS, .slot = 8, .pattern = new MonochromePatterns::FastStrobePattern()}, //millis
+            
             
         });
 
@@ -214,7 +215,7 @@ void addSunstripChain()
 
     // Log::info("TEST","Sunstrip map created, size = %d / %d", size, map->size());
 
-    DMXAndMonitor<Monochrome12>(&hyp, input, size, &dmxCombine, sunstripStartChannel, map, 0.02, GammaLut12);
+    DMXAndMonitor<Monochrome>(&hyp, input, size, &dmxCombine, sunstripStartChannel, map, 0.02);
 }
 
 // void addFogChain()
