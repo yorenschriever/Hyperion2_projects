@@ -179,11 +179,12 @@ void addLedparChain()
             {.column = Columns::LEDPAR, .slot = 2, .pattern = new LedPatterns::DuoTonePattern()},
             {.column = Columns::LEDPAR, .slot = 3, .pattern = new LedPatterns::DuoTonePattern(2)},
             {.column = Columns::LEDPAR, .slot = 4, .pattern = new LedPatterns::SinChasePattern()},
-            {.column = Columns::LEDPAR, .slot = 5, .pattern = new MaskPatterns::SinChaseMaskPattern()},
-            {.column = Columns::LEDPAR, .slot = 6, .pattern = new MaskPatterns::GlowPulseMaskPattern()},
-            {.column = Columns::LEDPAR, .slot = 7, .pattern = new LedPatterns::StrobePattern()},
-            {.column = Columns::LEDPAR, .slot = 8, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            {.column = Columns::LEDPAR, .slot = 9, .pattern = new LedPatterns::FlashesPattern()},
+            {.column = Columns::LEDPAR, .slot = 5, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::LEDPAR, .slot = 6, .pattern = new LedPatterns::StrobeHighlightPattern()},
+            {.column = Columns::LEDPAR, .slot = 7, .pattern = new LedPatterns::FlashesPattern()},
+
+            {.column = Columns::LEDPAR_MASK, .slot = 0, .pattern = new MaskPatterns::SinChaseMaskPattern(), .noMasterDim=true},
+            {.column = Columns::LEDPAR_MASK, .slot = 1, .pattern = new MaskPatterns::GlowPulseMaskPattern(), .noMasterDim=true},
         });
 
     auto map = gridMap(size, 1, 0.2, 0.5, 0, 0.7);

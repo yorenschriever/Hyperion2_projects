@@ -4,6 +4,7 @@ enum Columns
 {
     PALETTE,
     LEDPAR,
+    LEDPAR_MASK,
     SUNSTRIP,
     LEDBARS,
     LEDBARS2,

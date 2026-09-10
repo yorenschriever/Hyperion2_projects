@@ -28,7 +28,8 @@ public:
         this->R = rgbw.R;
         this->G = rgbw.G;   
         this->B = rgbw.B;
-        this->W = rgbw.W;
+        this->W = 0;
+        // this->W = rgbw.W;
     }
 
     inline void ApplyLut(LUT *lut)
