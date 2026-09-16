@@ -32,10 +32,12 @@ void addAerialChain();
 void addLightningChain();
 void addPaletteColumn();
 
-LUT *ledLut = new ColorCorrectionLUT(2.4, 255, 255, 255, 220); //2.7
+int blueCorr = 225;
+LUT *ledLutNew = new ColorCorrectionLUT(2.4, 255, 255, blueCorr, 255); //2.7
+LUT *ledLutOld = new ColorCorrectionLUT(2.4, 255, 255, 255, blueCorr); //2.7
 LUT *GammaLut12 = new GammaLUT(2.5, 4096);
 
-#define SHOW_DEBUG true
+#define SHOW_DEBUG false
 
 typedef GBR BAR_NEW;
 typedef BGR BAR_OLD;
@@ -49,14 +51,19 @@ enum Columns
     OBELISK,
     OBELISK_MASK,
     AERIAL,
+    AERIAL_MASK,
+
     ALL,
+
+    STAGE_PULSE,
+    STAGE_PULSE2,
+    OBELISK_PULSE,
+    OBELISK_PULSE2,
+    AERIAL_PULSE,
 
     DOME_BG,
     DOME_FG,
     DOME_MASK,
-    STAGE_PULSE,
-    OBELISK_PULSE,
-    AERIAL_PULSE,
     DOME_PULSE,
     LIGHTNING,
 
@@ -72,39 +79,46 @@ int main()
     addStageChain();
     addObeliskChain();
     addAerialChain();
-    addLightningChain();
+    // addLightningChain();
 
     hyp.hub.setColumnName(Columns::PALETTE, "Palette");
     hyp.hub.setColumnName(Columns::ALL, "All");
     hyp.hub.setColumnName(Columns::STAGE_BG, "Stage BG");
     hyp.hub.setColumnName(Columns::STAGE_FG, "Stage FG");
-    hyp.hub.setColumnName(Columns::STAGE_MASK, "Stage Mask");    
+    hyp.hub.setColumnName(Columns::STAGE_MASK, "Mask Stage");    
     hyp.hub.setColumnName(Columns::OBELISK, "Obelisk");
-    hyp.hub.setColumnName(Columns::OBELISK_MASK, "Obelisk Mask");
+    hyp.hub.setColumnName(Columns::OBELISK_MASK, "Mask Obelisk");
     hyp.hub.setColumnName(Columns::AERIAL, "Aerial");
-    hyp.hub.setColumnName(Columns::DOME_BG, "Dome BG");
-    hyp.hub.setColumnName(Columns::DOME_FG, "Dome FG");
-    hyp.hub.setColumnName(Columns::DOME_MASK, "Dome Mask");
+    hyp.hub.setColumnName(Columns::AERIAL_MASK, "Mask Aerial");
+    // hyp.hub.setColumnName(Columns::DOME_BG, "Dome BG");
+    // hyp.hub.setColumnName(Columns::DOME_FG, "Dome FG");
+    // hyp.hub.setColumnName(Columns::DOME_MASK, "Dome Mask");
     hyp.hub.setColumnName(Columns::STAGE_PULSE, "Stage Pulse");
+    hyp.hub.setColumnName(Columns::STAGE_PULSE2, "Stage Pulse");
     hyp.hub.setColumnName(Columns::OBELISK_PULSE, "Obelisk Pulse");
+    hyp.hub.setColumnName(Columns::OBELISK_PULSE2, "Obelisk Pulse");
     hyp.hub.setColumnName(Columns::AERIAL_PULSE, "Aerial Pulse");
-    hyp.hub.setColumnName(Columns::DOME_PULSE, "Dome Pulse");
-    hyp.hub.setColumnName(Columns::LIGHTNING, "Lightning");
+    // hyp.hub.setColumnName(Columns::DOME_PULSE, "Dome Pulse");
+    // hyp.hub.setColumnName(Columns::LIGHTNING, "Lightning");
     hyp.hub.setColumnName(Columns::DEBUG, "Debug");
+
+
 
     hyp.hub.buttonPressed(Columns::PALETTE, 0);
     hyp.hub.setForcedSelection(Columns::PALETTE);
     hyp.hub.setFlashColumn(Columns::PALETTE, false, true);
 
     hyp.hub.setFlashColumn(Columns::STAGE_PULSE);
+    hyp.hub.setFlashColumn(Columns::STAGE_PULSE2);
     hyp.hub.setFlashColumn(Columns::OBELISK_PULSE);
+    hyp.hub.setFlashColumn(Columns::OBELISK_PULSE2);
     hyp.hub.setFlashColumn(Columns::AERIAL_PULSE);
     hyp.hub.setFlashColumn(Columns::DOME_PULSE);
     hyp.hub.setFlashColumn(Columns::LIGHTNING);
 
-    Tempo::AddSource(new ConstantTempo(120));
-
     hyp.start();
+
+    // Tempo::AddSource(new ConstantTempo(120));
 
     auto viewParams = new ViewParams(
         80,
@@ -231,7 +245,7 @@ void addDomeChain()
 
         });
 
-    distributeAndMonitor<BAR_OLD>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_OLD>(&hyp, input, map, distribution, ledLutOld, 0.01);
 }
 
 void addStageChain()
@@ -339,15 +353,16 @@ void addStageChain()
             {.column = Columns::STAGE_PULSE, .slot = 5, .pattern = new TriggerPatterns::PulsePattern()},
             {.column = Columns::STAGE_PULSE, .slot = 6, .pattern = new TriggerPatterns::FadeFromRandom(60)},
             {.column = Columns::STAGE_PULSE, .slot = 7, .pattern = new LedPatterns::StrobeHighlightPattern()},
-            {.column = Columns::STAGE_PULSE, .slot = 8, .pattern = new TriggerPatterns::SlowPulsePattern()},
-            {.column = Columns::STAGE_PULSE, .slot = 9, .pattern = new LedPatterns::SegmentGlitchPattern()},
-            {.column = Columns::STAGE_PULSE, .slot = 10, .pattern = new LedPatterns::StrobePattern()},
-            {.column = Columns::STAGE_PULSE, .slot = 11, .pattern = new LedPatterns::PixelGlitchPattern()},
-            {.column = Columns::STAGE_PULSE, .slot = 12, .pattern = new LedPatterns::BeatShakePattern(2 * 60)},
-            {.column = Columns::STAGE_PULSE, .slot = 13, .pattern = new LedPatterns::BeatShakePattern(10)},
-            {.column = Columns::STAGE_PULSE, .slot = 14, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 100, 20)},
-            {.column = Columns::STAGE_PULSE, .slot = 15, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 500, 20)},
-            {.column = Columns::STAGE_PULSE, .slot = 16, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 1000, 20)},
+
+            {.column = Columns::STAGE_PULSE2, .slot = 0, .pattern = new TriggerPatterns::SlowPulsePattern()},
+            {.column = Columns::STAGE_PULSE2, .slot = 1, .pattern = new LedPatterns::SegmentGlitchPattern()},
+            {.column = Columns::STAGE_PULSE2, .slot = 2, .pattern = new LedPatterns::StrobePattern()},
+            {.column = Columns::STAGE_PULSE2, .slot = 3, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::STAGE_PULSE2, .slot = 4, .pattern = new LedPatterns::BeatShakePattern(2 * 60)},
+            {.column = Columns::STAGE_PULSE2, .slot = 5, .pattern = new LedPatterns::BeatShakePattern(10)},
+            {.column = Columns::STAGE_PULSE2, .slot = 6, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 100, 20)},
+            {.column = Columns::STAGE_PULSE2, .slot = 7, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 500, 20)},
+            {.column = Columns::STAGE_PULSE2, .slot = 8, .pattern = new TriggerPatterns::LineLaunch(frontMapUpsideDown, 1000, 20)},
 
             #if SHOW_DEBUG
             {.column = Columns::DEBUG, .slot = 0, .pattern = new TestPatterns::OrderBarsPattern(distribution)},
@@ -362,8 +377,8 @@ void addStageChain()
             #endif
         });
 
-    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
-    // distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLutNew, 0.01);
+    // distributeAndMonitor<BAR_NEW>(&hyp, input, frontMap, distribution, ledLutNew, 0.01);
 }
 
 void addObeliskChain()
@@ -448,13 +463,14 @@ void addObeliskChain()
             {.column = Columns::OBELISK_PULSE, .slot = 5, .pattern = new LedPatterns::StrobeHighlightPattern()},
             {.column = Columns::OBELISK_PULSE, .slot = 6, .pattern = new LedPatterns::SegmentGlitchPattern()},
             {.column = Columns::OBELISK_PULSE, .slot = 7, .pattern = new LedPatterns::StrobePattern()},
-            {.column = Columns::OBELISK_PULSE, .slot = 8, .pattern = new LedPatterns::PixelGlitchPattern()},
-            {.column = Columns::OBELISK_PULSE, .slot = 9, .pattern = new LedPatterns::BeatShakePattern(20)},
-            {.column = Columns::OBELISK_PULSE, .slot = 10, .pattern = new TriggerPatterns::PulsePattern()},
-            {.column = Columns::OBELISK_PULSE, .slot = 11, .pattern = new TriggerPatterns::LineLaunch(map2d, 100, 20)},
-            {.column = Columns::OBELISK_PULSE, .slot = 12, .pattern = new TriggerPatterns::LineLaunch(map2d, 500, 20)},
-            {.column = Columns::OBELISK_PULSE, .slot = 13, .pattern = new TriggerPatterns::LineLaunch(map2d, 1000, 20)},
-            {.column = Columns::OBELISK_PULSE, .slot = 14, .pattern = new TriggerPatterns::SlowPulsePattern()},
+
+            {.column = Columns::OBELISK_PULSE2, .slot = 0, .pattern = new LedPatterns::PixelGlitchPattern()},
+            {.column = Columns::OBELISK_PULSE2, .slot = 1, .pattern = new LedPatterns::BeatShakePattern(20)},
+            {.column = Columns::OBELISK_PULSE2, .slot = 2, .pattern = new TriggerPatterns::PulsePattern()},
+            {.column = Columns::OBELISK_PULSE2, .slot = 3, .pattern = new TriggerPatterns::LineLaunch(map2d, 100, 20)},
+            {.column = Columns::OBELISK_PULSE2, .slot = 4, .pattern = new TriggerPatterns::LineLaunch(map2d, 500, 20)},
+            {.column = Columns::OBELISK_PULSE2, .slot = 5, .pattern = new TriggerPatterns::LineLaunch(map2d, 1000, 20)},
+            {.column = Columns::OBELISK_PULSE2, .slot = 6, .pattern = new TriggerPatterns::SlowPulsePattern()},
             
             
 
@@ -471,7 +487,7 @@ void addObeliskChain()
             #endif
         });
 
-    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLutNew, 0.01);
 }
 
 void addAerialChain()
@@ -487,7 +503,7 @@ void addAerialChain()
     int nLeds = map->size();
     IndexMap *zigzag = new ZigZagMapper(3 * 60, true);
 
-    auto convertedOldBars = new ColorConverter<RGBA, BAR_OLD>(ledLut);
+    auto convertedOldBars = new ColorConverter<RGBA, BAR_OLD>(ledLutOld);
 
     Distribution distribution = {
         {"hypernode1.local", 9612, 2 * 3 * 60, convertedOldBars},
@@ -516,8 +532,9 @@ void addAerialChain()
             {.column = Columns::AERIAL, .slot = 6, .pattern = new LedPatterns::RibbenFlashPattern(3 * 60)},
             {.column = Columns::AERIAL, .slot = 7, .pattern = new LedPatterns::RibbenClivePattern<Glow>(1000, 1, 0.025, 3 * 60)},
             {.column = Columns::AERIAL, .slot = 8, .pattern = new LedPatterns::PalettePattern(0, "Primary")},
-            {.column = Columns::AERIAL, .slot = 9, .pattern = new MaskPatterns::AerialTipsMaskPattern()},
-            {.column = Columns::AERIAL, .slot = 10, .pattern = new MaskPatterns::CliveMaskPattern(3*60)},
+
+            {.column = Columns::AERIAL_MASK, .slot = 0, .pattern = new MaskPatterns::AerialTipsMaskPattern()},
+            {.column = Columns::AERIAL_MASK, .slot = 1, .pattern = new MaskPatterns::CliveMaskPattern(3*60)},
             
             {.column = Columns::ALL, .slot = 0, .pattern = new TriggerPatterns::LineLaunch(allFlatMap, 200, 40, -1)},
             {.column = Columns::ALL, .slot = 1, .pattern = new AllPatterns::Lighthouse(callMap)},
@@ -550,7 +567,7 @@ void addAerialChain()
             #endif
         });
 
-    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLut, 0.01);
+    distributeAndMonitor<BAR_NEW>(&hyp, input, map, distribution, ledLutNew, 0.01);
 }
 
 void addLightningChain()
@@ -598,6 +615,9 @@ void addPaletteColumn()
             &electroflux,
             &vhsTracking,
             &plasmaRewind,
+            &pinkSunset,
+            &heatmap2,
+            &redSalvation,
 
             &mad_science,
             &chromatic_frost,
@@ -615,13 +635,12 @@ void addPaletteColumn()
             &turboNoir,
             &velvetThorn,
 
-            &pinkSunset,
+            
             &heatmap,
             &campfire,
             &retro,
             &tunnel,
-            &heatmap2,
-            &redSalvation,
+
 
             // &sunset4,
             // &blueOrange,
