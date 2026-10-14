@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { stripJsonCodeFence } from './stripJsonCodeFence.js';
 
 export const generate = async (prompt) => {
 
@@ -47,5 +48,5 @@ export const generate = async (prompt) => {
 
     console.log(response)
 
-    return response.content[0].text
+    return stripJsonCodeFence(response.content[0].text)
 }

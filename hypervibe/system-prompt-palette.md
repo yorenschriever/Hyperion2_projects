@@ -12,7 +12,7 @@ Palettes are written json, in the following format:
       { "position": 0, "color": { "r": 45, "g": 0, "b": 80 } },
       { "position": 128, "color": { "r": 255, "g": 94, "b": 77 } },
       { "position": 255, "color": { "r": 255, "g": 214, "b": 0 } },
-    ],
+    ]
 }
 ```
 
@@ -31,4 +31,4 @@ Because the colors are displayed on leds, colors with low saturation don't work 
 
 use a creative name. avoid descriptive names. 
 
-output only the json. do not add the markdown '```json' codeblock backticks
+output only the json. do not add the markdown '```json' codeblock backticks.

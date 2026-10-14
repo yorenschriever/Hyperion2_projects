@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { stripJsonCodeFence } from './stripJsonCodeFence.js';
 
 export const generatePalette = async (prompt) => {
 
@@ -25,7 +26,6 @@ export const generatePalette = async (prompt) => {
         thinking: {
             "type": "disabled"
         },
-        // output_config: {"effort":"high"}
     };
 
     const response = await fetch("https://api.anthropic.com/v1/messages",{
@@ -40,5 +40,7 @@ export const generatePalette = async (prompt) => {
 
     console.log(response)
 
-    return response.content[0].text
+    const cleanedResponse = stripJsonCodeFence(response.content[0].text);
+
+    return cleanedResponse;
 }
